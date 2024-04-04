@@ -2,7 +2,7 @@
   <div class="relative flex min-h-screen">
     <div
       class="text-black w-64 px-3 absolute inset-y-0 left-0 md:relative md:-translate-x-0 transform -translate-x-full transition duration-200 ease-in-out"
-      :class="{'relative -translate-x-0': showSidebar}"
+      :class="{ 'relative translate-x-0': showSidebar }"
     >
       <a
         href="#"
