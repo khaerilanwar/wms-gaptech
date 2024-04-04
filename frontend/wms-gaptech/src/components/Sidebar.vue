@@ -16,9 +16,10 @@
         <span class="text-2xl font-extrabold text-blue-primary">GapTech</span>
       </a>
       <nav>
-        <a
-          href=""
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-black rounded transition duration-200"
+        <router-link
+          to="/"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          :class="{ 'sidebar_active': isActive('/') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,10 +36,11 @@
             />
           </svg>
           <span class="text-sm">Dashboard</span>
-        </a>
-        <a
-          href=""
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-black rounded transition duration-200"
+        </router-link>
+        <router-link
+          to="/barang-masuk"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          :class="{ 'sidebar_active': isActive('/barang-masuk') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,10 +55,11 @@
             />
           </svg>
           <span class="text-sm">Barang Masuk</span>
-        </a>
-        <a
-          href=""
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-black rounded transition duration-200"
+        </router-link>
+        <router-link
+          to="/barang-keluar"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          :class="{ 'sidebar_active': isActive('/barang-keluar') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -71,10 +74,11 @@
             />
           </svg>
           <span class="text-sm">Barang Keluar</span>
-        </a>
-        <a
-          href=""
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-black rounded transition duration-200"
+        </router-link>
+        <router-link
+          to="/status-rak"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          :class="{ 'sidebar_active': isActive('/status-rak') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -91,12 +95,12 @@
             />
           </svg>
           <span class="text-sm">Status Rak</span>
-        </a>
+        </router-link>
       </nav>
     </div>
     <div class="flex-1">
       <div class="bg-white px-3 py-4 flex items-center justify-between">
-        <button @click="showSidebar =! showSidebar">
+        <button @click="showSidebar = !showSidebar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -114,19 +118,31 @@
         </button>
         <p class="text-sm">header</p>
       </div>
-      <div class="p-3 bg-blue-300"><p class="text-sm">content</p></div>
+      <!-- <div class="h-[calc(100vh-50px)] bg-pink-400 p-[20px]">
+        <router-view />
+      </div> -->
+      <div class="flex-1 bg-pink-400 p-4 h-full">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 export default{
-  setup(){
-    const showSidebar = ref(false)
-    return{
-      showSidebar
-    }
+  setup() {
+    const route = useRoute();
+    const showSidebar = ref(false);
+
+    return {
+      showSidebar,
+      isActive(path) {
+        return route.path === path;
+      }
+    };
   }
 }
 </script>

@@ -5,3 +5,7 @@
 input:focus {
 	outline: none;
 }
+
+.sidebar_active{
+	background-color: #DDF2FD;
+}

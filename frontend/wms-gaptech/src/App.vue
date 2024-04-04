@@ -1,11 +1,5 @@
 <template>
-  <div class="font-Montserrat">
-    <RouterView />
+  <div>
+    <router-view />
   </div>
 </template>
-
-<script setup>
-  import { RouterView } from 'vue-router'
-</script>
-
-<style lang="scss" scoped></style>

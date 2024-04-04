@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-sm">DASHBOARD</p>
+    <p class="text-sm">INI STATUS RAK</p>
   </div>
 </template>
 
