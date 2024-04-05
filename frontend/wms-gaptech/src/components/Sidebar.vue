@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-self-closing -->
 <template>
   <div class="relative flex min-h-screen">
     <div
@@ -12,14 +13,14 @@
           class="w-8 h-8 mr-2"
           src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
           alt="logo"
-        >
+        />
         <span class="text-2xl font-extrabold text-blue-primary">GapTech</span>
       </a>
       <nav>
         <router-link
           to="/"
           class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
-          :class="{ 'sidebar_active': isActive('/') }"
+          :class="{ sidebar_active: isActive('/') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +41,7 @@
         <router-link
           to="/barang-masuk"
           class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
-          :class="{ 'sidebar_active': isActive('/barang-masuk') }"
+          :class="{ sidebar_active: isActive('/barang-masuk') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +60,7 @@
         <router-link
           to="/barang-keluar"
           class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
-          :class="{ 'sidebar_active': isActive('/barang-keluar') }"
+          :class="{ sidebar_active: isActive('/barang-keluar') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +79,7 @@
         <router-link
           to="/status-rak"
           class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
-          :class="{ 'sidebar_active': isActive('/status-rak') }"
+          :class="{ sidebar_active: isActive('/status-rak') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +122,7 @@
       <!-- <div class="h-[calc(100vh-50px)] bg-pink-400 p-[20px]">
         <router-view />
       </div> -->
-      <div class="flex-1 bg-pink-400 p-4 h-full">
+      <div class="flex-1 bg-white p-4 h-full border rounded border-black m-5">
         <router-view />
       </div>
     </div>
@@ -129,10 +130,10 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 
-export default{
+export default {
   setup() {
     const route = useRoute();
     const showSidebar = ref(false);
@@ -141,8 +142,8 @@ export default{
       showSidebar,
       isActive(path) {
         return route.path === path;
-      }
+      },
     };
-  }
-}
+  },
+};
 </script>
