@@ -30,26 +30,28 @@
           Entries
         </p>
       </div>
-      <button
-        class="rounded-lg text-sm py-2 px-3 mr-8 bg-sky-900 text-white hover:bg-sky-950 flex items-center"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1"
-          stroke="currentColor"
-          class="w-4 h-4 border rounded-sm mr-2"
+      <router-link to="/barang-keluar/tambah-data">
+        <button
+          class="rounded-lg text-sm py-2 px-3 mr-8 bg-sky-900 text-white hover:bg-sky-950 flex items-center"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M12 4.5v15m7.5-7.5h-15"
-          />
-        </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1"
+            stroke="currentColor"
+            class="w-4 h-4 border rounded-sm mr-2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
 
-        Tambah Data
-      </button>
+          Tambah Data
+        </button>
+      </router-link>
     </div>
 
     <div class="container mx-auto">
@@ -324,4 +326,4 @@
   </div>
 </template>
 
-<script setup></script>
+<script></script>
