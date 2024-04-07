@@ -17,6 +17,7 @@ const Contact = mongoose.model('Contact', {
 })
 
 // Contact
+Contact.i
 
 Contact.find().then(result => {
     for (const item of result) {
