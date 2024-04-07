@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import BarangKeluarView from "@/views/BarangKeluarView.vue";
 import StatusRakView from "@/views/StatusRakView.vue";
 import DetailBrgKeluar from "@/views/DetailBrgKeluar.vue";
+import TambahBrgKeluar from "@/views/TambahBrgKeluar.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,9 +42,14 @@ const router = createRouter({
           component: StatusRakView,
         },
         {
-          path: "/barang-keluar/tambah-data",
-          name: "tambah-data",
+          path: "/barang-keluar/detail",
+          name: "detail-barang-keluar",
           component: DetailBrgKeluar,
+        },
+        {
+          path: "/barang-keluar/tambah-barang",
+          name: "tambah-barang-keluar",
+          component: TambahBrgKeluar,
         },
       ],
     },
