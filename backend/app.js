@@ -1,6 +1,11 @@
 import mongoose from 'mongoose'
 import express from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import router from './routes/index.js'
+
+dotenv.config()
 const app = express()
 
 // connected to mongodb database
@@ -11,6 +16,8 @@ try {
     console.log(error)
 }
 
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+app.use(cookieParser())
 app.use(express.json())
 app.use(router)
 
