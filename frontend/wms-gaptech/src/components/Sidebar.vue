@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/html-self-closing -->
 <template>
   <div class="relative flex min-h-screen">
     <div
@@ -19,7 +18,7 @@
       <nav>
         <router-link
           to="/"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/') }"
         >
           <svg
@@ -40,7 +39,7 @@
         </router-link>
         <router-link
           to="/barang-masuk"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/barang-masuk') }"
         >
           <svg
@@ -59,7 +58,7 @@
         </router-link>
         <router-link
           to="/barang-keluar"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/barang-keluar') }"
         >
           <svg
@@ -78,7 +77,7 @@
         </router-link>
         <router-link
           to="/status-rak"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/status-rak') }"
         >
           <svg
@@ -117,12 +116,15 @@
             />
           </svg>
         </button>
-        <p class="text-sm">header</p>
+        <div>
+          <p v-if="user">{{ user.username }}</p>
+          <a href="javascript:void(0)" @click="handleClick">Logout</a>
+        </div>
       </div>
       <!-- <div class="h-[calc(100vh-50px)] bg-pink-400 p-[20px]">
         <router-view />
       </div> -->
-      <div class="flex-1 bg-white p-4 h-full border rounded border-black m-5">
+      <div class="flex-1 bg-white p-3 h-full border rounded border-black mx-3">
         <router-view />
       </div>
     </div>
@@ -132,6 +134,7 @@
 <script>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import { mapGetters } from "vuex";
 
 export default {
   setup() {
@@ -144,6 +147,15 @@ export default {
         return route.path === path;
       },
     };
+  },
+  computed: {
+    ...mapGetters(["user"]),
+  },
+  method: {
+    handleClick() {
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
