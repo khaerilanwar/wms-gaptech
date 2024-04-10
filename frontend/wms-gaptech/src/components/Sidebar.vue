@@ -117,7 +117,7 @@
           </svg>
         </button>
         <div>
-          <p v-if="user">{{ user.username }}</p>
+          <p v-if="user">Hai, {{ user.name }}</p>
           <a href="javascript:void(0)" @click="handleClick">Logout</a>
         </div>
       </div>
@@ -134,7 +134,7 @@
 <script>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { mapGetters } from "vuex";
+import axiosInstance, { refreshToken } from "@/utils/api";
 
 export default {
   setup() {
@@ -148,12 +148,24 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapGetters(["user"]),
+  data() {
+    return {
+      user: null,
+    };
   },
-  method: {
+  async created() {
+    try {
+      const response = await axiosInstance.get("user");
+      refreshToken(true);
+      this.user = response.data.user;
+    } catch (error) {
+      console.error("Gagal mendapatkan data pengguna:", error);
+    }
+  },
+  methods: {
     handleClick() {
       localStorage.removeItem("token");
+      refreshToken(false);
       this.$router.push("/login");
     },
   },

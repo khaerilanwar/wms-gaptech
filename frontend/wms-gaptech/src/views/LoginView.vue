@@ -1,7 +1,6 @@
 <template>
   <section>
     <div
-      v-if="!user"
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
     >
       <div class="flex items-center mb-3 text-2xl font-semibold text-black">
@@ -27,22 +26,6 @@
             method="post"
             @submit.prevent="handleSubmit"
           >
-            <div>
-              <label
-                for="username"
-                class="block mb-2 text-sm font-medium text-black"
-                >Username</label
-              >
-              <input
-                id="username"
-                v-model="username"
-                type="text"
-                name="username"
-                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-                placeholder="johndoe"
-                required
-              />
-            </div>
             <div>
               <label
                 for="email"
@@ -71,6 +54,7 @@
                 type="password"
                 name="password"
                 placeholder="••••••••"
+                autocomplete="off"
                 class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
                 required
               />
@@ -94,36 +78,29 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapGetters } from "vuex";
+import axiosInstance from "@/utils/api";
 
 export default {
-  props: {
-    user: {
-      type: Array,
-      default: null,
-    },
-  },
   data() {
     return {
-      username: "",
       email: "",
       password: "",
     };
   },
-  computed: {
-    ...mapGetters(["user"]),
-  },
   methods: {
     async handleSubmit() {
-      const response = await axios.post("login", {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      });
-      localStorage.setItem("token", response.data.token);
-      this.$store.dispatch("user", response.data.user);
-      this.$route.push("/");
+      try {
+        const loginResponse = await axiosInstance.post("login", {
+          email: this.email,
+          password: this.password,
+        });
+        const token = loginResponse.data.accessToken;
+        localStorage.setItem("token", token);
+        console.log("accessToken", token);
+        this.$router.push("/");
+      } catch (error) {
+        console.error("Error saat login:", error);
+      }
     },
   },
 };

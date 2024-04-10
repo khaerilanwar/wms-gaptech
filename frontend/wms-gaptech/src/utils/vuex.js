@@ -1,29 +1,29 @@
-import Vue from "vue";
-import Vuex from "vuex";
+// import { createStore } from "vuex";
+// import Vue from "vue";
+// import Vuex from "vuex";
 
-Vue.use(Vuex);
+// Vue.use(Vuex);
+// const store = createStore({
+//   state() {
+//     return {
+//       user: null,
+//     };
+//   },
+//   getters: {
+//     getUser(state) {
+//       return state.user;
+//     },
+//   },
+//   actions: {
+//     setUser(context, user) {
+//       context.commit("setUser", user);
+//     },
+//   },
+//   mutations: {
+//     setUser(state, user) {
+//       state.user = user;
+//     },
+//   },
+// });
 
-const state = {
-  user: null,
-};
-
-const store = new Vuex.Store({
-  state,
-  getters: {
-    user: (state) => {
-      return state.user;
-    },
-  },
-  actions: {
-    user(context, user) {
-      context.commit("user", user);
-    },
-  },
-  mutations: {
-    user(state, user) {
-      state.user = user;
-    },
-  },
-});
-
-export default store;
+// export default store;
