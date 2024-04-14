@@ -18,6 +18,7 @@
       <nav>
         <router-link
           to="/"
+          exact
           class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/') }"
         >
@@ -121,10 +122,7 @@
           <a href="javascript:void(0)" @click="handleClick">Logout</a>
         </div>
       </div>
-      <!-- <div class="h-[calc(100vh-50px)] bg-pink-400 p-[20px]">
-        <router-view />
-      </div> -->
-      <div class="flex-1 bg-white p-3 h-full border rounded border-black mx-3">
+      <div class="flex-1 bg-white p-3 h-full">
         <router-view />
       </div>
     </div>
@@ -145,7 +143,15 @@ export default {
     return {
       showSidebar,
       isActive(path) {
-        return route.path === path;
+        if (route.path === path) {
+          return true;
+        }
+
+        if (route.path.startsWith(path + "/") && path !== "/") {
+          return true;
+        }
+
+        return false;
       },
     };
   },
