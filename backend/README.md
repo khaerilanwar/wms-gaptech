@@ -78,7 +78,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
         "posisiRak": "L1-1-4-2"
     }
     ```
-10. ``PUT`` ``/product/{kodeProduk}`` untuk mengubah data produk <br> Contoh request data :
+10. ``PUT`` ``/product/{kodeProduk}`` untuk mengubah data produk `otorisasi` <br> Contoh request data :
     ```json
     {
         "namaProduk": "Sepatu Yamaha",
@@ -87,7 +87,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
         "posisiRak": "L1-2-4-2"
     }
     ```
-11. ``PATCH`` ``/product/{kodeProduk}`` untuk menambah stok jika ada barang masuk <br> Contoh request data :
+11. ``PATCH`` ``/product/{kodeProduk}`` untuk menambah stok jika ada barang masuk `otorisasi` <br> Contoh request data :
     ```json
     {
         "stokBaru": 24
