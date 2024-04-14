@@ -76,13 +76,18 @@
         </div>
       </div>
     </div>
+    <Notification ref="notification" />
   </section>
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
+import Notification from "../components/Notification.vue";
 
 export default {
+  components: {
+    Notification,
+  },
   data() {
     return {
       email: "",
@@ -102,7 +107,7 @@ export default {
         console.log("accessToken", token);
         this.$router.push("/");
       } catch (error) {
-        console.error("Error saat login:", error);
+        this.$refs.notification.showError(error.response.data.msg);
       }
     },
   },
