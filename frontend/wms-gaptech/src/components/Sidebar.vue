@@ -132,9 +132,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import axiosInstance, { refreshToken } from "@/utils/api";
+import axiosInstance from "@/utils/api";
 
 export default {
   setup() {
@@ -153,10 +154,12 @@ export default {
       user: null,
     };
   },
+  computed: {
+    ...mapGetters(["getUser"]),
+  },
   async created() {
     try {
       const response = await axiosInstance.get("user");
-      refreshToken(true);
       this.user = response.data.user;
     } catch (error) {
       console.error("Gagal mendapatkan data pengguna:", error);
@@ -165,9 +168,9 @@ export default {
   methods: {
     handleClick() {
       localStorage.removeItem("token");
-      refreshToken(false);
       this.$router.push("/login");
     },
+    ...mapActions(["setUser"]),
   },
 };
 </script>

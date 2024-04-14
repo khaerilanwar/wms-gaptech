@@ -18,15 +18,6 @@ export const getToken = async () => {
   }
 };
 
-//HELP
-export function refreshToken(status) {
-  if (status) {
-    var refreshTokenInterval = setInterval(getToken, 10000);
-  } else {
-    clearInterval(refreshTokenInterval);
-  }
-}
-
 axiosInstance.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem("token");

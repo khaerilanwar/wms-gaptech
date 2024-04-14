@@ -96,6 +96,7 @@ export default {
         });
         const token = loginResponse.data.accessToken;
         localStorage.setItem("token", token);
+        this.$store.dispatch("setUser", loginResponse.data.user);
         console.log("accessToken", token);
         this.$router.push("/");
       } catch (error) {
