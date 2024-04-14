@@ -166,8 +166,8 @@ export default {
     }
   },
   methods: {
-    handleClick() {
-      localStorage.removeItem("token");
+    async handleClick() {
+      await axiosInstance.delete("logout");
       this.$router.push("/login");
     },
     ...mapActions(["setUser"]),

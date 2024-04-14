@@ -8,12 +8,29 @@ import StatusRakView from "@/views/StatusRakView.vue";
 import DetailBrgKeluar from "@/views/DetailBrgKeluar.vue";
 import TambahBrgKeluar from "@/views/TambahBrgKeluar.vue";
 import { getToken } from "@/utils/api";
+import Password from "@/components/Password.vue";
+import ResetPassword from "@/components/ResetPassword.vue";
 
 const routes = [
   {
     path: "/login",
     name: "login",
     component: LoginView,
+  },
+  {
+    path: "/pengaturan-kata-sandi",
+    name: "pengaturan-kata-sandi",
+    component: Password,
+  },
+  // {
+  //   path: "/ganti-kata-sandi/:token",
+  //   name: "ganti-kata-sandi",
+  //   component: ResetPassword,
+  // },
+  {
+    path: "/ganti-kata-sandi",
+    name: "ganti-kata-sandi",
+    component: ResetPassword,
   },
   {
     path: "/",
