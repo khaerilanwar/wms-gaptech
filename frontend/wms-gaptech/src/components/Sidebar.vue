@@ -122,7 +122,7 @@
       <!-- <div class="h-[calc(100vh-50px)] bg-pink-400 p-[20px]">
         <router-view />
       </div> -->
-      <div class="flex-1 bg-white p-4 h-full border rounded border-black m-5">
+      <div class="flex-1 bg-slate-100 p-4 h-full">
         <router-view />
       </div>
     </div>

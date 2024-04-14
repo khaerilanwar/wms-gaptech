@@ -2,7 +2,7 @@
 <!-- eslint-disable vue/html-closing-bracket-newline -->
 <!-- eslint-disable vue/html-indent -->
 <template>
-  <div>
+  <div class="bg-white p-4 h-full border rounded border-black">
     <p
       class="flex justify-center font-mono items-center font-semibold text-3xl mt-10"
     >
