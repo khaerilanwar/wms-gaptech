@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/html-self-closing -->
 <template>
   <div class="relative flex min-h-screen">
     <div
@@ -19,7 +18,8 @@
       <nav>
         <router-link
           to="/"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          exact
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/') }"
         >
           <svg
@@ -40,7 +40,7 @@
         </router-link>
         <router-link
           to="/barang-masuk"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/barang-masuk') }"
         >
           <svg
@@ -59,7 +59,7 @@
         </router-link>
         <router-link
           to="/barang-keluar"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/barang-keluar') }"
         >
           <svg
@@ -78,7 +78,7 @@
         </router-link>
         <router-link
           to="/status-rak"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/status-rak') }"
         >
           <svg
@@ -117,12 +117,12 @@
             />
           </svg>
         </button>
-        <p class="text-sm">header</p>
+        <div>
+          <p v-if="user">Hai, {{ user.name }}</p>
+          <a href="javascript:void(0)" @click="handleClick">Logout</a>
+        </div>
       </div>
-      <!-- <div class="h-[calc(100vh-50px)] bg-pink-400 p-[20px]">
-        <router-view />
-      </div> -->
-      <div class="flex-1 bg-slate-100 p-4 h-full">
+      <div class="flex-1 bg-white p-3 h-full">
         <router-view />
       </div>
     </div>
@@ -130,8 +130,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import axiosInstance from "@/utils/api";
 
 export default {
   setup() {
@@ -141,9 +143,40 @@ export default {
     return {
       showSidebar,
       isActive(path) {
-        return route.path === path;
+        if (route.path === path) {
+          return true;
+        }
+
+        if (route.path.startsWith(path + "/") && path !== "/") {
+          return true;
+        }
+
+        return false;
       },
     };
+  },
+  data() {
+    return {
+      user: null,
+    };
+  },
+  computed: {
+    ...mapGetters(["getUser"]),
+  },
+  async created() {
+    try {
+      const response = await axiosInstance.get("user");
+      this.user = response.data.user;
+    } catch (error) {
+      console.error("Gagal mendapatkan data pengguna:", error);
+    }
+  },
+  methods: {
+    async handleClick() {
+      await axiosInstance.delete("logout");
+      this.$router.push("/login");
+    },
+    ...mapActions(["setUser"]),
   },
 };
 </script>

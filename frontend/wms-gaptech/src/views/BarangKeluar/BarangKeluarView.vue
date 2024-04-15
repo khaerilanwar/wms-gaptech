@@ -1,6 +1,3 @@
-<!-- eslint-disable vue/max-attributes-per-line -->
-<!-- eslint-disable vue/html-closing-bracket-newline -->
-<!-- eslint-disable vue/html-indent -->
 <template>
   <div class="bg-white p-4 h-full border rounded border-black">
     <p

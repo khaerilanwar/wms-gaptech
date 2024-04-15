@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 input:focus {
-	outline: none;
+  outline: none;
 }
 
-.sidebar_active{
-	background-color: #DDF2FD;
+.sidebar_active {
+  background-color: #ddf2fd;
+  color: #164863;
 }
