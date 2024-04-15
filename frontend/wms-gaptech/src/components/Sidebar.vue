@@ -174,6 +174,7 @@ export default {
   methods: {
     async handleClick() {
       await axiosInstance.delete("logout");
+      localStorage.removeItem("token");
       this.$router.push("/login");
     },
     ...mapActions(["setUser"]),

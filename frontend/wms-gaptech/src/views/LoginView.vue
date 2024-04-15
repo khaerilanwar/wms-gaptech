@@ -97,13 +97,13 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        const loginResponse = await axiosInstance.post("login", {
+        const response = await axiosInstance.post("login", {
           email: this.email,
           password: this.password,
         });
-        const token = loginResponse.data.accessToken;
+        const token = response.data.accessToken;
         localStorage.setItem("token", token);
-        this.$store.dispatch("setUser", loginResponse.data.user);
+        this.$store.dispatch("setUser", response.data.user);
         console.log("accessToken", token);
         this.$router.push("/");
       } catch (error) {

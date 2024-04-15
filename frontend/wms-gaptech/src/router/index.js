@@ -7,7 +7,6 @@ import BarangKeluarView from "@/views/BarangKeluar/BarangKeluarView.vue";
 import StatusRakView from "@/views/StatusRakView.vue";
 import DetailBrgKeluar from "@/views/BarangKeluar/DetailBrgKeluar.vue";
 import TambahBrgKeluar from "@/views/BarangKeluar/TambahBrgKeluar.vue";
-import { getToken } from "@/utils/api";
 import Password from "@/components/Password.vue";
 import ResetPassword from "@/components/ResetPassword.vue";
 
@@ -85,7 +84,6 @@ router.beforeEach(async (to, from, next) => {
     }
 
     try {
-      await getToken();
       next();
     } catch (error) {
       console.error("Gagal memperbarui token:", error);
