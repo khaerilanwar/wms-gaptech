@@ -57,4 +57,4 @@ export default {
 };
 </script>
 ```
-Read the documentation to learn how to import another style of icons [here]([URL](https://www.npmjs.com/package/@heroicons/vue)) Also, you can view the icons [here](https://heroicons.com/)
+Read the documentation to learn how to import another style of icons [here](https://www.npmjs.com/package/@heroicons/vue) Also, you can view the icons [here](https://heroicons.com/)
