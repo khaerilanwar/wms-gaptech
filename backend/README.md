@@ -47,12 +47,52 @@ Maka server backend akan berjalan secara live di localhost:{port}. Dengan menggu
 Berikut adalah endpoint API yang bisa digunakan di server backend :
 
 1. ``POST`` ``/login`` untuk melakukan proses login pengguna
-2. ``POST`` ``/register`` untuk proses registrasi pengguna
+    ```json
+    {
+        "email": "nurulrahmanda@gmail.com",
+        "password": "123456"
+    }
+    ```
+2. ``POST`` ``/register`` untuk proses registrasi pengguna <br> Contoh request data :
+    ```json
+    {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "johndoe@gmail.com",
+        "password": "123456",
+        "confPassword": "123456"
+    }
+    ```
 3. ``DELETE`` ``/logout`` untuk proses logout pengguna yang sudah login
 4. ``GET`` ``/token`` untuk mendapatkan akses token
 5. ``GET`` ``/users`` untuk mendapatkan data semua pengguna `otorisasi`
 6. ``GET`` ``/user`` untuk mendapatkan data pengguna yang sedang login `otorisasi`
 7. ``GET`` ``/products`` untuk mendapatkan semua data produk `otorisasi`
+8. ``GET`` ``/product/{kodeProduk}`` untuk mendapatkan data produk berdasarkan kode produknya `otorisasi`
+9. ``POST`` `/product` untuk menambahkan data produk ke dalam database `otorisasi` <br> Contoh request data : 
+    ```json
+    {
+        "namaProduk": "Sepatu Aerox",
+        "harga": 359000,
+        "stok": 12,
+        "posisiRak": "L1-1-4-2"
+    }
+    ```
+10. ``PUT`` ``/product/{kodeProduk}`` untuk mengubah data produk `otorisasi` <br> Contoh request data :
+    ```json
+    {
+        "namaProduk": "Sepatu Yamaha",
+        "harga": 349000,
+        "stok": 12,
+        "posisiRak": "L1-2-4-2"
+    }
+    ```
+11. ``PATCH`` ``/product/{kodeProduk}`` untuk menambah stok jika ada barang masuk `otorisasi` <br> Contoh request data :
+    ```json
+    {
+        "stokBaru": 24
+    }
+    ```
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.
 
