@@ -52,20 +52,7 @@
 
     <div class="bg-white border p-4 mt-3 shadow-md rounded-md">
       <div class="flex items-center place-content-between mt-12">
-        <div class="ml-10">
-          <input
-            id="default-checkbox"
-            type="checkbox"
-            value=""
-            class="w-4 h-4 mt-2 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label
-            for="default-checkbox"
-            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >Select All Items</label
-          >
-        </div>
-        <form action="" class="mb-2">
+        <form action="" class="mb-4">
           <div class="flex items-center ml-10">
             <label
               for="search"
@@ -98,117 +85,57 @@
       <v-data-table
         v-model="selected"
         :headers="headers"
-        :items="desserts"
+        :items="products"
         item-value="name"
         items-per-page="5"
+        :loading="loading"
         return-object
         show-select
-      ></v-data-table>
-
+      >
+      </v-data-table>
       <pre>{{ selected }}</pre>
     </div>
   </div>
 </template>
 <script>
+import axiosInstance from "@/utils/api";
+
 export default {
   data() {
     return {
       selected: [],
       headers: [
         {
-          title: "Dessert (100g serving)",
+          title: "Nama Produk",
           align: "start",
-          key: "name",
+          key: "namaProduk",
+          sortable: false,
         },
-        { title: "Calories", align: "end", key: "calories" },
-        { title: "Fat (g)", align: "end", key: "fat" },
-        { title: "Carbs (g)", align: "end", key: "carbs" },
-        { title: "Protein (g)", align: "end", key: "protein" },
-        { title: "Iron (%)", align: "end", key: "iron" },
-      ],
-      desserts: [
+        { title: "Harga", align: "end", key: "harga" },
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: 1,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: 1,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: 7,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: 8,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: 16,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: 0,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: 2,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: 45,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: 22,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: 6,
+          title: "Tambahkan Barang",
+          align: "end",
+          key: "add",
+          sortable: false,
         },
       ],
+      products: [],
     };
+  },
+  mounted() {
+    this.fetchProducts();
+  },
+  methods: {
+    async fetchProducts() {
+      try {
+        const response = await axiosInstance.get(
+          "http://localhost:5000/products",
+        );
+        this.products = response.data;
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    },
   },
 };
 </script>
