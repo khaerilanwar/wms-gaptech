@@ -5,8 +5,8 @@
     >
       BARANG KELUAR
     </p>
-    <div class="flex items-center place-content-between mt-12">
-      <div class="flex justify-center ml-10">
+    <div class="flex items-center place-content-end mt-12">
+      <!-- <div class="flex justify-center ml-10">
         <label
           for="entries"
           class="mr-2 mt-3 text-sm font-medium leading-6 text-gray-900"
@@ -26,32 +26,16 @@
         <p class="ml-2 mt-3 text-sm font-medium leading-6 text-gray-900">
           Entries
         </p>
-      </div>
+      </div> -->
       <router-link to="/barang-keluar/tambah-barang">
-        <button
-          class="rounded-lg text-sm py-2 px-3 mr-8 bg-sky-900 text-white hover:bg-sky-950 flex items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1"
-            stroke="currentColor"
-            class="w-4 h-4 border rounded-sm mr-2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-
+        <ComponentButton intent="primary" :left-icon="PlusIcon">
           Tambah Data
-        </button>
+        </ComponentButton>
       </router-link>
     </div>
 
-    <div class="container mx-auto">
+    <TabelBarangKeluar class="p-4 mt-3 border rounded-lg"></TabelBarangKeluar>
+    <!-- <div class="container mx-auto">
       <table class="w-full table-auto border-2 border-slate-400 rounded mt-10">
         <thead>
           <tr class="border-2 border-slate-400">
@@ -331,8 +315,24 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
   </div>
 </template>
 
-<script></script>
+<script>
+import ComponentButton from "@/components/ComponentButton.vue";
+import { PlusIcon } from "@heroicons/vue/24/outline";
+import TabelBarangKeluar from "@/components/TabelBarangKeluar.vue";
+
+export default {
+  components: {
+    ComponentButton,
+    TabelBarangKeluar,
+  },
+  data() {
+    return {
+      PlusIcon: PlusIcon,
+    };
+  },
+};
+</script>
