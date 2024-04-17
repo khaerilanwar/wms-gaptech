@@ -11,10 +11,15 @@
     "lint:fix": "eslint \"src/**/*.{js,vue}\" --fix"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.1.3",
+    "@mdi/font": "^7.4.47",
     "axios": "^1.6.8",
+    "axios-jwt": "^4.0.2",
+    "class-variance-authority": "^0.7.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "vue3-toastify": "^0.2.1",
+    "vuetify": "^3.5.15",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

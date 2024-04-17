@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-<!-- eslint-disable vue/html-closing-bracket-newline -->
-<!-- eslint-disable vue/html-indent -->
-<!-- eslint-disable vue/html-self-closing -->
-<!-- eslint-disable vue/max-attributes-per-line -->
-=======
->>>>>>> 8454dfb4f382ef65e8de587938807b017936a326
 <template>
   <div class="p-3 h-full">
     <div class="bg-white border p-4 shadow-md rounded-md">

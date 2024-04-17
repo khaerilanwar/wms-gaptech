@@ -1,7 +1,7 @@
 <template>
   <section>
     <div
-      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 font-Montserrat"
     >
       <div class="flex items-center mb-3 text-2xl font-semibold text-black">
         <img
@@ -42,12 +42,7 @@
                 required
               />
             </div>
-            <button
-              type="submit"
-              class="w-full text-white bg-blue-primary hover:bg-blue-secondary font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              Kirim
-            </button>
+            <ComponentButton intent="primary_full_width">Kirim</ComponentButton>
           </form>
         </div>
       </div>
@@ -57,7 +52,11 @@
 
 <script>
 import axiosInstance from "@/utils/api";
+import ComponentButton from "./ComponentButton.vue";
 export default {
+  components: {
+    ComponentButton,
+  },
   data() {
     return {
       email: "",

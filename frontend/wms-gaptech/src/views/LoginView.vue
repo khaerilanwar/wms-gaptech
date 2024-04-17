@@ -1,7 +1,7 @@
 <template>
   <section>
     <div
-      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 font-Montserrat"
     >
       <div class="flex items-center mb-3 text-2xl font-semibold text-black">
         <img
@@ -66,12 +66,7 @@
                 >Lupa kata sandi?</router-link
               >
             </div>
-            <button
-              type="submit"
-              class="w-full text-white bg-blue-primary hover:bg-blue-secondary font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              Masuk
-            </button>
+            <ComponentButton intent="primary_full_width">Masuk</ComponentButton>
           </form>
         </div>
       </div>
@@ -83,27 +78,31 @@
 <script>
 import axiosInstance from "@/utils/api";
 import Notification from "../components/Notification.vue";
+import ComponentButton from "../components/ComponentButton.vue";
+import { HomeIcon } from "@heroicons/vue/24/outline";
 
 export default {
   components: {
     Notification,
+    ComponentButton,
   },
   data() {
     return {
       email: "",
       password: "",
+      HomeIcon: HomeIcon,
     };
   },
   methods: {
     async handleSubmit() {
       try {
-        const loginResponse = await axiosInstance.post("login", {
+        const response = await axiosInstance.post("login", {
           email: this.email,
           password: this.password,
         });
-        const token = loginResponse.data.accessToken;
+        const token = response.data.accessToken;
         localStorage.setItem("token", token);
-        this.$store.dispatch("setUser", loginResponse.data.user);
+        this.$store.dispatch("setUser", response.data.user);
         console.log("accessToken", token);
         this.$router.push("/");
       } catch (error) {

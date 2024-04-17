@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DashboardView from "../views/DashboardView.vue";
 import LoginView from "@/views/LoginView.vue";
-import BarangMasukView from "@/views/BarangMasukView.vue";
+import BarangMasukView from "@/views/BarangMasuk/BarangMasukView.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import BarangKeluarView from "@/views/BarangKeluar/BarangKeluarView.vue";
 import StatusRakView from "@/views/StatusRakView.vue";
 import DetailBrgKeluar from "@/views/BarangKeluar/DetailBrgKeluar.vue";
 import TambahBrgKeluar from "@/views/BarangKeluar/TambahBrgKeluar.vue";
-import { getToken } from "@/utils/api";
 import Password from "@/components/Password.vue";
 import ResetPassword from "@/components/ResetPassword.vue";
+import TambahBarangMasukView from "@/views/BarangMasuk/TambahBarangMasukView.vue";
 
 const routes = [
   {
@@ -49,6 +49,11 @@ const routes = [
         component: BarangMasukView,
       },
       {
+        path: "/barang-masuk/tambah-barang",
+        name: "tambah-barang-masuk",
+        component: TambahBarangMasukView,
+      },
+      {
         path: "/barang-keluar",
         name: "barang-keluar",
         component: BarangKeluarView,
@@ -83,9 +88,7 @@ router.beforeEach(async (to, from, next) => {
       next({ name: "login" });
       return;
     }
-
     try {
-      await getToken();
       next();
     } catch (error) {
       console.error("Gagal memperbarui token:", error);
