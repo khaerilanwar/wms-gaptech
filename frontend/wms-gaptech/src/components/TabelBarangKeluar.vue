@@ -9,7 +9,7 @@
     @update:options="loadItems"
   >
     <template #item="{ item, index }">
-      <tr>
+      <tr :class="diffRowColor(index)">
         <td>{{ index + 1 }}</td>
         <td>{{ item.id }}</td>
         <td>{{ item.tglKeluar }}</td>
@@ -37,63 +37,63 @@ import { PlusIcon } from "@heroicons/vue/24/outline";
 const barangKeluar = [
   {
     id: "TK-001",
-    tglKeluar: "01-01-2024",
+    tglKeluar: "2024-01-01",
   },
   {
     id: "TK-002",
-    tglKeluar: "05-03-2024",
+    tglKeluar: "2024-03-05",
   },
   {
     id: "TK-003",
-    tglKeluar: "17-12-2024",
+    tglKeluar: "2024-12-17",
   },
   {
     id: "TK-004",
-    tglKeluar: "15-07-2024",
+    tglKeluar: "2024-07-15",
   },
   {
     id: "TK-005",
-    tglKeluar: "22-02-2024",
+    tglKeluar: "2024-02-22",
   },
   {
     id: "TK-006",
-    tglKeluar: "27-10-2024",
+    tglKeluar: "2024-10-27",
   },
   {
     id: "TK-007",
-    tglKeluar: "19-05-2024",
+    tglKeluar: "2024-05-19",
   },
   {
     id: "TK-008",
-    tglKeluar: "09-10-2024",
+    tglKeluar: "2024-10-09",
   },
   {
     id: "TK-009",
-    tglKeluar: "31-07-2024",
+    tglKeluar: "2024-07-31",
   },
   {
     id: "TK-010",
-    tglKeluar: "19-04-2024",
+    tglKeluar: "2024-04-19",
   },
   {
     id: "TK-011",
-    tglKeluar: "29-02-2024",
+    tglKeluar: "2024-02-29",
   },
   {
     id: "TK-012",
-    tglKeluar: "01-09-2024",
+    tglKeluar: "2024-09-01",
   },
   {
     id: "TK-013",
-    tglKeluar: "10-11-2024",
+    tglKeluar: "2024-11-10",
   },
   {
     id: "TK-014",
-    tglKeluar: "18-06-2024",
+    tglKeluar: "2024-06-18",
   },
   {
     id: "TK-015",
-    tglKeluar: "14-02-2024",
+    tglKeluar: "2024-02-14",
   },
 ];
 
@@ -110,9 +110,9 @@ const FakeAPI = {
           const sortOrder = sortBy[0].order;
           if (sortKey === "tglKeluar") {
             items.sort((a, b) => {
-              const aValue = a[sortKey];
-              const bValue = b[sortKey];
-              return sortOrder === "desc" ? bValue - aValue : aValue - bValue;
+              const dateA = new Date(a[sortKey]).getTime();
+              const dateB = new Date(b[sortKey]).getTime();
+              return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
             });
           }
         }
@@ -131,21 +131,19 @@ export default {
   },
   data: () => ({
     PlusIcon: PlusIcon,
-
     itemsPerPage: 5,
     headers: [
       {
         title: "No",
         align: "start",
       },
-      { title: "ID Transaksi", key: "id", align: "start" },
+      { title: "ID Transaksi", key: "id", align: "start", sortable: false },
       {
         title: "Tanggal Keluar",
         key: "tglKeluar",
         align: "start",
-        sortable: true,
       },
-      { title: "Action", key: "action", align: "start" },
+      { title: "Action", key: "action", align: "start", sortable: false },
     ],
     serverItems: [],
     loading: true,
@@ -159,6 +157,9 @@ export default {
         this.totalItems = total;
         this.loading = false;
       });
+    },
+    diffRowColor(index) {
+      return (index + 1) % 2 !== 0 ? "bg-slate-100" : "";
     },
   },
 };
