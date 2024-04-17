@@ -36,7 +36,7 @@ const routes = [
     path: "/",
     name: "sidebar",
     component: Sidebar,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
     children: [
       {
         path: "/",
