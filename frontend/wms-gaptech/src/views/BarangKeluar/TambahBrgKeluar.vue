@@ -12,9 +12,8 @@
           <label
             for="recipientName"
             class="block text-gray-700 text-sm font-medium mb-2"
+            >Nama Pemesan</label
           >
-            Nama Pemesan
-          </label>
           <input
             id="recipientName"
             type="text"
@@ -28,9 +27,8 @@
           <label
             for="recipientAddress"
             class="block text-gray-700 text-sm font-medium mb-2"
+            >Alamat Pengiriman</label
           >
-            Alamat Pengiriman
-          </label>
           <textarea
             id="recipientAddress"
             class="shadow-sm focus:border-blue-500 w-full rounded-md border border-slate-400 p-2"
@@ -39,6 +37,7 @@
             required
           ></textarea>
         </div>
+
         <div class="mt-4">
           <button
             type="submit"
@@ -50,38 +49,8 @@
       </form>
     </div>
 
+    <!-- Tabel untuk menampilkan data produk -->
     <div class="bg-white border p-4 mt-3 shadow-md rounded-md">
-      <div class="flex items-center place-content-between mt-12">
-        <form action="" class="mb-4">
-          <div class="flex items-center ml-10">
-            <label
-              for="search"
-              class="mr-2 mt-3 text-sm font-medium leading-6 text-gray-900 mb-2"
-              >Search</label
-            >
-            <div class="flex items-center border-2 rounded h-8 mr-8 ml-2">
-              <input type="text" class="flex-grow" name="search" />
-              <button>
-                <svg
-                  class="w-4 h-4 text-gray-500 dark:text-gray-400 m-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
       <v-data-table
         v-model="selected"
         :headers="headers"
@@ -91,16 +60,40 @@
         :loading="loading"
         return-object
         show-select
+        color="primary"
+        dense
       >
+        <template #item="{ item, index }">
+          <tr :class="diffRowColor(index)">
+            <td class="pt-4 pl-2">
+              <v-checkbox
+                v-model="selected"
+                :value="item"
+                color="primary"
+                dense
+              ></v-checkbox>
+            </td>
+            <td>{{ item.namaProduk }}</td>
+            <td>{{ item.harga }}</td>
+            <td class="flex">
+              <QuantityBtn></QuantityBtn>
+            </td>
+          </tr>
+        </template>
       </v-data-table>
       <pre>{{ selected }}</pre>
     </div>
   </div>
 </template>
+
 <script>
 import axiosInstance from "@/utils/api";
+import QuantityBtn from "@/components/QuantityBtn.vue";
 
 export default {
+  components: {
+    QuantityBtn,
+  },
   data() {
     return {
       selected: [],
@@ -111,15 +104,16 @@ export default {
           key: "namaProduk",
           sortable: false,
         },
-        { title: "Harga", align: "end", key: "harga" },
+        { title: "Harga", align: "start", key: "harga" },
         {
-          title: "Tambahkan Barang",
-          align: "end",
+          title: "Kuantitas",
+          align: "start",
           key: "add",
           sortable: false,
         },
       ],
       products: [],
+      loading: false,
     };
   },
   mounted() {
@@ -128,14 +122,27 @@ export default {
   methods: {
     async fetchProducts() {
       try {
+        // Menampilkan loading spinner
+        this.loading = true;
         const response = await axiosInstance.get(
           "http://localhost:5000/products",
         );
+        // Menghentikan loading spinner
+        this.loading = false;
         this.products = response.data;
       } catch (error) {
         console.error("Error fetching products:", error);
+        // Menghentikan loading spinner dan menampilkan pesan kesalahan
+        this.loading = false;
       }
+    },
+    diffRowColor(index) {
+      return index % 2 === 0 ? "bg-gray-100" : "";
     },
   },
 };
 </script>
+
+<style>
+/* Styles khusus untuk komponen ini */
+</style>
