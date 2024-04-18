@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker/locale/id_ID'
 import Database from './config/Database.js'
 import Users from './models/UserModel.js'
 import Products from './models/ProductModel.js'
+import InProducts from './models/InProductModel.js'
 import bcrypt from 'bcrypt'
 
 // Credential main admin
@@ -67,3 +68,19 @@ function productSeeder() {
 
     console.log('Product seeder has been done!')
 }
+
+async function inProductSeeder() {
+    const products = await Products.find()
+    for (let i = 0; i < 300; i++) {
+        const randProduct = faker.helpers.arrayElement(products)
+        InProducts.create({
+            kodeProduk: randProduct.kodeProduk,
+            namaProduk: randProduct.namaProduk,
+            stok: randProduct.stok,
+            dateInProduct: faker.date.between({ from: new Date("2024-01-01"), to: new Date() })
+        })
+    }
+}
+
+// uncomment code below to run in product seeder
+// inProductSeeder().then(() => console.log('In product seeder has been done!'))
