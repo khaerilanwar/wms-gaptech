@@ -17,7 +17,7 @@
           <input
             id="recipientName"
             type="text"
-            class="shadow-sm focus:border-blue-500 w-full rounded-md border border-slate-400 p-2"
+            class="shadow-sm focus:border-blue-700 w-full rounded-md border border-blue-500 p-2"
             placeholder="Masukkan Nama Pemesan"
             required
           />
@@ -31,7 +31,7 @@
           >
           <textarea
             id="recipientAddress"
-            class="shadow-sm focus:border-blue-500 w-full rounded-md border border-slate-400 p-2"
+            class="shadow-sm focus:border-blue-700 w-full rounded-md border border-blue-500 p-2"
             rows="5"
             placeholder="Masukkan Alamat Pengiriman"
             required
@@ -50,38 +50,50 @@
     </div>
 
     <!-- Tabel untuk menampilkan data produk -->
-    <div class="bg-white border p-4 mt-3 shadow-md rounded-md">
-      <v-data-table
-        v-model="selected"
-        :headers="headers"
-        :items="products"
-        item-value="name"
-        items-per-page="5"
-        :loading="loading"
-        return-object
-        show-select
-        color="primary"
-        dense
-      >
-        <template #item="{ item, index }">
-          <tr :class="diffRowColor(index)">
-            <td class="pt-4 pl-2">
-              <v-checkbox
-                v-model="selected"
-                :value="item"
-                color="primary"
-                dense
-              ></v-checkbox>
-            </td>
-            <td>{{ item.namaProduk }}</td>
-            <td>{{ item.harga }}</td>
-            <td>
-              <QuantityBtn @quantity-changed="handleQuantity"></QuantityBtn>
-            </td>
-          </tr>
+    <div class="mt-3">
+      <v-card class="pb-4 pt-5">
+        <template #text>
+          <v-text-field
+            v-model="search"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            hide-details
+            single-line
+          ></v-text-field>
         </template>
-      </v-data-table>
-      <pre>{{ selected }}</pre>
+        <v-data-table
+          v-model="selected"
+          :headers="headers"
+          :items="products"
+          item-value="name"
+          items-per-page="5"
+          :loading="loading"
+          :search="search"
+          return-object
+          show-select
+          color="primary"
+          dense
+        >
+          <template #item="{ item, index }">
+            <tr :class="diffRowColor(index)">
+              <td class="pt-4 pl-2">
+                <v-checkbox
+                  v-model="selected"
+                  :value="item"
+                  color="primary"
+                  dense
+                ></v-checkbox>
+              </td>
+              <td>{{ item.namaProduk }}</td>
+              <td>{{ item.harga }}</td>
+              <td>
+                <QuantityBtn @quantity-changed="handleQuantity"></QuantityBtn>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-card>
     </div>
   </div>
 </template>
@@ -96,6 +108,7 @@ export default {
   },
   data() {
     return {
+      search: "",
       selected: [],
       headers: [
         {
