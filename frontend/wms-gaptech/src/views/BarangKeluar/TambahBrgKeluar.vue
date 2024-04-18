@@ -75,8 +75,8 @@
             </td>
             <td>{{ item.namaProduk }}</td>
             <td>{{ item.harga }}</td>
-            <td class="flex">
-              <QuantityBtn></QuantityBtn>
+            <td>
+              <QuantityBtn @quantity-changed="handleQuantity"></QuantityBtn>
             </td>
           </tr>
         </template>
@@ -139,10 +139,9 @@ export default {
     diffRowColor(index) {
       return index % 2 === 0 ? "bg-gray-100" : "";
     },
+    handleQuantity(quantity) {
+      this.quantity = quantity;
+    },
   },
 };
 </script>
-
-<style>
-/* Styles khusus untuk komponen ini */
-</style>

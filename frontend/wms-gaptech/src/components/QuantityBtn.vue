@@ -1,19 +1,15 @@
 <template>
   <form class="max-w-xs mx-auto">
-    <label
-      for="counter-input"
-      class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-      >Choose quantity:</label
-    >
     <div class="relative flex items-center">
       <button
         id="decrement-button"
         type="button"
         data-input-counter-decrement="counter-input"
-        class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+        class="flex-shrink-0 bg-gray-100 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 focus:ring-2 focus:outline-none"
+        @click="decrement"
       >
         <svg
-          class="w-2.5 h-2.5 text-gray-900 dark:text-white"
+          class="w-2.5 h-2.5 text-gray-900"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -32,16 +28,17 @@
         id="counter-input"
         type="text"
         data-input-counter
-        class="flex-shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
+        class="flex-shrink-0 text-gray-900 border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
         placeholder=""
-        value="12"
+        :value="quantity"
         required
       />
       <button
         id="increment-button"
         type="button"
         data-input-counter-increment="counter-input"
-        class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+        class="flex-shrink-0 bg-gray-100 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 focus:ring-2 focus:outline-none"
+        @click="increment"
       >
         <svg
           class="w-2.5 h-2.5 text-gray-900 dark:text-white"
@@ -62,3 +59,28 @@
     </div>
   </form>
 </template>
+
+<script>
+export default {
+  emits: ["quantity-changed"],
+  data() {
+    return {
+      quantity: 0,
+    };
+  },
+  methods: {
+    increment: function () {
+      if (this.quantity >= 0) {
+        this.quantity++;
+        this.$emit("quantity-changed", this.quantity);
+      }
+    },
+    decrement: function () {
+      if (this.quantity > 0) {
+        this.quantity--;
+        this.$emit("quantity-changed", this.quantity);
+      }
+    },
+  },
+};
+</script>
