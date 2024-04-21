@@ -78,7 +78,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
         "posisiRak": "L1-1-4-2"
     }
     ```
-10. ``PUT`` ``/product/{kodeProduk}`` untuk mengubah data produk `otorisasi` <br> Contoh request data :
+10. ``PUT`` ``/product/{kodeProduk}`` untuk mengubah data produk <br> Contoh request data :
     ```json
     {
         "namaProduk": "Sepatu Yamaha",
@@ -87,12 +87,22 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
         "posisiRak": "L1-2-4-2"
     }
     ```
-11. ``PATCH`` ``/product/{kodeProduk}`` untuk menambah stok jika ada barang masuk `otorisasi` <br> Contoh request data :
+11. ``PATCH`` ``/product/{kodeProduk}`` untuk menambah stok jika ada barang masuk <br> Contoh request data :
     ```json
     {
         "stokBaru": 24
     }
     ```
+12. ``GET`` ``/inproducts`` untuk mendapatkan semua data barang masuk atau history `otorisasi`
+13. ``GET`` ``/inproducts/last30days`` untuk mendapatkan history barang masuk 30 hari terakhir
+14. ``GET`` ``/inproducts/data-by-period`` untuk mendapatkan history barang masuk berdasarkan periode waktu awal dan akhir tertentu. Data dikirimkan dengan metode `GET` <br> Contoh request data :<br>`http://localhost:5000/inproducts/data-by-period?start=2024-03-09&end=2024-03-25`
+15. ``GET`` ``/inproducts/data-by-month`` untuk mendapatkan history barang masuk perbulan. Data request dikirim dengan menggunakan method `GET` <br>Contoh request data :<br> `http://localhost:5000/inproducts/data-by-month?month=03&year=2024`
+16. ``GET`` ``/outproducts`` untuk mendapatkan semua data barang keluar atau history `otorisasi`
+17. ``GET`` ``/outproducts/last30days`` untuk mendapatkan history barang keluar 30 hari terakhir
+18. ``GET`` ``/outproducts/data-by-period`` untuk mendapatkan history barang keluar berdasarkan periode waktu awal dan akhir tertentu. Data dikirimkan dengan metode `GET` <br> Contoh request data :<br>`http://localhost:5000/outproducts/data-by-period?start=2024-03-09&end=2024-03-25`
+19. ``GET`` ``/outproducts/data-by-month`` untuk mendapatkan history barang keluar perbulan. Data request dikirim dengan menggunakan method `GET` <br>Contoh request data :<br> `http://localhost:5000/inproducts/data-by-month?month=03&year=2024`
+20. ``GET`` ``/transactions`` untuk mendapatkan semua data transaksi atau history transaksi barang keluar
+
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.
 

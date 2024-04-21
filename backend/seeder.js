@@ -3,7 +3,9 @@ import Database from './config/Database.js'
 import Users from './models/UserModel.js'
 import Products from './models/ProductModel.js'
 import InProducts from './models/InProductModel.js'
+import OutProducts from './models/OutProductModel.js'
 import bcrypt from 'bcrypt'
+import Transaction from './models/TransactionModel.js'
 
 // Credential main admin
 // name     : Khaeril Anwar
@@ -71,12 +73,12 @@ function productSeeder() {
 
 async function inProductSeeder() {
     const products = await Products.find()
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 200; i++) {
         const randProduct = faker.helpers.arrayElement(products)
         InProducts.create({
             kodeProduk: randProduct.kodeProduk,
             namaProduk: randProduct.namaProduk,
-            stok: randProduct.stok,
+            stokMasuk: faker.number.int({ min: 2, max: 32 }),
             dateInProduct: faker.date.between({ from: new Date("2024-01-01"), to: new Date() })
         })
     }
@@ -84,3 +86,56 @@ async function inProductSeeder() {
 
 // uncomment code below to run in product seeder
 // inProductSeeder().then(() => console.log('In product seeder has been done!'))
+
+async function outProductSeeder() {
+    const products = await Products.find()
+    for (let i = 0; i < 100; i++) {
+        const randProduct = faker.helpers.arrayElement(products)
+        OutProducts.create({
+            kodeProduk: randProduct.kodeProduk,
+            namaProduk: randProduct.namaProduk,
+            stokKeluar: faker.number.int({ min: 5, max: 23 }),
+            dateOutProduct: faker.date.between({ from: new Date("2024-02-01"), to: new Date() })
+        })
+    }
+}
+
+// uncomment code below to run in product seeder
+// outProductSeeder().then(() => console.log('Out product seeder has been done!'))
+
+async function transactionSeeder() {
+    const products = await Products.find({}, { kodeProduk: 1, namaProduk: 1, harga: 1 })
+
+    for (let i = 0; i < 15; i++) {
+        const outProducts = []
+        const totalHarga = []
+        for (let j = 0; j < faker.number.int({ min: 1, max: 12 }); j++) {
+            let outProduct = faker.helpers.arrayElement(products)
+            let kuantitas = faker.number.int({ min: 1, max: 35 })
+            outProduct = {
+                kodeProduk: outProduct.kodeProduk,
+                namaProduk: outProduct.namaProduk,
+                kuantitas,
+                hargaSatuan: outProduct.harga,
+                subTotal: outProduct.harga * kuantitas
+            }
+            totalHarga.push(outProduct.subTotal)
+            outProducts.push(outProduct)
+        }
+        const current = new Date()
+        const transaction = {
+            idTransaksi: `${current.getFullYear()}${String(current.getMonth() + 1).padStart(2, '0')}${String(current.getDate()).padStart(2, '0')}${faker.string.numeric({ length: 4 })}`,
+            namaPemesan: faker.person.fullName(),
+            alamatPengiriman: `${faker.location.streetAddress()} ${faker.location.city()} ${faker.location.zipCode()}`,
+            barangKeluar: outProducts,
+            totalHarga: totalHarga.reduce((accumulator, currentValue) => accumulator + currentValue, 0),
+            tanggalTransaksi: faker.date.between({ from: new Date("2024-02-01"), to: new Date() })
+
+        }
+
+        Transaction.create(transaction)
+    }
+}
+
+// uncomment code below to run in transaction seeder
+// transactionSeeder().then(() => console.log('Transaction seeder has been done!'))
