@@ -69,4 +69,4 @@ function productSeeder() {
   console.log("Product seeder has been done!");
 }
 
-console.log(userSeeder());
+console.log(productSeeder());

@@ -1,9 +1,10 @@
 import express from 'express'
-import { Login, Logout, Register, getUser, getUsers } from '../controllers/Users.js'
+import { Login, Logout, Register, getUser, getUsers,resetPassword, verifyResetToken, updatePassword } from '../controllers/Users.js'
 import { verifyToken } from '../middleware/VerifyToken.js'
 import { refreshToken } from '../controllers/RefreshToken.js'
 import { addProduct, addStock, getProduct, getProducts, updateProduct } from '../controllers/Products.js'
 import { getInProducts } from '../controllers/InProducts.js'
+import { authToken } from "../middleware/authToken.js";
 
 const router = express.Router()
 
@@ -14,6 +15,11 @@ router.post('/register', Register)
 router.post('/login', Login)
 router.get('/token', refreshToken)
 router.delete('/logout', Logout)
+
+// Router reset password
+router.post("/reset-password", resetPassword);
+router.get("/verify-reset-token/:token", verifyResetToken);
+router.put("/update-password", authToken, updatePassword);
 
 // Router products
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
