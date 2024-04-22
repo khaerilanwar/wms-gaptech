@@ -37,15 +37,6 @@
             required
           ></textarea>
         </div>
-
-        <div class="mt-4">
-          <button
-            type="submit"
-            class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 hover:bg-blue-600"
-          >
-            Submit
-          </button>
-        </div>
       </form>
     </div>
 
@@ -93,6 +84,15 @@
             </tr>
           </template>
         </v-data-table>
+        <p class="p-5 m-5">Total Harga :</p>
+        <div class="flex justify-center items-center p-5 m-5">
+          <button
+            type="submit"
+            class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 hover:bg-blue-600"
+          >
+            Submit
+          </button>
+        </div>
       </v-card>
     </div>
   </div>
@@ -137,9 +137,7 @@ export default {
       try {
         // Menampilkan loading spinner
         this.loading = true;
-        const response = await axiosInstance.get(
-          "http://localhost:5000/products",
-        );
+        const response = await axiosInstance.get("products");
         // Menghentikan loading spinner
         this.loading = false;
         this.products = response.data;
