@@ -48,7 +48,7 @@ router.get('/outproducts/data-by-month', verifyToken, outProductByMonth)
 router.get('/transactions', verifyToken, getAllTransactions)
 
 // Router Debug Development
-//router.get('/dev/sayang', develop)
+// router.get('/dev/sayang', develop)
 
 router.use((req, res) => {
     res.status(404)
