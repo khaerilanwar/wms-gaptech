@@ -1,10 +1,13 @@
 import express from 'express'
 import { Login, Logout, Register, getUser, getUsers,resetPassword, verifyResetToken, updatePassword } from '../controllers/Users.js'
 import { verifyToken } from '../middleware/VerifyToken.js'
+import { authToken } from '../middleware/authToken.js'
 import { refreshToken } from '../controllers/RefreshToken.js'
 import { addProduct, addStock, getProduct, getProducts, updateProduct } from '../controllers/Products.js'
-import { getInProducts } from '../controllers/InProducts.js'
-import { authToken } from "../middleware/authToken.js";
+import { getInProducts, inProductByMonth, inProductByPeriod, inProductLast30Days } from '../controllers/InProducts.js'
+//import { develop } from '../controllers/Development.js'
+import { getOutProducts, outProductByMonth, outProductByPeriod, outProductLast30Days } from '../controllers/OutProducts.js'
+import { getAllTransactions } from '../controllers/Transaction.js'
 
 const router = express.Router()
 
@@ -23,14 +26,29 @@ router.put("/update-password", authToken, updatePassword);
 
 // Router products
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
-router.get('/products', getProducts)
-router.get('/product/:kodeProduk(\\d+)', getProduct) // kodeProduk hanya menerima numeric
-router.post('/product', addProduct)
-router.put('/product/:kodeProduk(\\d+)', updateProduct)
-router.patch('/product/:kodeProduk(\\d+)', addStock)
+router.get('/products', verifyToken, getProducts)
+router.get('/product/:kodeProduk(\\d+)', verifyToken, getProduct) // kodeProduk hanya menerima numeric
+router.post('/product', verifyToken, addProduct)
+router.put('/product/:kodeProduk(\\d+)', verifyToken, updateProduct)
+router.patch('/product/:kodeProduk(\\d+)', verifyToken, addStock)
 
 // Router in products (history)
-router.get('/inproducts', getInProducts)
+router.get('/inproducts', verifyToken, getInProducts)
+router.get('/inproducts/last30days', verifyToken, inProductLast30Days)
+router.get('/inproducts/data-by-period', verifyToken, inProductByPeriod)
+router.get('/inproducts/data-by-month', verifyToken, inProductByMonth)
+
+// Router out products (history)
+router.get('/outproducts', verifyToken, getOutProducts)
+router.get('/outproducts/last30days', verifyToken, outProductLast30Days)
+router.get('/outproducts/data-by-period', verifyToken, outProductByPeriod)
+router.get('/outproducts/data-by-month', verifyToken, outProductByMonth)
+
+// Router transaction product
+router.get('/transactions', verifyToken, getAllTransactions)
+
+// Router Debug Development
+//router.get('/dev/sayang', develop)
 
 router.use((req, res) => {
     res.status(404)

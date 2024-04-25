@@ -5,7 +5,7 @@ const inProductSchema = new Schema(
     {
         kodeProduk: { type: Number, unique: false, required: true },
         namaProduk: { type: String, required: true },
-        stok: { type: Number, required: true },
+        stokMasuk: { type: Number, required: true },
         dateInProduct: { type: Date, default: Date.now() }
     },
     { versionKey: false }
