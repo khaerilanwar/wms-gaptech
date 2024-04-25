@@ -13,11 +13,11 @@ import Transaction from './models/TransactionModel.js'
 // email    : 12210952@bsi.ac.id
 // password : 12345
 
-function userSeeder() {
+async function userSeeder() {
     // iterasi data seeder user
     let jumlahUser = 5;
     for (let i = 0; i < jumlahUser; i++) {
-        Users.create({
+        await Users.create({
             name: faker.person.fullName(),
             username: faker.internet.userName().toLowerCase(),
             email: faker.internet
@@ -28,17 +28,17 @@ function userSeeder() {
     }
 
     // nambah user yang akan digunakan untuk proses pengembangan
-    Users.create({
-        name: "Khaeril Anwar",
-        username: "admin",
-        email: "12210952@bsi.ac.id",
-        password: "12345",
-    });
+    // Users.create({
+    //     name: "Khaeril Anwar",
+    //     username: "admin",
+    //     email: "12210952@bsi.ac.id",
+    //     password: "12345",
+    // });
 
     console.log("User seeder has been done!");
 }
 
-function productSeeder() {
+async function productSeeder() {
     const rakArray = []; // total posisi rak ada 48
     // generate lokasi rak
     // contoh posisi rak L1-2-3-4
@@ -59,7 +59,7 @@ function productSeeder() {
     // iterasi data produk
     let jumlahProduk = 100;
     for (let x = 0; x < jumlahProduk; x++) {
-        Products.create({
+        await Products.create({
             kodeProduk: faker.string.numeric(13),
             namaProduk: faker.commerce.productName(),
             harga:
@@ -76,7 +76,7 @@ async function inProductSeeder() {
     const products = await Products.find()
     for (let i = 0; i < 200; i++) {
         const randProduct = faker.helpers.arrayElement(products)
-        InProducts.create({
+        await InProducts.create({
             kodeProduk: randProduct.kodeProduk,
             namaProduk: randProduct.namaProduk,
             stokMasuk: faker.number.int({ min: 2, max: 32 }),
@@ -92,7 +92,7 @@ async function outProductSeeder() {
     const products = await Products.find()
     for (let i = 0; i < 100; i++) {
         const randProduct = faker.helpers.arrayElement(products)
-        OutProducts.create({
+        await OutProducts.create({
             kodeProduk: randProduct.kodeProduk,
             namaProduk: randProduct.namaProduk,
             stokKeluar: faker.number.int({ min: 5, max: 23 }),
@@ -134,7 +134,7 @@ async function transactionSeeder() {
 
         }
 
-        Transaction.create(transaction)
+        await Transaction.create(transaction)
     }
 }
 

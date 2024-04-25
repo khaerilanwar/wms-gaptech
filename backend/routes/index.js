@@ -6,7 +6,7 @@ import { addProduct, addStock, getProduct, getProducts, updateProduct } from '..
 import { getInProducts, inProductByMonth, inProductByPeriod, inProductLast30Days } from '../controllers/InProducts.js'
 import { develop } from '../controllers/Development.js'
 import { getOutProducts, outProductByMonth, outProductByPeriod, outProductLast30Days } from '../controllers/OutProducts.js'
-import { getAllTransactions } from '../controllers/Transaction.js'
+import { getAllTransactions, saveTransaction } from '../controllers/Transaction.js'
 
 const router = express.Router()
 
@@ -40,6 +40,7 @@ router.get('/outproducts/data-by-month', verifyToken, outProductByMonth)
 
 // Router transaction product
 router.get('/transactions', verifyToken, getAllTransactions)
+router.post('/transactions', verifyToken, saveTransaction)
 
 // Router Debug Development
 // router.get('/dev/sayang', develop)
