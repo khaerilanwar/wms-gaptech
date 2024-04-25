@@ -33,7 +33,15 @@ const props = defineProps({
     type: String,
     default: "primary",
     validator: (val) =>
-      ["primary", "primary_full_width", "info", "delete"].includes(val),
+      [
+        "primary",
+        "primary_full_width",
+        "info",
+        "delete",
+        "edit",
+        "add",
+        "secondary",
+      ].includes(val),
   },
 });
 
@@ -45,6 +53,8 @@ const buttonClass = computed(() => {
           "inline-flex items-center bg-blue-primary hover:bg-blue-secondary min-h-[32px] px-3 py-0.5 gap-1",
         primary_full_width:
           " w-full items-center text-center bg-blue-primary hover:bg-blue-secondary min-h-[32px] px-3 py-0.5",
+        danger:
+          "inline-flex items-center bg-red-primary hover:bg-red-secondary min-h-[32px] px-3 py-0.5 gap-1",
         info: "py-1 px-1 mr-1 bg-grey-primary hover:bg-grey-secondary",
         delete: "py-1 px-1 mr-1 bg-red-primary hover:bg-red-secondary",
         edit: "py-1 px-1 mr-1 bg-yellow-primary hover:bg-yellow-secondary",

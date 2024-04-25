@@ -10,6 +10,8 @@ import TambahBrgKeluar from "@/views/BarangKeluar/TambahBrgKeluar.vue";
 import Password from "@/components/Password.vue";
 import ResetPassword from "@/components/ResetPassword.vue";
 import TambahBarangMasukView from "@/views/BarangMasuk/TambahBarangMasukView.vue";
+import RiwayatBarangMasukView from "@/views/Riwayat/RiwayatBarangMasukView.vue";
+import RiwayatBarangKeluarView from "@/views/Riwayat/RiwayatBarangKeluarView.vue";
 
 const routes = [
   {
@@ -72,6 +74,16 @@ const routes = [
         path: "/barang-keluar/tambah-barang",
         name: "tambah-barang-keluar",
         component: TambahBrgKeluar,
+      },
+      {
+        path: "/riwayat-barang-masuk",
+        name: "riwayat-barang-masuk",
+        component: RiwayatBarangMasukView,
+      },
+      {
+        path: "/riwayat-barang-keluar",
+        name: "riwayat-barang-keluar",
+        component: RiwayatBarangKeluarView,
       },
     ],
   },

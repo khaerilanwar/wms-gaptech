@@ -14,13 +14,6 @@
           @input="searchItems"
         ></v-text-field>
       </div>
-      <div>
-        <router-link to="/barang-masuk/tambah-barang">
-          <ComponentButton intent="primary" :left-icon="PlusIcon">
-            Tambah Data
-          </ComponentButton>
-        </router-link>
-      </div>
     </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
@@ -40,19 +33,9 @@
           <td>{{ item.nama }}</td>
           <td>{{ item.tanggalMasuk }}</td>
           <td>
-            <v-chip :color="getColor(item.stock)">
-              {{ item.stock }}
-            </v-chip>
+            {{ item.total }}
           </td>
           <td>{{ item.posisiRak }}</td>
-          <td class="flex">
-            <button @click="addProduct(item)">
-              <ComponentButton intent="add"></ComponentButton>
-            </button>
-            <button @click="deleteItem(item)">
-              <ComponentButton intent="delete"></ComponentButton>
-            </button>
-          </td>
         </tr>
       </template>
     </v-data-table-server>
@@ -60,112 +43,112 @@
 </template>
 
 <script>
-import ComponentButton from "./ComponentButton.vue";
+// import ComponentButton from "../../components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 const barangMasuk = [
   {
     kodeProduk: "bg-0001",
     nama: "Kertas Putih",
     tanggalMasuk: "2023-04-07",
-    stock: 51,
+    total: 51,
     posisiRak: "A2",
   },
   {
     kodeProduk: "bg-0002",
     nama: "Kertas Warna",
     tanggalMasuk: "2023-04-02",
-    stock: 114,
+    total: 114,
     posisiRak: "B3",
   },
   {
     kodeProduk: "bg-0003",
     nama: "Kertas HVS",
     tanggalMasuk: "2023-04-11",
-    stock: 30,
+    total: 30,
     posisiRak: "C1",
   },
   {
     kodeProduk: "bg-0004",
     nama: "Kertas Karton",
     tanggalMasuk: "2023-04-12",
-    stock: 18,
+    total: 18,
     posisiRak: "A3",
   },
   {
     kodeProduk: "bg-0005",
     nama: "Kertas Laminasi",
     tanggalMasuk: "2023-04-08",
-    stock: 22,
+    total: 22,
     posisiRak: "B1",
   },
   {
     kodeProduk: "bg-0006",
     nama: "Kertas Foto",
     tanggalMasuk: "2023-04-06",
-    stock: 10,
+    total: 10,
     posisiRak: "C3",
   },
   {
     kodeProduk: "bg-0007",
     nama: "Kertas Sampul",
     tanggalMasuk: "2023-04-10",
-    stock: 28,
+    total: 28,
     posisiRak: "A1",
   },
   {
     kodeProduk: "bg-0008",
     nama: "Kertas Emboss",
     tanggalMasuk: "2023-04-05",
-    stock: 17,
+    total: 17,
     posisiRak: "B2",
   },
   {
     kodeProduk: "bg-0009",
     nama: "Kertas Kado",
     tanggalMasuk: "2023-04-13",
-    stock: 25,
+    total: 25,
     posisiRak: "C2",
   },
   {
     kodeProduk: "bg-0010",
     nama: "Kertas Stiker",
     tanggalMasuk: "2023-04-09",
-    stock: 20,
+    total: 20,
     posisiRak: "A2",
   },
   {
     kodeProduk: "bg-0011",
     nama: "Kertas Karbon",
     tanggalMasuk: "2023-04-15",
-    stock: 14,
+    total: 14,
     posisiRak: "B3",
   },
   {
     kodeProduk: "bg-0012",
     nama: "Kertas Kalkir",
     tanggalMasuk: "2023-04-04",
-    stock: 16,
+    total: 16,
     posisiRak: "C1",
   },
   {
     kodeProduk: "bg-0013",
     nama: "Kertas Origami",
     tanggalMasuk: "2023-04-01",
-    stock: 32,
+    total: 32,
     posisiRak: "A3",
   },
   {
     kodeProduk: "bg-0014",
     nama: "Kertas Duplex",
     tanggalMasuk: "2023-04-14",
-    stock: 19,
+    total: 19,
     posisiRak: "B1",
   },
   {
     kodeProduk: "bg-0015",
     nama: "Kertas Jadi",
     tanggalMasuk: "2023-04-03",
-    stock: 21,
+    total: 21,
     posisiRak: "C2",
   },
 ];
@@ -232,7 +215,7 @@ const FakeAPI = {
 
 export default {
   components: {
-    ComponentButton,
+    // ComponentButton,
   },
   data: () => ({
     PlusIcon: PlusIcon,
@@ -263,9 +246,13 @@ export default {
         align: "start",
         width: "25%",
       },
-      { title: "Stock (dus)", key: "stock", align: "start", width: "15%" },
+      {
+        title: "Jumlah Masuk",
+        key: "total",
+        align: "start",
+        width: "25%",
+      },
       { title: "Rak", key: "posisiRak", align: "start" },
-      { title: "Edit", key: "actions", align: "start", sortable: false },
     ],
     search: {
       nama: "",
@@ -296,9 +283,9 @@ export default {
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
     },
-    getColor(stock) {
-      if (stock > 100) return "green";
-      else if (stock > 50) return "orange";
+    getColor(total) {
+      if (total > 100) return "green";
+      else if (total > 50) return "orange";
       else return "red";
     },
   },

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import TabelBarangMasuk from "@/components/TabelBarangMasuk.vue";
+import TabelBarangMasuk from "@/components/BarangMasuk/TabelBarangMasuk.vue";
 export default {
   components: {
     TabelBarangMasuk,
