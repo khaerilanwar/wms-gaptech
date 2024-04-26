@@ -26,12 +26,12 @@
           <span class="text-sm">Dashboard</span>
         </router-link>
         <router-link
-          to="/barang-masuk"
+          to="/produk"
           class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
-          :class="{ sidebar_active: isActive('/barang-masuk') }"
+          :class="{ sidebar_active: isActive('/produk') }"
         >
-          <ArrowRightEndOnRectangleIcon class="h-6 w-6" />
-          <span class="text-sm">Barang Masuk</span>
+          <CubeIcon class="h-6 w-6" />
+          <span class="text-sm">Produk</span>
         </router-link>
         <router-link
           to="/barang-keluar"
@@ -122,6 +122,7 @@ import {
   Bars3Icon,
   DocumentIcon,
   ChevronDownIcon,
+  CubeIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -133,6 +134,7 @@ export default {
     Bars3Icon,
     DocumentIcon,
     ChevronDownIcon,
+    CubeIcon,
   },
   setup() {
     const route = useRoute();

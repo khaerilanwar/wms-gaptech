@@ -46,8 +46,8 @@ const routes = [
         component: DashboardView,
       },
       {
-        path: "/barang-masuk",
-        name: "barang-masuk",
+        path: "/produk",
+        name: "produk",
         component: BarangMasukView,
       },
       {
