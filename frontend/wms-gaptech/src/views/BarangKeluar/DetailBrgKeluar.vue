@@ -48,7 +48,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in desserts" :key="item.name" class="border">
+        <tr v-for="item in products" :key="item.name" class="border">
           <td>{{ item.number }}</td>
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
@@ -75,7 +75,7 @@ export default {
   },
   data() {
     return {
-      desserts: [
+      products: [
         {
           number: 1,
           id: "TK-001",
