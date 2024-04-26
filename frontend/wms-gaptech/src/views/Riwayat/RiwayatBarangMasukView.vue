@@ -9,6 +9,7 @@
 
 <script>
 import TabelRiwayatBarangMasuk from "@/components/BarangMasuk/TabelRiwayatBarangMasuk.vue";
+
 export default {
   components: {
     TabelRiwayatBarangMasuk,

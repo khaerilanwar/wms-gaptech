@@ -1,8 +1,14 @@
 <template>
-  <div class="flex justify-between">
+  <div class="flex justify-between p-2 rounded-lg bg-white shadow-lg">
     <div class="space-y-2">
       <p>Filter</p>
-      <v-chip variant="outlined"> 30 hari terakhir</v-chip>
+      <v-chip
+        class="hover:bg-blue-primary hover:text-white"
+        variant="outlined"
+        :disabled="showPeriode"
+        @click="toggleShow30DaysFilter"
+        >30 hari terakhir
+      </v-chip>
     </div>
 
     <div class="space-y-2">
@@ -27,66 +33,43 @@
             placeholder="Pilih tanggal mulai"
           />
         </div>
-        <ComponentButton intent="primary" @click="handleGetData"
-          >Ambil Data
+        <ComponentButton
+          intent="primary"
+          :disabled="show30Days"
+          @click="handleGetData"
+        >
+          Ambil Data
         </ComponentButton>
       </div>
     </div>
   </div>
 
-  <div v-show="!showTable" class="flex items-center justify-center mt-10">
-    <img src="../../../public/show data.png" alt="" srcset="" class="w-36" />
-    <span class="text-xl font-semibold">Pilih Filter Terlebih Dahulu!</span>
+  <div>
+    <h2 v-show="show30Days || showPeriode" class="font-semibold py-3">
+      Hasil Filter Data:
+    </h2>
+    <div>
+      <v-chip v-show="show30Days" closable @click="toggleHide30DaysFilter">
+        30 hari terakhir
+      </v-chip>
+      <v-chip v-show="showPeriode" closable @click="toggleHidePeriodeFilter">
+        {{ formatDate(startDate) }} - {{ formatDate(endDate) }}
+      </v-chip>
+    </div>
+    <RiwayatInputTanggal
+      v-show="showPeriode"
+      :start-date="startDate"
+      :end-date="endDate"
+    ></RiwayatInputTanggal>
+    <Riwayat30Hari v-show="show30Days"></Riwayat30Hari>
   </div>
 
-  <!-- tabel -->
-  <div v-show="showTable">
-    <div class="flex mb-2 justify-between items-center">
-      <div class="flex items-center">
-        <p>Pencarian</p>
-        <v-text-field
-          v-model="search.namaProduk"
-          class="ma-2"
-          density="compact"
-          placeholder="Cari Produk"
-          hide-details
-          outlined
-          filled
-          @input="searchItems"
-        ></v-text-field>
-      </div>
-    </div>
-    <v-data-table-server
-      v-model:items-per-page="itemsPerPage"
-      class="border rounded-lg"
-      :headers="headers"
-      :items="serverItems"
-      :items-length="totalItems"
-      :loading="loading"
-      :search="search.namaProduk"
-      :items-per-page-options="[
-        { value: 10, title: '10' },
-        { value: 25, title: '25' },
-        { value: 50, title: '50' },
-        { value: 100, title: '100' },
-      ]"
-      item-value="name"
-      @update:options="loadItems"
-    >
-      <template #item="{ item, index }">
-        <tr :class="getRowClass(index)">
-          <td class="text-center bg-blue-300">{{ index + 1 }}</td>
-          <td class="text-center bg-green-300">{{ item.kodeProduk }}</td>
-          <td class="bg-pink-300">{{ item.namaProduk }}</td>
-          <td class="text-center bg-yellow-300">
-            {{ item.stokMasuk }}
-          </td>
-          <td class="text-center bg-gray-300">
-            {{ item.dateInProduct }}
-          </td>
-        </tr>
-      </template>
-    </v-data-table-server>
+  <div
+    v-show="!showPeriode && !show30Days"
+    class="flex items-center justify-center mt-10"
+  >
+    <img src="../../../public/show data.png" alt="" srcset="" class="w-36" />
+    <span class="text-xl font-semibold">Pilih Filter Terlebih Dahulu!</span>
   </div>
   <Notification ref="notification" />
 </template>
@@ -94,106 +77,23 @@
 <script>
 import Notification from "../Notification.vue";
 import ComponentButton from "../ComponentButton.vue";
-import axiosInstance from "@/utils/api";
+import RiwayatInputTanggal from "./RiwayatInputTanggal.vue";
+import Riwayat30Hari from "./Riwayat30Hari.vue";
 
-async function fetchData(startDate, endDate) {
-  const response = await axiosInstance.get(
-    `inproducts/data-by-period?start=${startDate}&end=${endDate}`,
-  );
-  return response.data;
-}
-
-function formatDateTime(dateTimeString) {
-  const dateTime = new Date(dateTimeString);
-  const localDateTime = new Date(
-    dateTime.getTime() + dateTime.getTimezoneOffset() * 60000,
-  );
-  const day = localDateTime.getDate().toString().padStart(2, "0");
-  const month = (localDateTime.getMonth() + 1).toString().padStart(2, "0");
-  const year = localDateTime.getFullYear();
-  const hours = localDateTime.getHours().toString().padStart(2, "0");
-  const minutes = localDateTime.getMinutes().toString().padStart(2, "0");
-  return `${day}-${month}-${year} ${hours}:${minutes}`;
-}
-
-const API = {
-  async fetch({ page, itemsPerPage, search, startDate, endDate }) {
-    return new Promise((resolve) => {
-      setTimeout(async () => {
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-
-        const items = (await fetchData(startDate, endDate)).filter((item) => {
-          if (search && Object.keys(search).length > 0) {
-            if (
-              search.namaProduk &&
-              !item.namaProduk
-                .toLowerCase()
-                .includes(search.namaProduk.toLowerCase())
-            ) {
-              return false;
-            }
-          }
-
-          return true;
-        });
-
-        const paginated = items.slice(start, end);
-
-        resolve({ items: paginated, total: items.length });
-      }, 500);
-    });
-  },
-};
 export default {
-  components: { Notification, ComponentButton },
+  components: {
+    Notification,
+    ComponentButton,
+    RiwayatInputTanggal,
+    Riwayat30Hari,
+  },
   data() {
     return {
       startDate: null,
       endDate: null,
-      itemsPerPage: 5,
-      headers: [
-        { title: "No", align: "start", sortable: false, width: "5%" },
-        {
-          title: "Kode Produk",
-          align: "center",
-          sortable: false,
-          key: "kodeProduk",
-          width: "10%",
-        },
-        {
-          title: "Nama Produk",
-          align: "center",
-          sortable: false,
-          key: "namaProduk",
-          width: "40%",
-        },
-        {
-          title: "Stok Masuk",
-          align: "center",
-          key: "stokMasuk",
-          width: "10%",
-          sortable: false,
-        },
-        {
-          title: "Tanggal Masuk",
-          align: "center",
-          key: "dateInProduct",
-          width: "20%",
-          sortable: false,
-        },
-      ],
-      serverItems: [],
-      loading: true,
-      totalItems: 0,
-      search: { namaProduk: "" },
-      showTable: false,
+      showPeriode: false,
+      show30Days: false,
     };
-  },
-  watch: {
-    name() {
-      this.loadItems();
-    },
   },
   methods: {
     handleGetData() {
@@ -234,7 +134,7 @@ export default {
           );
           return;
         }
-        this.showTable = true;
+        this.showPeriode = true;
       } else {
         this.$refs.notification.showError(
           "Isi tanggal mulai dan tanggal akhir terlebih dahulu",
@@ -242,33 +142,19 @@ export default {
       }
       this.loadItems();
     },
-    async loadItems({ page, itemsPerPage, sortBy } = {}) {
-      this.loading = true;
-      const { items, total } = await API.fetch({
-        page: page || 1,
-        itemsPerPage: itemsPerPage || this.itemsPerPage,
-        sortBy: sortBy || [],
-        search: this.search,
-        startDate: this.startDate,
-        endDate: this.endDate,
-      });
-      items.forEach((item) => {
-        item.dateInProduct = formatDateTime(item.dateInProduct);
-      });
-      this.serverItems = items;
-      this.totalItems = total;
-      this.loading = false;
+    formatDate(date) {
+      if (!date) return "";
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}`;
     },
-    searchItems() {
-      this.loadItems({
-        page: 1,
-        itemsPerPage: this.itemsPerPage,
-        sortBy: [],
-        search: this.search,
-      });
+    toggleShow30DaysFilter() {
+      this.show30Days = true;
     },
-    getRowClass(index) {
-      return index % 2 === 0 ? "bg-blue-bg" : "";
+    toggleHide30DaysFilter() {
+      this.show30Days = false;
+    },
+    toggleHidePeriodeFilter() {
+      this.showPeriode = false;
     },
   },
 };

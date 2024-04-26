@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex mb-2 justify-between items-center">
+    <div class="flex mb-2 justify-end items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
@@ -36,7 +36,7 @@
         <tr :class="getRowClass(index)">
           <td class="text-center bg-blue-300">{{ index + 1 }}</td>
           <td class="text-center bg-green-300">{{ item.kodeProduk }}</td>
-          <td class="text-center bg-pink-300">{{ item.namaProduk }}</td>
+          <td class="bg-pink-300">{{ item.namaProduk }}</td>
           <td class="text-center bg-yellow-300">
             {{ item.stokMasuk }}
           </td>
@@ -53,13 +53,12 @@
 import axiosInstance from "@/utils/api";
 
 async function fetchData() {
-  const response = await axiosInstance.get("inproducts");
+  const response = await axiosInstance.get("/inproducts/last30days");
   return response.data;
 }
 
 function formatDateTime(dateTimeString) {
   const dateTime = new Date(dateTimeString);
-  // Konversi waktu ke zona waktu setempat
   const localDateTime = new Date(
     dateTime.getTime() + dateTime.getTimezoneOffset() * 60000,
   );
