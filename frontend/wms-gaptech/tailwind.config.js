@@ -31,5 +31,5 @@ export default {
       center: true,
     },
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [],
 };
