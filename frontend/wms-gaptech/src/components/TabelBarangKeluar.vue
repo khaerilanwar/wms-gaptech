@@ -11,8 +11,8 @@
     <template #item="{ item, index }">
       <tr :class="diffRowColor(index)">
         <td>{{ index + 1 }}</td>
-        <td>{{ item.id }}</td>
-        <td>{{ item.tglKeluar }}</td>
+        <td>{{ item.idTransaksi }}</td>
+        <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
         <td class="flex">
           <div class="mt-3">
             <router-link to="/barang-keluar/detail">
@@ -31,87 +31,31 @@
 </template>
 
 <script>
+import axiosInstance from "@/utils/api";
 import ComponentButton from "./ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 
-const barangKeluar = [
-  {
-    id: "TK-001",
-    tglKeluar: "2024-01-01",
-  },
-  {
-    id: "TK-002",
-    tglKeluar: "2024-03-05",
-  },
-  {
-    id: "TK-003",
-    tglKeluar: "2024-12-17",
-  },
-  {
-    id: "TK-004",
-    tglKeluar: "2024-07-15",
-  },
-  {
-    id: "TK-005",
-    tglKeluar: "2024-02-22",
-  },
-  {
-    id: "TK-006",
-    tglKeluar: "2024-10-27",
-  },
-  {
-    id: "TK-007",
-    tglKeluar: "2024-05-19",
-  },
-  {
-    id: "TK-008",
-    tglKeluar: "2024-10-09",
-  },
-  {
-    id: "TK-009",
-    tglKeluar: "2024-07-31",
-  },
-  {
-    id: "TK-010",
-    tglKeluar: "2024-04-19",
-  },
-  {
-    id: "TK-011",
-    tglKeluar: "2024-02-29",
-  },
-  {
-    id: "TK-012",
-    tglKeluar: "2024-09-01",
-  },
-  {
-    id: "TK-013",
-    tglKeluar: "2024-11-10",
-  },
-  {
-    id: "TK-014",
-    tglKeluar: "2024-06-18",
-  },
-  {
-    id: "TK-015",
-    tglKeluar: "2024-02-14",
-  },
-];
+async function fetchData() {
+  const response = await axiosInstance.get("transactions");
+  return response.data;
+}
 
-const FakeAPI = {
+const API = {
   async fetch({ page, itemsPerPage, sortBy }) {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const items = barangKeluar.slice();
+
+        const items = await fetchData();
 
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
           const sortOrder = sortBy[0].order;
-          if (sortKey === "tglKeluar") {
+          if (sortKey === "tanggalTransaksi") {
             items.sort((a, b) => {
-              const dateA = new Date(a[sortKey]).getTime();
-              const dateB = new Date(b[sortKey]).getTime();
+              const dateA = new Date(a[sortKey]);
+              const dateB = new Date(b[sortKey]);
               return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
             });
           }
@@ -140,7 +84,7 @@ export default {
       { title: "ID Transaksi", key: "id", align: "start", sortable: false },
       {
         title: "Tanggal Keluar",
-        key: "tglKeluar",
+        key: "tanggalTransaksi",
         align: "start",
       },
       { title: "Action", key: "action", align: "start", sortable: false },
@@ -149,15 +93,25 @@ export default {
     loading: true,
     totalItems: 0,
   }),
-  methods: {
-    loadItems({ page, itemsPerPage, sortBy }) {
-      this.loading = true;
-      FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-        this.serverItems = items;
-        this.totalItems = total;
-        this.loading = false;
-      });
+  watch: {
+    name() {
+      this.loadItems();
     },
+  },
+  methods: {
+    async loadItems({ page, itemsPerPage, sortBy } = {}) {
+      this.loading = true;
+      const { items, total } = await API.fetch({
+        page: page || 1,
+        itemsPerPage: itemsPerPage || this.itemsPerPage,
+        sortBy: sortBy || [],
+      });
+      this.serverItems = items;
+      console.log(this.serverItems);
+      this.totalItems = total;
+      this.loading = false;
+    },
+
     diffRowColor(index) {
       return (index + 1) % 2 !== 0 ? "bg-slate-100" : "";
     },

@@ -181,7 +181,6 @@ export default {
       this.orders.totalPrice = this.orders.items.reduce((total, item) => {
         return total + item.harga * this.orders.quantity;
       }, 0);
-      console.log(this.orders);
       this.$emit("submit-order", this.orders);
     },
   },

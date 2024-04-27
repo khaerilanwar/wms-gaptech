@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex mb-2 justify-between items-center">
+    <div class="flex mb-2 justify-end items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
@@ -13,13 +13,6 @@
           filled
           @input="searchItems"
         ></v-text-field>
-      </div>
-      <div>
-        <router-link to="/barang-masuk/tambah-barang">
-          <ComponentButton intent="primary" :left-icon="PlusIcon">
-            Produk Baru
-          </ComponentButton>
-        </router-link>
       </div>
     </div>
     <v-data-table-server
@@ -41,25 +34,14 @@
     >
       <template #item="{ item, index }">
         <tr :class="getRowClass(index)">
-          <td class="text-center">{{ index + 1 }}</td>
-          <td class="text-center">{{ item.kodeProduk }}</td>
-          <td>{{ item.namaProduk }}</td>
-          <td class="text-center">{{ item.posisiRak }}</td>
-          <td>
-            <v-chip :color="getColor(item.stok)">
-              {{ item.stok }}
-            </v-chip>
+          <td class="text-center bg-blue-300">{{ index + 1 }}</td>
+          <td class="text-center bg-green-300">{{ item.kodeProduk }}</td>
+          <td class="bg-pink-300">{{ item.namaProduk }}</td>
+          <td class="text-center bg-yellow-300">
+            {{ item.stokMasuk }}
           </td>
-          <td class="flex">
-            <button @click="addProduct(item)">
-              <ComponentButton intent="add"></ComponentButton>
-            </button>
-            <button @click="editProduct(item)">
-              <ComponentButton intent="edit"></ComponentButton>
-            </button>
-            <button @click="deleteItem(item)">
-              <ComponentButton intent="delete"></ComponentButton>
-            </button>
+          <td class="text-center bg-gray-300">
+            {{ item.dateInProduct }}
           </td>
         </tr>
       </template>
@@ -68,23 +50,40 @@
 </template>
 
 <script>
-import ComponentButton from "../../components/ComponentButton.vue";
-import { PlusIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
 
-async function fetchData() {
-  const response = await axiosInstance.get("products");
+async function fetchData(startDate, endDate) {
+  const response = await axiosInstance.get(
+    `inproducts/data-by-period?start=${startDate}&end=${endDate}`,
+  );
+  console.log(startDate);
+  console.log(endDate);
   return response.data;
 }
 
+function formatDateTime(dateTimeString) {
+  const dateTime = new Date(dateTimeString);
+  const localDateTime = new Date(
+    dateTime.getTime() + dateTime.getTimezoneOffset() * 60000,
+  );
+  const day = localDateTime.getDate().toString().padStart(2, "0");
+  const month = (localDateTime.getMonth() + 1).toString().padStart(2, "0");
+  const year = localDateTime.getFullYear();
+  const hours = localDateTime.getHours().toString().padStart(2, "0");
+  const minutes = localDateTime.getMinutes().toString().padStart(2, "0");
+  return `${day}-${month}-${year} ${hours}:${minutes}`;
+}
+
 const API = {
-  async fetch({ page, itemsPerPage, sortBy, search }) {
+  async fetch({ page, itemsPerPage, search, startDate, endDate }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        const items = (await fetchData()).filter((item) => {
+        const items = (await fetchData(startDate, endDate)).filter((item) => {
+          console.log(startDate);
+          console.log(endDate);
           if (search && Object.keys(search).length > 0) {
             if (
               search.namaProduk &&
@@ -99,18 +98,6 @@ const API = {
           return true;
         });
 
-        if (sortBy.length) {
-          const sortKey = sortBy[0].key;
-          const sortOrder = sortBy[0].order;
-          if (sortKey === "stok") {
-            items.sort((a, b) => {
-              const aValue = a[sortKey];
-              const bValue = b[sortKey];
-              return sortOrder === "desc" ? bValue - aValue : aValue - bValue;
-            });
-          }
-        }
-
         const paginated = items.slice(start, end);
 
         resolve({ items: paginated, total: items.length });
@@ -118,14 +105,19 @@ const API = {
     });
   },
 };
-
 export default {
-  components: {
-    ComponentButton,
+  props: {
+    startDate: {
+      type: String,
+      default: null,
+    },
+    endDate: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {
-      PlusIcon: PlusIcon,
       itemsPerPage: 5,
       headers: [
         { title: "No", align: "start", sortable: false, width: "5%" },
@@ -134,7 +126,7 @@ export default {
           align: "center",
           sortable: false,
           key: "kodeProduk",
-          width: "15%",
+          width: "10%",
         },
         {
           title: "Nama Produk",
@@ -144,14 +136,19 @@ export default {
           width: "40%",
         },
         {
-          title: "Posisi Rak",
+          title: "Stok Masuk",
           align: "center",
-          key: "posisiRak",
-          width: "15%",
+          key: "stokMasuk",
+          width: "10%",
           sortable: false,
         },
-        { title: "Stok", align: "center", key: "stok", width: "15%" },
-        { title: "Edit", align: "center", sortable: false, key: "actions" },
+        {
+          title: "Tanggal Masuk",
+          align: "center",
+          key: "dateInProduct",
+          width: "20%",
+          sortable: false,
+        },
       ],
       serverItems: [],
       loading: true,
@@ -160,7 +157,10 @@ export default {
     };
   },
   watch: {
-    name() {
+    startDate() {
+      this.loadItems();
+    },
+    endDate() {
       this.loadItems();
     },
   },
@@ -172,6 +172,11 @@ export default {
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
+        startDate: this.startDate,
+        endDate: this.endDate,
+      });
+      items.forEach((item) => {
+        item.dateInProduct = formatDateTime(item.dateInProduct);
       });
       this.serverItems = items;
       this.totalItems = total;
@@ -187,11 +192,6 @@ export default {
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
-    },
-    getColor(stock) {
-      if (stock > 100) return "green";
-      else if (stock > 50) return "orange";
-      else return "red";
     },
   },
 };

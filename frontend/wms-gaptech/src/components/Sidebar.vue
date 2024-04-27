@@ -187,7 +187,6 @@ export default {
 
     const toggleDropdown = () => {
       dropdownOpen.value = !dropdownOpen.value;
-      console.log("Dropdown open:", dropdownOpen.value);
     };
 
     return {
