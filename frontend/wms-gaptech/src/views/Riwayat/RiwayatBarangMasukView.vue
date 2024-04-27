@@ -1,17 +1,17 @@
 <template>
   <div class="h-full">
     <div class="flex justify-center items-center font-semibold text-3xl mb-2">
-      <h1 class="font-semibold">Daftar Produk</h1>
+      <h1 class="font-semibold">Riwayat Barang Masuk</h1>
     </div>
-    <TabelProduk></TabelProduk>
+    <TabelRiwayatBarangMasuk></TabelRiwayatBarangMasuk>
   </div>
 </template>
 
 <script>
-import TabelProduk from "@/components/BarangMasuk/TabelProduk.vue";
+import TabelRiwayatBarangMasuk from "@/components/BarangMasuk/TabelRiwayatBarangMasuk.vue";
 export default {
   components: {
-    TabelProduk,
+    TabelRiwayatBarangMasuk,
   },
 };
 </script>

@@ -79,14 +79,16 @@
                 ></v-checkbox>
               </td>
               <td>{{ item.namaProduk }}</td>
-              <td>{{ item.harga }}</td>
+              <td>{{ $filters.currency(item.harga) }}</td>
               <td>
                 <QuantityBtn @quantity-changed="handleQuantity"></QuantityBtn>
               </td>
             </tr>
           </template>
         </v-data-table>
-        <p class="p-5 m-5">Total Harga : {{ orders.totalPrice }}</p>
+        <p class="p-5 m-5">
+          Total Harga : {{ $filters.currency(orders.totalPrice) }}
+        </p>
         <div class="flex justify-center items-center p-5 m-5">
           <button
             type="submit"

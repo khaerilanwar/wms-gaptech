@@ -5,8 +5,12 @@ import {
   Register,
   getUser,
   getUsers,
+  resetPassword,
+  verifyResetToken,
+  updatePassword,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
+import { authToken } from "../middleware/authToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import {
   addProduct,
@@ -21,14 +25,17 @@ import {
   inProductByPeriod,
   inProductLast30Days,
 } from "../controllers/InProducts.js";
-import { develop } from "../controllers/Development.js";
+//import { develop } from '../controllers/Development.js'
 import {
   getOutProducts,
   outProductByMonth,
   outProductByPeriod,
   outProductLast30Days,
 } from "../controllers/OutProducts.js";
-import { getAllTransactions } from "../controllers/Transaction.js";
+import {
+  getAllTransactions,
+  saveTransaction,
+} from "../controllers/Transaction.js";
 
 const router = express.Router();
 
@@ -39,6 +46,11 @@ router.post("/register", Register);
 router.post("/login", Login);
 router.get("/token", refreshToken);
 router.delete("/logout", Logout);
+
+// Router reset password
+router.post("/reset-password", resetPassword);
+router.get("/verify-reset-token/:token", verifyResetToken);
+router.put("/update-password", authToken, updatePassword);
 
 // Router products
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
@@ -62,6 +74,7 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
 router.get("/transactions", verifyToken, getAllTransactions);
+router.post("/transactions", verifyToken, saveTransaction);
 
 // Router Debug Development
 // router.get('/dev/sayang', develop)

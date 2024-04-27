@@ -19,23 +19,23 @@
         <router-link
           to="/"
           exact
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/') }"
         >
           <HomeIcon class="h-6 w-6" />
           <span class="text-sm">Dashboard</span>
         </router-link>
         <router-link
-          to="/barang-masuk"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
-          :class="{ sidebar_active: isActive('/barang-masuk') }"
+          to="/produk"
+          class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+          :class="{ sidebar_active: isActive('/produk') }"
         >
-          <ArrowRightEndOnRectangleIcon class="h-6 w-6" />
-          <span class="text-sm">Barang Masuk</span>
+          <CubeIcon class="h-6 w-6" />
+          <span class="text-sm">Produk</span>
         </router-link>
         <router-link
           to="/barang-keluar"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/barang-keluar') }"
         >
           <ArrowRightStartOnRectangleIcon class="h-6 w-6" />
@@ -43,12 +43,49 @@
         </router-link>
         <router-link
           to="/status-rak"
-          class="flex items-center py-3 px-4 space-x-2 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+          class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
           :class="{ sidebar_active: isActive('/status-rak') }"
         >
           <InboxStackIcon class="h-6 w-6" />
           <span class="text-sm">Status Rak</span>
         </router-link>
+        <button
+          class="py-3 px-4 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200 w-full"
+          @click="toggleDropdown"
+        >
+          <div class="flex justify-between">
+            <div class="flex items-center space-x-2">
+              <DocumentIcon class="h-6 w-6" />
+              <span class="text-sm">Riwayat</span>
+            </div>
+            <ChevronDownIcon class="h-6 w-6" />
+          </div>
+        </button>
+        <!-- Dropdown menu -->
+        <div v-show="dropdownOpen" class="z-10 w-full shadow-xl rounded-lg">
+          <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+            <li>
+              <router-link
+                to="/riwayat-barang-masuk"
+                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+                :class="{ sidebar_active: isActive('/riwayat-barang-masuk') }"
+              >
+                <ArrowRightEndOnRectangleIcon class="h-6 w-6" />
+                <span class="text-sm">Riwayat Barang Masuk</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/riwayat-barang-keluar"
+                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+                :class="{ sidebar_active: isActive('/riwayat-barang-keluar') }"
+              >
+                <ArrowRightStartOnRectangleIcon class="h-6 w-6" />
+                <span class="text-sm">Riwayat Barang Keluar</span>
+              </router-link>
+            </li>
+          </ul>
+        </div>
       </nav>
     </div>
     <!-- header atas -->
@@ -83,6 +120,9 @@ import {
   ArrowRightStartOnRectangleIcon,
   InboxStackIcon,
   Bars3Icon,
+  DocumentIcon,
+  ChevronDownIcon,
+  CubeIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -92,12 +132,16 @@ export default {
     ArrowRightStartOnRectangleIcon,
     InboxStackIcon,
     Bars3Icon,
+    DocumentIcon,
+    ChevronDownIcon,
+    CubeIcon,
   },
   setup() {
     const route = useRoute();
     const showSidebar = ref(false);
     const screenWidth = computed(() => window.innerWidth);
     const isMobile = computed(() => screenWidth.value <= 768);
+    const dropdownOpen = ref(false);
 
     const sidebarClasses = computed(() => {
       if (isMobile.value) {
@@ -140,10 +184,18 @@ export default {
     onUnmounted(() => {
       window.removeEventListener("resize", updateScreenWidth);
     });
+
+    const toggleDropdown = () => {
+      dropdownOpen.value = !dropdownOpen.value;
+      console.log("Dropdown open:", dropdownOpen.value);
+    };
+
     return {
       showSidebar,
       sidebarClasses,
       isMobile,
+      dropdownOpen,
+      toggleDropdown,
       isActive(path) {
         if (route.path === path) {
           return true;
