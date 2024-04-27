@@ -22,6 +22,18 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App);
+
+app.config.globalProperties.$filters = {
+  currency(value) {
+    const formatter = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 2,
+    });
+    return formatter.format(value);
+  },
+};
+
 app.use(router);
 app.use(store);
 app.use(vuetify);
