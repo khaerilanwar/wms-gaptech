@@ -25,38 +25,48 @@
     <div class="flex flex-col mt-14 mb-10 ml-15 gap-3">
       <div class="flex flex-row">
         <p class="font-medium">ID Transaksi :</p>
-        <p class="ml-2">ID/20230714/TK0001</p>
+        <p class="ml-2">{{ products.idTransaksi }}</p>
       </div>
       <div class="flex flex-row">
         <p class="font-medium">Nama Pemesan :</p>
-        <p class="ml-2">Jhon Thor</p>
+        <p class="ml-2">{{ products.namaPemesan }}</p>
       </div>
       <div class="flex flex-row">
         <p class="font-medium">Alamat Pengiriman :</p>
-        <p class="ml-2">Jln. in aja dulu</p>
+        <p class="ml-2">{{ products.alamatPengiriman }}</p>
       </div>
     </div>
 
     <v-table class="px-12">
       <thead>
         <tr class="border">
-          <th class="text-left">No</th>
-          <th class="text-left">ID Barang</th>
-          <th class="text-left">Nama Barang</th>
-          <th class="text-left">Jumlah Pesanan</th>
-          <th class="text-left">Total Harga</th>
+          <th class="text-center border">No</th>
+          <th class="text-center border">ID Barang</th>
+          <th class="text-center border">Nama Barang</th>
+          <th class="text-center border">Jumlah Pesanan</th>
+          <th class="text-center border">Subtotal</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in products" :key="item.name" class="border">
-          <td>{{ item.number }}</td>
-          <td>{{ item.idTransaksi }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.qty }}</td>
-          <td>{{ item.totalPrice }}</td>
+        <tr
+          v-for="(item, index) in products.barangKeluar"
+          :key="index"
+          class="border"
+        >
+          <td class="text-center border">{{ index + 1 }}</td>
+          <td class="text-center border">{{ item.kodeProduk }}</td>
+          <td class="text-center border">{{ item.namaProduk }}</td>
+          <td class="text-center border">{{ item.kuantitas }}</td>
+          <td class="text-center border">
+            {{ $filters.currency(item.subTotal) }}
+          </td>
         </tr>
       </tbody>
     </v-table>
+
+    <p class="mt-14 mb-10 ml-15 font-medium">
+      Total Harga : {{ $filters.currency(totalHarga) }}
+    </p>
 
     <div class="flex justify-center items-center mt-14">
       <ComponentButton intent="primary" :left-icon="PlusIcon">
@@ -77,6 +87,7 @@ export default {
   data() {
     return {
       products: [],
+      totalHarga: 0,
     };
   },
   created() {
@@ -86,9 +97,12 @@ export default {
     async fetchTransactionData() {
       try {
         const idTransaksi = this.$route.params.idTransaksi;
-        const response = await axiosInstance.get(`transactions/${idTransaksi}`);
+        const response = await axiosInstance.get(`transaction/${idTransaksi}`);
         this.products = response.data;
-        console.log(this.products);
+        this.totalHarga = this.products.barangKeluar.reduce(
+          (total, item) => total + item.subTotal,
+          0,
+        );
       } catch (error) {
         console.error("Error fetching transaction data:", error);
       }
