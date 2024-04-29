@@ -12,6 +12,8 @@ import ResetPassword from "@/components/ResetPassword.vue";
 import TambahBarangMasukView from "@/views/BarangMasuk/TambahBarangMasukView.vue";
 import RiwayatBarangMasukView from "@/views/Riwayat/RiwayatBarangMasukView.vue";
 import RiwayatBarangKeluarView from "@/views/Riwayat/RiwayatBarangKeluarView.vue";
+import TambahStok from "@/components/Produk/TambahStok.vue";
+import EditProduk from "@/components/Produk/EditProduk.vue";
 
 const routes = [
   {
@@ -49,6 +51,16 @@ const routes = [
         path: "/produk",
         name: "produk",
         component: BarangMasukView,
+      },
+      {
+        path: "/produk/tambah-stok/:kodeProduk",
+        name: "tambah-stok",
+        component: TambahStok,
+      },
+      {
+        path: "/produk/edit-produk/:kodeProduk",
+        name: "edit-produk",
+        component: EditProduk,
       },
       {
         path: "/produk/tambah-produk-baru",

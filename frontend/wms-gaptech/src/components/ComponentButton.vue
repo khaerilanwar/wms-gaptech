@@ -40,7 +40,7 @@ const props = defineProps({
         "delete",
         "edit",
         "add",
-        "secondary",
+        "danger",
       ].includes(val),
   },
 });

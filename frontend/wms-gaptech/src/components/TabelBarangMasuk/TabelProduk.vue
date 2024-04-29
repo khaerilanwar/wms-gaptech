@@ -41,25 +41,28 @@
     >
       <template #item="{ item, index }">
         <tr :class="getRowClass(index)">
-          <td class="text-center">{{ index + 1 }}</td>
-          <td class="text-center">{{ item.kodeProduk }}</td>
-          <td>{{ item.namaProduk }}</td>
-          <td class="text-center">{{ item.posisiRak }}</td>
-          <td>
+          <td class="text-center bg-blue-200">{{ index + 1 }}</td>
+          <td class="text-center bg-green-200">{{ item.kodeProduk }}</td>
+          <td class="bg-yellow-200">{{ item.namaProduk }}</td>
+          <td class="text-center bg-fuchsia-200">{{ item.posisiRak }}</td>
+          <td class="bg-red-200">{{ formatHarga(item.harga) }}</td>
+          <td class="bg-amber-200">
             <v-chip :color="getColor(item.stok)">
               {{ item.stok }}
             </v-chip>
           </td>
-          <td class="flex">
-            <button @click="addProduct(item)">
-              <ComponentButton intent="add"></ComponentButton>
-            </button>
-            <button @click="editProduct(item)">
-              <ComponentButton intent="edit"></ComponentButton>
-            </button>
-            <button @click="deleteItem(item)">
-              <ComponentButton intent="delete"></ComponentButton>
-            </button>
+          <td class="bg-purple-200">
+            <div class="flex">
+              <router-link :to="`/produk/tambah-stok/${item.kodeProduk}`">
+                <ComponentButton intent="add"></ComponentButton>
+              </router-link>
+              <router-link :to="`/produk/edit-produk/${item.kodeProduk}`">
+                <ComponentButton intent="edit"></ComponentButton>
+              </router-link>
+              <button @click="deleteItem(item)">
+                <ComponentButton intent="delete"></ComponentButton>
+              </button>
+            </div>
           </td>
         </tr>
       </template>
@@ -102,7 +105,7 @@ const API = {
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
           const sortOrder = sortBy[0].order;
-          if (sortKey === "stok") {
+          if (sortKey === "stok" || sortKey === "harga") {
             items.sort((a, b) => {
               const aValue = a[sortKey];
               const bValue = b[sortKey];
@@ -134,7 +137,7 @@ export default {
           align: "center",
           sortable: false,
           key: "kodeProduk",
-          width: "15%",
+          width: "10%",
         },
         {
           title: "Nama Produk",
@@ -150,8 +153,20 @@ export default {
           width: "15%",
           sortable: false,
         },
-        { title: "Stok", align: "center", key: "stok", width: "15%" },
-        { title: "Edit", align: "center", sortable: false, key: "actions" },
+        {
+          title: "Harga",
+          align: "center",
+          key: "harga",
+          width: "10%",
+        },
+        { title: "Stok", align: "center", key: "stok", width: "10%" },
+        {
+          title: "Edit",
+          align: "center",
+          sortable: false,
+          key: "actions",
+          width: "5%",
+        },
       ],
       serverItems: [],
       loading: true,
@@ -192,6 +207,14 @@ export default {
       if (stock > 100) return "green";
       else if (stock > 50) return "orange";
       else return "red";
+    },
+    formatHarga(harga) {
+      return (
+        "Rp " +
+        parseFloat(harga)
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      );
     },
   },
 };
