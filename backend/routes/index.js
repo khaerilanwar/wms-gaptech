@@ -57,7 +57,7 @@ router.put("/update-password", authToken, updatePassword);
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
 router.get("/products", verifyToken, getProducts);
 router.get("/product/:kodeProduk(\\d+)", verifyToken, getProduct); // kodeProduk hanya menerima numeric
-router.post("/product", verifyToken, addProduct);
+router.post("/product", addProduct);
 router.put("/product/:kodeProduk(\\d+)", verifyToken, updateProduct);
 router.patch("/product/:kodeProduk(\\d+)", verifyToken, addStock);
 
@@ -74,7 +74,7 @@ router.get("/outproducts/data-by-period", verifyToken, outProductByPeriod);
 router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
-router.get("/transaction", getTransaction)
+router.get("/transaction/:idTransaksi(\\d+)", getTransaction)
 router.get("/transactions", verifyToken, getAllTransactions);
 router.post("/transactions", verifyToken, saveTransaction);
 
