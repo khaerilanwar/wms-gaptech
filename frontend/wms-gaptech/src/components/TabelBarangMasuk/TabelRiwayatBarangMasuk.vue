@@ -74,7 +74,7 @@ import Notification from "../Notification.vue";
 import ComponentButton from "../ComponentButton.vue";
 import RiwayatInputTanggal from "./RiwayatInputTanggal.vue";
 import Riwayat30Hari from "./Riwayat30Hari.vue";
-import ShowAlert from "../Alert/ShowAlert.vue";
+import ShowAlert from "../ShowAlert.vue";
 
 export default {
   components: {

@@ -9,7 +9,7 @@
         v-show="!showAlert"
         class="flex justify-center items-center font-semibold text-3xl mb-2"
       >
-        <h1 class="font-semibold">Tambah Stok</h1>
+        <h1 class="font-semibold">Detail Produk Baru</h1>
       </div>
     </div>
     <div
@@ -84,7 +84,9 @@
           <ComponentButton intent="primary" class="mr-5"
             >Simpan
           </ComponentButton>
-          <ComponentButton intent="danger">Batal</ComponentButton>
+          <ComponentButton intent="danger" @click="cancel"
+            >Batal</ComponentButton
+          >
         </div>
       </div>
     </div>
@@ -105,6 +107,15 @@ export default {
       const isConfirmed = window.confirm(
         "Apakah Anda yakin meninggalkan halaman ini?",
       );
+      if (isConfirmed) {
+        this.$router.push("/produk");
+      }
+    },
+    cancel() {
+      const isConfirmed = window.confirm(
+        "Apakah Anda yakin tidak menyimpan data?",
+      );
+      console.log("Tes cancel: ", isConfirmed);
       if (isConfirmed) {
         this.$router.push("/produk");
       }

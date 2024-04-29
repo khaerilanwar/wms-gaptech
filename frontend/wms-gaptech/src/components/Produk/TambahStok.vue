@@ -88,7 +88,7 @@
 import ComponentButton from "../ComponentButton.vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
-import ShowAlert from "../Alert/ShowAlert.vue";
+import ShowAlert from "../ShowAlert.vue";
 import Notification from "../Notification.vue";
 
 export default {

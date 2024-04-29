@@ -52,7 +52,7 @@
 
 <script>
 import axiosInstance from "@/utils/api";
-import ComponentButton from "./ComponentButton.vue";
+import ComponentButton from ".././ComponentButton.vue";
 export default {
   components: {
     ComponentButton,

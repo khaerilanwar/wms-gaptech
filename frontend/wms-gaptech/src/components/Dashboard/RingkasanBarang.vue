@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div class="flex mb-2 justify-between items-center">
+  <div class="">
+    <h1 class="font-semibold">Ringkasan Stok Barang</h1>
+    <div class="flex mb-2 justify-end items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
@@ -13,13 +14,6 @@
           filled
           @input="searchItems"
         ></v-text-field>
-      </div>
-      <div>
-        <router-link to="/produk/tambah-produk-baru">
-          <ComponentButton intent="primary" :left-icon="PlusIcon">
-            Produk Baru
-          </ComponentButton>
-        </router-link>
       </div>
     </div>
     <v-data-table-server
@@ -44,25 +38,10 @@
           <td class="text-center">{{ index + 1 }}</td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
-          <td class="text-center">{{ item.posisiRak }}</td>
-          <td>{{ formatHarga(item.harga) }}</td>
           <td>
             <v-chip :color="getColor(item.stok)">
               {{ item.stok }}
             </v-chip>
-          </td>
-          <td>
-            <div class="flex">
-              <router-link :to="`/produk/tambah-stok/${item.kodeProduk}`">
-                <ComponentButton intent="add"></ComponentButton>
-              </router-link>
-              <router-link :to="`/produk/edit-produk/${item.kodeProduk}`">
-                <ComponentButton intent="edit"></ComponentButton>
-              </router-link>
-              <button @click="deleteItem(item)">
-                <ComponentButton intent="delete"></ComponentButton>
-              </button>
-            </div>
           </td>
         </tr>
       </template>
@@ -71,7 +50,6 @@
 </template>
 
 <script>
-import ComponentButton from "../../components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
 
@@ -98,14 +76,16 @@ const API = {
               return false;
             }
           }
-
-          return true;
+          if (item.stok < 50 || item.stok < 100) {
+            return true;
+          }
+          return false;
         });
-
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
           const sortOrder = sortBy[0].order;
-          if (sortKey === "stok" || sortKey === "harga") {
+          console.log(sortOrder);
+          if (sortKey === "stok") {
             items.sort((a, b) => {
               const aValue = a[sortKey];
               const bValue = b[sortKey];
@@ -113,9 +93,7 @@ const API = {
             });
           }
         }
-
         const paginated = items.slice(start, end);
-
         resolve({ items: paginated, total: items.length });
       }, 500);
     });
@@ -123,50 +101,25 @@ const API = {
 };
 
 export default {
-  components: {
-    ComponentButton,
-  },
   data() {
     return {
       PlusIcon: PlusIcon,
       itemsPerPage: 5,
       headers: [
-        { title: "No", align: "start", sortable: false, width: "5%" },
+        { title: "No", align: "center", sortable: false },
         {
           title: "Kode Produk",
           align: "center",
           sortable: false,
           key: "kodeProduk",
-          width: "10%",
         },
         {
           title: "Nama Produk",
           align: "center",
           sortable: false,
           key: "namaProduk",
-          width: "40%",
         },
-        {
-          title: "Posisi Rak",
-          align: "center",
-          key: "posisiRak",
-          width: "15%",
-          sortable: false,
-        },
-        {
-          title: "Harga",
-          align: "center",
-          key: "harga",
-          width: "15%",
-        },
-        { title: "Stok", align: "center", key: "stok", width: "10%" },
-        {
-          title: "Edit",
-          align: "center",
-          sortable: false,
-          key: "actions",
-          width: "5%",
-        },
+        { title: "Stok", align: "center", key: "stok" },
       ],
       serverItems: [],
       loading: true,
@@ -182,10 +135,13 @@ export default {
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
       this.loading = true;
+      const defaultSortOrder = "asc";
       const { items, total } = await API.fetch({
         page: page || 1,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
-        sortBy: sortBy || [],
+        sortBy: sortBy.length
+          ? sortBy
+          : [{ key: "stok", order: defaultSortOrder }],
         search: this.search,
       });
       this.serverItems = items;
@@ -207,14 +163,6 @@ export default {
       if (stock > 100) return "green";
       else if (stock > 50) return "orange";
       else return "red";
-    },
-    formatHarga(harga) {
-      return (
-        "Rp " +
-        parseFloat(harga)
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      );
     },
   },
 };
