@@ -73,7 +73,7 @@ function formatDateTime(dateTimeString) {
 }
 
 const API = {
-  async fetch({ page, itemsPerPage, search, startDate, endDate }) {
+  async fetch({ page, itemsPerPage, search, startDate, endDate, sortBy }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
@@ -90,9 +90,20 @@ const API = {
               return false;
             }
           }
-
           return true;
         });
+
+        if (sortBy.length) {
+          const sortKey = sortBy[0].key;
+          const sortOrder = sortBy[0].order;
+          if (sortKey === "dateInProduct") {
+            items.sort((a, b) => {
+              const dateA = new Date(a[sortKey]).getTime();
+              const dateB = new Date(b[sortKey]).getTime();
+              return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+            });
+          }
+        }
 
         const paginated = items.slice(start, end);
 
@@ -144,7 +155,6 @@ export default {
           align: "center",
           key: "dateInProduct",
           width: "20%",
-          sortable: false,
         },
       ],
       serverItems: [],
@@ -168,7 +178,7 @@ export default {
     },
   },
   methods: {
-    async loadItems({ page, itemsPerPage } = {}) {
+    async loadItems({ page, itemsPerPage, sortBy } = {}) {
       if (this.startDate === null || this.endDate === null) {
         return;
       }
@@ -176,6 +186,7 @@ export default {
       const { items, total } = await API.fetch({
         page: page || 1,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
+        sortBy: sortBy || [],
         search: this.search,
         startDate: this.startDate,
         endDate: this.endDate,
