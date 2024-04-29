@@ -50,7 +50,7 @@
       <tbody>
         <tr v-for="item in products" :key="item.name" class="border">
           <td>{{ item.number }}</td>
-          <td>{{ item.id }}</td>
+          <td>{{ item.idTransaksi }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.qty }}</td>
           <td>{{ item.totalPrice }}</td>
@@ -68,6 +68,7 @@
 
 <script>
 import ComponentButton from "@/components/ComponentButton.vue";
+import axiosInstance from "@/utils/api";
 
 export default {
   components: {
@@ -75,16 +76,23 @@ export default {
   },
   data() {
     return {
-      products: [
-        {
-          number: 1,
-          id: "TK-001",
-          name: "Stylabags Crossbody Bag",
-          qty: 20,
-          totalPrice: 20000000,
-        },
-      ],
+      products: [],
     };
+  },
+  created() {
+    this.fetchTransactionData();
+  },
+  methods: {
+    async fetchTransactionData() {
+      try {
+        const idTransaksi = this.$route.params.idTransaksi;
+        const response = await axiosInstance.get(`transactions/${idTransaksi}`);
+        this.products = response.data;
+        console.log(this.products);
+      } catch (error) {
+        console.error("Error fetching transaction data:", error);
+      }
+    },
   },
 };
 </script>

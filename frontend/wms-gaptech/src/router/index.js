@@ -66,8 +66,8 @@ const routes = [
         component: StatusRakView,
       },
       {
-        path: "/barang-keluar/detail",
-        name: "detail-barang-keluar",
+        path: "/barang-keluar/detail/:idTransaksi",
+        name: "DetailBrgKeluar",
         component: DetailBrgKeluar,
       },
       {

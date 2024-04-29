@@ -15,8 +15,8 @@
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
         <td class="flex">
           <div class="mt-3">
-            <router-link to="/barang-keluar/detail">
-              <button>
+            <router-link :to="'/barang-keluar/detail/' + item.idTransaksi">
+              <button @click="showDetails(item.idTransaksi)">
                 <ComponentButton intent="edit"></ComponentButton>
               </button>
             </router-link>
@@ -73,6 +73,7 @@ export default {
   components: {
     ComponentButton,
   },
+  emits: ["transaction-details"],
   data: () => ({
     PlusIcon: PlusIcon,
     itemsPerPage: 5,
@@ -110,6 +111,10 @@ export default {
       console.log(this.serverItems);
       this.totalItems = total;
       this.loading = false;
+    },
+
+    async showDetails(dataItem) {
+      this.$emit("transaction-details", dataItem);
     },
 
     diffRowColor(index) {
