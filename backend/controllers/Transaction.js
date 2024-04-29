@@ -10,6 +10,15 @@ export const getAllTransactions = async (req, res) => {
     }
 }
 
+export const getTransaction = async (req, res) => {
+    try {
+        const transaction = await Transaction.findOne({ idTransaksi: req.query.idTransaksi }, { _id: 0 })
+        res.json(transaction)
+    } catch (error) {
+        res.sendStatus(400)
+    }
+}
+
 export const saveTransaction = async (req, res) => {
     const allProduct = await Products.find()
     try {

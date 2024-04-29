@@ -34,6 +34,7 @@ import {
 } from "../controllers/OutProducts.js";
 import {
   getAllTransactions,
+  getTransaction,
   saveTransaction,
 } from "../controllers/Transaction.js";
 
@@ -73,6 +74,7 @@ router.get("/outproducts/data-by-period", verifyToken, outProductByPeriod);
 router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
+router.get("/transaction", getTransaction)
 router.get("/transactions", verifyToken, getAllTransactions);
 router.post("/transactions", verifyToken, saveTransaction);
 
