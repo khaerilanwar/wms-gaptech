@@ -15,7 +15,7 @@
         ></v-text-field>
       </div>
       <div>
-        <router-link to="/barang-masuk/tambah-barang">
+        <router-link to="/produk/tambah-produk-baru">
           <ComponentButton intent="primary" :left-icon="PlusIcon">
             Produk Baru
           </ComponentButton>

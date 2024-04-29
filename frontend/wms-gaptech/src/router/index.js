@@ -51,8 +51,8 @@ const routes = [
         component: BarangMasukView,
       },
       {
-        path: "/barang-masuk/tambah-barang",
-        name: "tambah-barang-masuk",
+        path: "/produk/tambah-produk-baru",
+        name: "tambah-produk-baru",
         component: TambahBarangMasukView,
       },
       {

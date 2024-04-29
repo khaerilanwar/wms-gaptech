@@ -140,7 +140,6 @@ export default {
           "Isi tanggal mulai dan tanggal akhir terlebih dahulu",
         );
       }
-      this.loadItems();
     },
     formatDate(date) {
       if (!date) return "";

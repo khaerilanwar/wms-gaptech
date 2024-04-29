@@ -34,13 +34,13 @@
     >
       <template #item="{ item, index }">
         <tr :class="getRowClass(index)">
-          <td class="text-center bg-blue-300">{{ index + 1 }}</td>
-          <td class="text-center bg-green-300">{{ item.kodeProduk }}</td>
-          <td class="bg-pink-300">{{ item.namaProduk }}</td>
-          <td class="text-center bg-yellow-300">
+          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ item.kodeProduk }}</td>
+          <td>{{ item.namaProduk }}</td>
+          <td class="text-center">
             {{ item.stokMasuk }}
           </td>
-          <td class="text-center bg-gray-300">
+          <td class="text-center">
             {{ item.dateInProduct }}
           </td>
         </tr>
@@ -56,8 +56,6 @@ async function fetchData(startDate, endDate) {
   const response = await axiosInstance.get(
     `inproducts/data-by-period?start=${startDate}&end=${endDate}`,
   );
-  console.log(startDate);
-  console.log(endDate);
   return response.data;
 }
 
@@ -82,8 +80,6 @@ const API = {
         const end = start + itemsPerPage;
 
         const items = (await fetchData(startDate, endDate)).filter((item) => {
-          console.log(startDate);
-          console.log(endDate);
           if (search && Object.keys(search).length > 0) {
             if (
               search.namaProduk &&
@@ -105,6 +101,7 @@ const API = {
     });
   },
 };
+
 export default {
   props: {
     startDate: {
@@ -158,19 +155,27 @@ export default {
   },
   watch: {
     startDate() {
+      if (this.startDate === null) {
+        return;
+      }
       this.loadItems();
     },
     endDate() {
+      if (this.endDate === null) {
+        return;
+      }
       this.loadItems();
     },
   },
   methods: {
-    async loadItems({ page, itemsPerPage, sortBy } = {}) {
+    async loadItems({ page, itemsPerPage } = {}) {
+      if (this.startDate === null || this.endDate === null) {
+        return;
+      }
       this.loading = true;
       const { items, total } = await API.fetch({
         page: page || 1,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
-        sortBy: sortBy || [],
         search: this.search,
         startDate: this.startDate,
         endDate: this.endDate,
@@ -186,7 +191,6 @@ export default {
       this.loadItems({
         page: 1,
         itemsPerPage: this.itemsPerPage,
-        sortBy: [],
         search: this.search,
       });
     },

@@ -34,13 +34,13 @@
     >
       <template #item="{ item, index }">
         <tr :class="getRowClass(index)">
-          <td class="text-center bg-blue-300">{{ index + 1 }}</td>
-          <td class="text-center bg-green-300">{{ item.kodeProduk }}</td>
-          <td class="bg-pink-300">{{ item.namaProduk }}</td>
-          <td class="text-center bg-yellow-300">
+          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ item.kodeProduk }}</td>
+          <td>{{ item.namaProduk }}</td>
+          <td class="text-center">
             {{ item.stokMasuk }}
           </td>
-          <td class="text-center bg-gray-300">
+          <td class="text-center">
             {{ item.dateInProduct }}
           </td>
         </tr>
@@ -71,14 +71,16 @@ function formatDateTime(dateTimeString) {
 }
 
 const API = {
-  async fetch({ page, itemsPerPage, search }) {
+  async fetch({ page, itemsPerPage, search, sortBy }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        const items = (await fetchData()).filter((item) => {
-          if (search && Object.keys(search).length > 0) {
+        let items = await fetchData();
+
+        if (search && Object.keys(search).length > 0) {
+          items = items.filter((item) => {
             if (
               search.namaProduk &&
               !item.namaProduk
@@ -87,10 +89,21 @@ const API = {
             ) {
               return false;
             }
-          }
+            return true;
+          });
+        }
 
-          return true;
-        });
+        if (sortBy.length) {
+          const sortKey = sortBy[0].key;
+          const sortOrder = sortBy[0].order;
+          if (sortKey === "dateInProduct") {
+            items.sort((a, b) => {
+              const dateA = new Date(a[sortKey]).getTime();
+              const dateB = new Date(b[sortKey]).getTime();
+              return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+            });
+          }
+        }
 
         const paginated = items.slice(start, end);
 
@@ -133,7 +146,6 @@ export default {
           align: "center",
           key: "dateInProduct",
           width: "20%",
-          sortable: false,
         },
       ],
       serverItems: [],
@@ -141,11 +153,6 @@ export default {
       totalItems: 0,
       search: { namaProduk: "" },
     };
-  },
-  watch: {
-    name() {
-      this.loadItems();
-    },
   },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
@@ -156,6 +163,7 @@ export default {
         sortBy: sortBy || [],
         search: this.search,
       });
+
       items.forEach((item) => {
         item.dateInProduct = formatDateTime(item.dateInProduct);
       });
