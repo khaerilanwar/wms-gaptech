@@ -11,8 +11,9 @@ export const getAllTransactions = async (req, res) => {
 }
 
 export const getTransaction = async (req, res) => {
+    if (!req.params.idTransaksi) return res.status(400).json({ msg: "Id transaksi tidak dikirim" })
     try {
-        const transaction = await Transaction.findOne({ idTransaksi: req.query.idTransaksi }, { _id: 0 })
+        const transaction = await Transaction.findOne({ idTransaksi: req.params.idTransaksi }, { _id: 0 })
         res.json(transaction)
     } catch (error) {
         res.sendStatus(400)
