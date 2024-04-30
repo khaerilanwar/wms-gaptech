@@ -1,3 +1,4 @@
+import OutProducts from "../models/OutProductModel.js";
 import Products from "../models/ProductModel.js";
 import Transaction from "../models/TransactionModel.js";
 
@@ -29,18 +30,18 @@ export const saveTransaction = async (req, res) => {
         for (const item of req.body.barangKeluar) {
             let outProduct = allProduct.find(produk => produk.kodeProduk == item.kodeProduk)
             if (!outProduct) return res.status(404).json({ msg: `Kode produk ${item.kodeProduk} tidak ditemukan` })
-            let kuantitas = req.body.kuantitas
             outProduct = {
                 kodeProduk: outProduct.kodeProduk,
                 namaProduk: outProduct.namaProduk,
-                kuantitas,
+                kuantitas: item.kuantitas,
                 hargaSatuan: outProduct.harga,
-                subTotal: outProduct.harga * kuantitas
+                subTotal: outProduct.harga * item.kuantitas
             }
             totalHarga.push(outProduct.subTotal)
             barangKeluar.push(outProduct)
         }
 
+        const current = new Date()
         const newTransaction = {
             idTransaksi: `${current.getFullYear()}${String(current.getMonth() + 1).padStart(2, '0')}${String(current.getDate()).padStart(2, '0')}${Math.floor(1000 + Math.random() * 9000)}`,
             namaPemesan: req.body.namaPemesan,
@@ -51,12 +52,23 @@ export const saveTransaction = async (req, res) => {
         // Menambahkan data transaksi baru ke database
         await Transaction.create(newTransaction)
 
-        // Mengurangi stok barang keluar di database
+        // Mengurangi stok dan menambahkan data barang keluar di database
         for (const itemBarangKeluar of barangKeluar) {
+            // Mengurangi stok barang
             await Products.updateOne(
                 { kodeProduk: itemBarangKeluar.kodeProduk },
                 { $inc: { stok: -itemBarangKeluar.kuantitas } })
+
+            // Menambahkan data barang keluar
+            await OutProducts.create({
+                kodeProduk: itemBarangKeluar.kodeProduk,
+                namaProduk: itemBarangKeluar.namaProduk,
+                stokKeluar: itemBarangKeluar.kuantitas,
+                dateOutProduct: new Date()
+            })
         }
+
+        res.status(201).json({ msg: "Transaksi baru berhasil ditambahkan!" })
     } catch (error) {
         res.sendStatus(400)
     }

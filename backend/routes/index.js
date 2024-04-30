@@ -15,6 +15,7 @@ import { refreshToken } from "../controllers/RefreshToken.js";
 import {
   addProduct,
   addStock,
+  deleteProduct,
   getProduct,
   getProducts,
   updateProduct,
@@ -57,9 +58,10 @@ router.put("/update-password", authToken, updatePassword);
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
 router.get("/products", verifyToken, getProducts);
 router.get("/product/:kodeProduk(\\d+)", verifyToken, getProduct); // kodeProduk hanya menerima numeric
-router.post("/product", addProduct);
+router.post("/product", verifyToken, addProduct);
 router.put("/product/:kodeProduk(\\d+)", verifyToken, updateProduct);
 router.patch("/product/:kodeProduk(\\d+)", verifyToken, addStock);
+router.delete("/product/:kodeProduk(\\d+)", verifyToken, deleteProduct);
 
 // Router in products (history)
 router.get("/inproducts", verifyToken, getInProducts);
@@ -75,8 +77,8 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
 router.get("/transaction/:idTransaksi(\\d+)", getTransaction)
+router.post("/transaction", verifyToken, saveTransaction);
 router.get("/transactions", verifyToken, getAllTransactions);
-router.post("/transactions", verifyToken, saveTransaction);
 
 // Router Debug Development
 // router.get('/dev/sayang', develop)

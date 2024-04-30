@@ -93,6 +93,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
         "stokBaru": 24
     }
     ```
+12. ``DELETE`` ``/product/{kodeProduk}`` untuk menghapus kode produk
 12. ``GET`` ``/inproducts`` untuk mendapatkan semua data barang masuk atau history `otorisasi`
 13. ``GET`` ``/inproducts/last30days`` untuk mendapatkan history barang masuk 30 hari terakhir
 14. ``GET`` ``/inproducts/data-by-period`` untuk mendapatkan history barang masuk berdasarkan periode waktu awal dan akhir tertentu. Data dikirimkan dengan metode `GET` <br> Contoh request data :<br>`http://localhost:5000/inproducts/data-by-period?start=2024-03-09&end=2024-03-25`
@@ -100,8 +101,37 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
 16. ``GET`` ``/outproducts`` untuk mendapatkan semua data barang keluar atau history `otorisasi`
 17. ``GET`` ``/outproducts/last30days`` untuk mendapatkan history barang keluar 30 hari terakhir
 18. ``GET`` ``/outproducts/data-by-period`` untuk mendapatkan history barang keluar berdasarkan periode waktu awal dan akhir tertentu. Data dikirimkan dengan metode `GET` <br> Contoh request data :<br>`http://localhost:5000/outproducts/data-by-period?start=2024-03-09&end=2024-03-25`
-19. ``GET`` ``/outproducts/data-by-month`` untuk mendapatkan history barang keluar perbulan. Data request dikirim dengan menggunakan method `GET` <br>Contoh request data :<br> `http://localhost:5000/outproducts/data-by-month?month=03&year=2024`
+19. ``GET`` ``/outproducts/data-by-month`` untuk mendapatkan history barang keluar perbulan. Data request dikirim dengan menggunakan method `GET` <br>Contoh request data :<br> `http://localhost:5000/inproducts/data-by-month?month=03&year=2024`
 20. ``GET`` ``/transactions`` untuk mendapatkan semua data transaksi atau history transaksi barang keluar
+21. ``POST`` ``/transaction`` untuk menambahkan data transaksi baru `otorisasi` <br> Contoh request data : 
+    ```json
+    {
+        "namaPemesan": "Khaeril Anwar",
+        "alamatPengiriman": "Jl. Gajah Mada Bogor Indonesia",
+        "barangKeluar": [
+            {
+                "kodeProduk": 1687435916970,
+                "kuantitas": 10
+            },
+            {
+                "kodeProduk": 1617570119708,
+                "kuantitas": 11
+            },
+            {
+                "kodeProduk": 3785372871339,
+                "kuantitas": 12
+            },
+            {
+                "kodeProduk": 8411853826123,
+                "kuantitas": 13
+            },
+            {
+                "kodeProduk": 8415415203023,
+                "kuantitas": 14
+            }
+        ]
+    }
+    ```
 
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.

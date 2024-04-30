@@ -30,13 +30,13 @@ export const getProduct = async (req, res) => {
 
 export const addProduct = async (req, res) => {
     // add field kodeProduk, createdAt and updatedAt
-    req.body.kodeProduk = faker.string.numeric(13)
+    req.body.kodeProduk = parseInt(faker.string.numeric(13))
     req.body.createdAt = new Date()
     req.body.updatedAt = new Date()
     try {
         // save new product to database
         await Products.create(req.body)
-        res.sendStatus(201).json({ msg: 'Produk berhasil ditambahkan!' })
+        res.status(201).json({ msg: 'Produk berhasil ditambahkan!', kodeProduk: req.body.kodeProduk })
         console.log('Successfull for add a data product')
     } catch (error) {
         res.sendStatus(400)
@@ -60,6 +60,23 @@ export const updateProduct = async (req, res) => {
     }
 }
 
+export const deleteProduct = async (req, res) => {
+    const kodeProduk = req.params.kodeProduk
+    try {
+        const product = await Products.findOne({ kodeProduk })
+        if (!product) return res.status(404).json({ msg: "Kode produk tidak ditemukan!" })
+
+        // jika kode produk ada di database
+        await Products.deleteOne({ kodeProduk })
+        res.status(204).json({ msg: "Produk berhasil dihapus!" })
+        console.log('Successfull for delete a data product')
+    } catch (error) {
+        res.sendStatus(400)
+        console.log('Failed for delete a data product')
+        // console.log(error)
+    }
+}
+
 export const addStock = async (req, res) => {
     const kodeProduk = req.params.kodeProduk
     try {
@@ -74,7 +91,7 @@ export const addStock = async (req, res) => {
         await InProducts.create({
             kodeProduk: kodeProduk,
             namaProduk: product.namaProduk,
-            stok: req.body.stokBaru,
+            stokMasuk: req.body.stokBaru,
             dateInProduct: new Date()
         })
         res.json({ msg: `Berhasil menambah stok ${product.namaProduk}!` })
@@ -85,3 +102,4 @@ export const addStock = async (req, res) => {
         console.log('Failed for add new stock product')
     }
 }
+

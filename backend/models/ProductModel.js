@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 const productSchema = new Schema(
     {
-        kodeProduk: { type: Number, unique: true, required: true },
+        kodeProduk: { type: Number, unique: true, required: true, minlength: 13, maxlength: 13 },
         namaProduk: { type: String, required: true },
         harga: { type: Number, required: true },
         stok: { type: Number, required: true },
