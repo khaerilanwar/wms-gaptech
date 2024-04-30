@@ -63,14 +63,9 @@
     ></RiwayatInputTanggal>
     <Riwayat30Hari v-show="show30Days"></Riwayat30Hari>
   </div>
-
-  <div
-    v-show="!showPeriode && !show30Days"
-    class="flex items-center justify-center mt-10"
+  <ShowAlert v-show="!showPeriode && !show30Days"
+    >Pilih Filter Terlebih Dahulu!</ShowAlert
   >
-    <img src="../../../public/show data.png" alt="" srcset="" class="w-36" />
-    <span class="text-xl font-semibold">Pilih Filter Terlebih Dahulu!</span>
-  </div>
   <Notification ref="notification" />
 </template>
 
@@ -79,6 +74,7 @@ import Notification from "../Notification.vue";
 import ComponentButton from "../ComponentButton.vue";
 import RiwayatInputTanggal from "./RiwayatInputTanggal.vue";
 import Riwayat30Hari from "./Riwayat30Hari.vue";
+import ShowAlert from "../ShowAlert.vue";
 
 export default {
   components: {
@@ -86,6 +82,7 @@ export default {
     ComponentButton,
     RiwayatInputTanggal,
     Riwayat30Hari,
+    ShowAlert,
   },
   data() {
     return {
@@ -140,7 +137,6 @@ export default {
           "Isi tanggal mulai dan tanggal akhir terlebih dahulu",
         );
       }
-      this.loadItems();
     },
     formatDate(date) {
       if (!date) return "";

@@ -13,7 +13,10 @@
       </router-link>
     </div>
 
-    <TabelBarangKeluar class="p-4 mt-3 border rounded-lg"></TabelBarangKeluar>
+    <TabelBarangKeluar
+      class="p-4 mt-3 border rounded-lg"
+      @transaction-details="handleShowDetail"
+    ></TabelBarangKeluar>
   </div>
 </template>
 
@@ -21,16 +24,23 @@
 import ComponentButton from "@/components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import TabelBarangKeluar from "@/components/TabelBarangKeluar.vue";
+// import DetailBrgKeluar from "@/DetailBrgKeluar.vue";
 
 export default {
   components: {
     ComponentButton,
     TabelBarangKeluar,
+    // DetailBrgKeluar,
   },
   data() {
     return {
       PlusIcon: PlusIcon,
     };
+  },
+  methods: {
+    handleShowDetail(idTransaksi) {
+      this.$router.push({ name: "DetailBrgKeluar", params: { idTransaksi } });
+    },
   },
 };
 </script>

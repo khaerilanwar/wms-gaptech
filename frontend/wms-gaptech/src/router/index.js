@@ -7,11 +7,13 @@ import BarangKeluarView from "@/views/BarangKeluar/BarangKeluarView.vue";
 import StatusRakView from "@/views/StatusRakView.vue";
 import DetailBrgKeluar from "@/views/BarangKeluar/DetailBrgKeluar.vue";
 import TambahBrgKeluar from "@/views/BarangKeluar/TambahBrgKeluar.vue";
-import Password from "@/components/Password.vue";
-import ResetPassword from "@/components/ResetPassword.vue";
+import Password from "@/components/Login/Password.vue";
+import ResetPassword from "@/components/Login/ResetPassword.vue";
 import TambahBarangMasukView from "@/views/BarangMasuk/TambahBarangMasukView.vue";
 import RiwayatBarangMasukView from "@/views/Riwayat/RiwayatBarangMasukView.vue";
 import RiwayatBarangKeluarView from "@/views/Riwayat/RiwayatBarangKeluarView.vue";
+import TambahStok from "@/components/Produk/TambahStok.vue";
+import EditProduk from "@/components/Produk/EditProduk.vue";
 
 const routes = [
   {
@@ -51,8 +53,18 @@ const routes = [
         component: BarangMasukView,
       },
       {
-        path: "/barang-masuk/tambah-barang",
-        name: "tambah-barang-masuk",
+        path: "/produk/tambah-stok/:kodeProduk",
+        name: "tambah-stok",
+        component: TambahStok,
+      },
+      {
+        path: "/produk/edit-produk/:kodeProduk",
+        name: "edit-produk",
+        component: EditProduk,
+      },
+      {
+        path: "/produk/tambah-produk-baru",
+        name: "tambah-produk-baru",
         component: TambahBarangMasukView,
       },
       {
@@ -66,8 +78,8 @@ const routes = [
         component: StatusRakView,
       },
       {
-        path: "/barang-keluar/detail",
-        name: "detail-barang-keluar",
+        path: "/barang-keluar/detail/:idTransaksi",
+        name: "DetailBrgKeluar",
         component: DetailBrgKeluar,
       },
       {

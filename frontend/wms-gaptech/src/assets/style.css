@@ -10,3 +10,7 @@ input:focus {
   background-color: #ddf2fd;
   color: #164863;
 }
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}

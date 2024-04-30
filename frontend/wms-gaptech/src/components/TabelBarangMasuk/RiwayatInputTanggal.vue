@@ -34,13 +34,13 @@
     >
       <template #item="{ item, index }">
         <tr :class="getRowClass(index)">
-          <td class="text-center bg-blue-300">{{ index + 1 }}</td>
-          <td class="text-center bg-green-300">{{ item.kodeProduk }}</td>
-          <td class="bg-pink-300">{{ item.namaProduk }}</td>
-          <td class="text-center bg-yellow-300">
+          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ item.kodeProduk }}</td>
+          <td>{{ item.namaProduk }}</td>
+          <td class="text-center">
             {{ item.stokMasuk }}
           </td>
-          <td class="text-center bg-gray-300">
+          <td class="text-center">
             {{ item.dateInProduct }}
           </td>
         </tr>
@@ -52,8 +52,10 @@
 <script>
 import axiosInstance from "@/utils/api";
 
-async function fetchData() {
-  const response = await axiosInstance.get("/inproducts/last30days");
+async function fetchData(startDate, endDate) {
+  const response = await axiosInstance.get(
+    `inproducts/data-by-period?start=${startDate}&end=${endDate}`,
+  );
   return response.data;
 }
 
@@ -71,13 +73,13 @@ function formatDateTime(dateTimeString) {
 }
 
 const API = {
-  async fetch({ page, itemsPerPage, search }) {
+  async fetch({ page, itemsPerPage, search, startDate, endDate, sortBy }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        const items = (await fetchData()).filter((item) => {
+        const items = (await fetchData(startDate, endDate)).filter((item) => {
           if (search && Object.keys(search).length > 0) {
             if (
               search.namaProduk &&
@@ -88,9 +90,20 @@ const API = {
               return false;
             }
           }
-
           return true;
         });
+
+        if (sortBy.length) {
+          const sortKey = sortBy[0].key;
+          const sortOrder = sortBy[0].order;
+          if (sortKey === "dateInProduct") {
+            items.sort((a, b) => {
+              const dateA = new Date(a[sortKey]).getTime();
+              const dateB = new Date(b[sortKey]).getTime();
+              return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+            });
+          }
+        }
 
         const paginated = items.slice(start, end);
 
@@ -101,7 +114,16 @@ const API = {
 };
 
 export default {
-  components: {},
+  props: {
+    startDate: {
+      type: String,
+      default: null,
+    },
+    endDate: {
+      type: String,
+      default: null,
+    },
+  },
   data() {
     return {
       itemsPerPage: 5,
@@ -133,7 +155,6 @@ export default {
           align: "center",
           key: "dateInProduct",
           width: "20%",
-          sortable: false,
         },
       ],
       serverItems: [],
@@ -143,18 +164,32 @@ export default {
     };
   },
   watch: {
-    name() {
+    startDate() {
+      if (this.startDate === null) {
+        return;
+      }
+      this.loadItems();
+    },
+    endDate() {
+      if (this.endDate === null) {
+        return;
+      }
       this.loadItems();
     },
   },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
+      if (this.startDate === null || this.endDate === null) {
+        return;
+      }
       this.loading = true;
       const { items, total } = await API.fetch({
         page: page || 1,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
+        startDate: this.startDate,
+        endDate: this.endDate,
       });
       items.forEach((item) => {
         item.dateInProduct = formatDateTime(item.dateInProduct);
@@ -167,7 +202,6 @@ export default {
       this.loadItems({
         page: 1,
         itemsPerPage: this.itemsPerPage,
-        sortBy: [],
         search: this.search,
       });
     },
