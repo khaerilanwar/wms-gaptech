@@ -138,7 +138,6 @@ export default {
       const isConfirmed = window.confirm(
         "Apakah Anda yakin tidak menyimpan data?",
       );
-      console.log("Tes cancel: ", isConfirmed);
       if (isConfirmed) {
         this.$router.push("/produk");
       }
@@ -147,7 +146,6 @@ export default {
       const isConfirmed = window.confirm(
         "Apakah Anda yakin meninggalkan halaman ini?",
       );
-      console.log("Tes back: ", isConfirmed);
       if (isConfirmed) {
         this.$router.push("/produk");
       }

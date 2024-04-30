@@ -154,6 +154,9 @@ export default {
       search: { namaProduk: "" },
     };
   },
+  mounted() {
+    this.loadItems();
+  },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
       this.loading = true;

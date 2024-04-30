@@ -109,7 +109,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!localStorage.getItem("token")) {
-      next({ name: "login" });
+      await next({ name: "login" });
       return;
     }
     try {

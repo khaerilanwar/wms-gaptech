@@ -177,6 +177,9 @@ export default {
       this.loadItems();
     },
   },
+  mounted() {
+    this.loadItems();
+  },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
       if (this.startDate === null || this.endDate === null) {

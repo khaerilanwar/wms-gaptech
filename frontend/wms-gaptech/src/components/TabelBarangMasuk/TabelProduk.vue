@@ -59,7 +59,7 @@
               <router-link :to="`/produk/edit-produk/${item.kodeProduk}`">
                 <ComponentButton intent="edit"></ComponentButton>
               </router-link>
-              <button @click="deleteItem(item)">
+              <button @click="deleteItem(item.kodeProduk)">
                 <ComponentButton intent="delete"></ComponentButton>
               </button>
             </div>
@@ -215,6 +215,15 @@ export default {
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
       );
+    },
+    async deleteItem(kodeProduk) {
+      const isConfirmed = window.confirm(
+        "Apakah Anda yakin untuk menghapus data?",
+      );
+      if (isConfirmed) {
+        await axiosInstance.delete(`product/${kodeProduk}`);
+        this.loadItems();
+      }
     },
   },
 };
