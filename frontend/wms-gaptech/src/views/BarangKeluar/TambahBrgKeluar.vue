@@ -145,7 +145,7 @@ export default {
       },
     };
   },
-  mounted() {
+  created() {
     this.fetchProducts();
   },
   methods: {
