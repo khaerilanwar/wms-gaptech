@@ -40,12 +40,15 @@
       @update:options="loadItems"
     >
       <template #item="{ item, index }">
-        <tr :class="getRowClass(index)">
+        <tr
+          :class="getRowClass(index)"
+          class="hover:bg-grey-primary hover:bg-opacity-15"
+        >
           <td class="text-center">{{ index + 1 }}</td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
           <td class="text-center">{{ item.posisiRak }}</td>
-          <td>{{ formatHarga(item.harga) }}</td>
+          <td>{{ $filters.currency(item.harga) }}</td>
           <td>
             <v-chip :color="getColor(item.stok)">
               {{ item.stok }}
@@ -207,14 +210,6 @@ export default {
       if (stock > 100) return "green";
       else if (stock > 50) return "orange";
       else return "red";
-    },
-    formatHarga(harga) {
-      return (
-        "Rp " +
-        parseFloat(harga)
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      );
     },
     async deleteItem(kodeProduk) {
       const isConfirmed = window.confirm(

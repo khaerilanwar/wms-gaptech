@@ -21,7 +21,7 @@
             <label
               for="productName"
               class="block mb-2 text-sm font-medium text-black"
-              >Nama Produk Baru</label
+              >Nama Produk Baru <span class="text-red-secondary">*</span></label
             >
             <textarea
               id="productName"
@@ -35,8 +35,8 @@
             <label
               for="rackPosition"
               class="block mb-2 text-sm font-medium text-black"
-              >Posisi Rak</label
-            >
+              >Posisi Rak <span class="text-red-secondary">*</span>
+            </label>
             <select
               id="rackPosition"
               name="rackPosition"
@@ -53,22 +53,25 @@
             <label
               for="productPrice"
               class="block mb-2 text-sm font-medium text-black"
-              >Harga Produk</label
-            >
+              >Harga Produk <span class="text-red-secondary">*</span>
+            </label>
             <input
               id="productPrice"
+              v-model="hargaProduk"
               type="text"
               name="productPrice"
               class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
               placeholder="Harga produk baru"
               required
+              @input="formatHargaInput"
             />
           </div>
           <div>
             <label
               for="stockAmount"
               class="block mb-2 text-sm font-medium text-black"
-              >Jumlah stok masuk</label
+              >Jumlah stok masuk
+              <span class="text-red-secondary">*</span></label
             >
             <input
               id="stockAmount"
@@ -102,6 +105,11 @@ export default {
     ComponentButton,
     ChevronLeftIcon,
   },
+  data() {
+    return {
+      hargaProduk: "",
+    };
+  },
   methods: {
     goBack() {
       const isConfirmed = window.confirm(
@@ -119,6 +127,11 @@ export default {
       if (isConfirmed) {
         this.$router.push("/produk");
       }
+    },
+    formatHargaInput() {
+      let input = this.hargaProduk.replace(/\D/g, "");
+      input = input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      this.hargaProduk = input;
     },
   },
 };

@@ -51,7 +51,7 @@
           </div>
           <div>
             <label
-              for="rackPosition"
+              for="productPrice"
               class="block mb-2 text-sm font-medium text-black"
               >Harga</label
             >

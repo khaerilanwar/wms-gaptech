@@ -43,7 +43,6 @@
       </div>
     </div>
   </div>
-
   <div>
     <h2 v-show="show30Days || showPeriode" class="font-semibold py-3">
       Hasil Filter Data:
@@ -64,8 +63,8 @@
     <Riwayat30Hari v-show="show30Days"></Riwayat30Hari>
   </div>
   <ShowAlert v-show="!showPeriode && !show30Days"
-    >Pilih Filter Terlebih Dahulu!</ShowAlert
-  >
+    >Pilih Filter Terlebih Dahulu!
+  </ShowAlert>
   <Notification ref="notification" />
 </template>
 
