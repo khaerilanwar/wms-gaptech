@@ -10,7 +10,7 @@
         <h1 class="text-xl font-semibold">Barang Keluar</h1>
       </div>
 
-      <form>
+      <form @submit.prevent="submitOrder">
         <div class="bg-white border p-5 mt-3 shadow-md rounded-md">
           <h1 class="text-lg font-semibold pb-4 pt-2">Data Penerima</h1>
           <div class="mb-5">
@@ -97,7 +97,6 @@
               <button
                 type="submit"
                 class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 hover:bg-blue-600"
-                @click="submitOrder"
               >
                 Submit
               </button>
@@ -189,6 +188,7 @@ export default {
       this.orders.totalPrice = this.orders.items.reduce((total, item) => {
         return total + item.harga * this.orders.quantity;
       }, 0);
+      console.log(this.orders);
       this.$emit("submit-order", this.orders);
     },
   },
