@@ -33,7 +33,10 @@
       @update:options="loadItems"
     >
       <template #item="{ item, index }">
-        <tr :class="getRowClass(index)">
+        <tr
+          :class="getRowClass(index)"
+          class="hover:bg-grey-primary hover:bg-opacity-15"
+        >
           <td class="text-center">{{ index + 1 }}</td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
@@ -153,6 +156,9 @@ export default {
       totalItems: 0,
       search: { namaProduk: "" },
     };
+  },
+  mounted() {
+    this.loadItems();
   },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {

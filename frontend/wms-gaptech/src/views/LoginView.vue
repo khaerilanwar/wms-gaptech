@@ -30,8 +30,8 @@
               <label
                 for="email"
                 class="block mb-2 text-sm font-medium text-black"
-                >Email</label
-              >
+                >Email <span class="text-red-secondary">*</span>
+              </label>
               <input
                 id="email"
                 v-model="email"
@@ -46,7 +46,7 @@
               <label
                 for="password"
                 class="block mb-2 text-sm font-medium text-black"
-                >Kata Sandi</label
+                >Kata Sandi <span class="text-red-secondary">*</span></label
               >
               <input
                 id="password"

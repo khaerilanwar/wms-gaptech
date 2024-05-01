@@ -54,7 +54,7 @@
               for="stockAmount"
               class="block mb-2 text-sm font-medium text-black"
             >
-              Tambah Stok Baru
+              Tambah Stok Baru <span class="text-red-secondary">*</span>
             </label>
             <input
               id="stockAmountNew"
