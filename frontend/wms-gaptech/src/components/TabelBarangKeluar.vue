@@ -94,10 +94,8 @@ export default {
     loading: true,
     totalItems: 0,
   }),
-  watch: {
-    name() {
-      this.loadItems();
-    },
+  created() {
+    this.loadItems();
   },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
@@ -108,7 +106,6 @@ export default {
         sortBy: sortBy || [],
       });
       this.serverItems = items;
-      console.log(this.serverItems);
       this.totalItems = total;
       this.loading = false;
     },

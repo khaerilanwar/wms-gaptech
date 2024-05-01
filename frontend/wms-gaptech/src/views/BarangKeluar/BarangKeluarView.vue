@@ -24,13 +24,11 @@
 import ComponentButton from "@/components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import TabelBarangKeluar from "@/components/TabelBarangKeluar.vue";
-// import DetailBrgKeluar from "@/DetailBrgKeluar.vue";
 
 export default {
   components: {
     ComponentButton,
     TabelBarangKeluar,
-    // DetailBrgKeluar,
   },
   data() {
     return {
