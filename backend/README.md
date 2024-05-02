@@ -139,6 +139,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
     }
     ```
 23.``GET`` ``/verify-reset-token/:token`` untuk verifikasi token yang didapatkan dari link yang dikirimkan
+
 24.``GET`` ``/update-password`` untuk mengubah password terbaru dengan `auth` token yang didapatkan 
    ```json
     {
