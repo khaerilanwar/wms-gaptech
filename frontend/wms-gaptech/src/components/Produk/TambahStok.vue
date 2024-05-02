@@ -65,6 +65,7 @@
                 name="stockAmountNew"
                 class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
                 required
+                @input="formatStokInput"
               />
               <p class="text-sm text-red-primary text-end">
                 Stok saat ini: {{ products.stok }}
@@ -178,6 +179,10 @@ export default {
       if (isConfirmed) {
         this.$router.push("/produk");
       }
+    },
+    formatStokInput() {
+      let input = this.stockAmountNew.replace(/\D/g, "");
+      this.stockAmountNew = input;
     },
   },
 };
