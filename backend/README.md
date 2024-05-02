@@ -146,7 +146,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
        "newPassword": "newpassword",
        "confirmNewPassword": "newpassword"
     }
-    ```
+   ```
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.
 
