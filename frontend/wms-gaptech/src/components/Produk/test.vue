@@ -148,20 +148,22 @@ export default {
         "Apakah Anda yakin untuk menambahkan data?",
       );
       if (isConfirmed) {
-        this.fetchData();
         this.saveDataToServer();
+        this.$router.push("/produk");
       }
     },
     async saveDataToServer() {
-      try {
-        this.showAlert = false;
-        await axiosInstance.patch(`product/${this.products.kodeProduk}`, {
-          stokBaru: parseInt(this.stockAmountNew),
-        });
-        this.$router.push("/produk");
-      } catch (error) {
-        console.log(error);
-      }
+      setTimeout(async () => {
+        try {
+          await axiosInstance.patch(`product/${this.products.kodeProduk}`, {
+            stokBaru: parseInt(this.stockAmountNew),
+          });
+          this.loading = false;
+        } catch (error) {
+          this.loading = false;
+          console.log(error);
+        }
+      }, 1000);
     },
     cancel() {
       const isConfirmed = window.confirm(

@@ -87,7 +87,6 @@ const API = {
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
           const sortOrder = sortBy[0].order;
-          console.log(sortOrder);
           if (sortKey === "stok") {
             items.sort((a, b) => {
               const aValue = a[sortKey];
