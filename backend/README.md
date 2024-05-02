@@ -132,8 +132,21 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
         ]
     }
     ```
-
+22. ``POST`` ``/reset-password`` untuk mengirimkan email berisi link (localhost:5173/reset/token)
+    ```json
+    {
+        "email": "johndoe@gmail.com",
+    }
+    ```
+23.``GET`` ``/verify-reset-token/:token`` untuk verifikasi token yang didapatkan dari link yang dikirimkan
+24.``GET`` ``/update-password`` untuk mengubah password terbaru dengan `auth` token yang didapatkan 
+   ```json
+    {
+       "newPassword": "newpassword",
+       "confirmNewPassword": "newpassword"
+    }
+    ```
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.
 
-Author : [Khaeril Anwar](https://github.com/khaerilanwar)
+Author : [Khaeril Anwar](https://github.com/khaerilanwar) & [Jozanda Aulia](https://github.com/jossanda17)
