@@ -76,9 +76,9 @@ router.get("/outproducts/data-by-period", verifyToken, outProductByPeriod);
 router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
-router.get("/transaction/:idTransaksi(\\d+)", getTransaction)
-router.post("/transaction", verifyToken, saveTransaction);
-router.get("/transactions", verifyToken, getAllTransactions);
+router.get("/transaction/:idTransaksi(\\d+)", getTransaction);
+router.post("/transaction", saveTransaction);
+router.get("/transactions", getAllTransactions);
 
 // Router Debug Development
 // router.get('/dev/sayang', develop)
