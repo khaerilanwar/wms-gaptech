@@ -112,7 +112,7 @@ async function outProductSeeder() {
 }
 
 // uncomment code below to run in product seeder
-// outProductSeeder().then(() => console.log('Out product seeder has been done!'))
+outProductSeeder().then(() => console.log('Out product seeder has been done!'))
 
 async function transactionSeeder() {
   const products = await Products.find(
@@ -162,4 +162,4 @@ async function transactionSeeder() {
 }
 
 // uncomment code below to run in transaction seeder
-// transactionSeeder().then(() => console.log('Transaction seeder has been done!'))
+transactionSeeder().then(() => console.log('Transaction seeder has been done!'))
