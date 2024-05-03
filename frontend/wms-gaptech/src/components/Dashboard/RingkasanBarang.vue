@@ -1,6 +1,6 @@
 <template>
-  <div class="">
-    <h1 class="font-semibold">Ringkasan Stok Barang</h1>
+  <div class="mt-5">
+    <h1 class="font-semibold xl:text-2xl">Ringkasan Stok Barang</h1>
     <div class="flex mb-2 justify-end items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
@@ -87,7 +87,6 @@ const API = {
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
           const sortOrder = sortBy[0].order;
-          console.log(sortOrder);
           if (sortKey === "stok") {
             items.sort((a, b) => {
               const aValue = a[sortKey];

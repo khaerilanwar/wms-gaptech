@@ -84,12 +84,14 @@
                   <td>{{ $filters.currency(item.harga) }}</td>
                   <td>
                     <QuantityBtn
+                      :selected="selected"
                       @quantity-changed="handleQuantity"
                     ></QuantityBtn>
                   </td>
                 </tr>
               </template>
             </v-data-table>
+            <!-- <pre> {{ selected }}</pre> -->
             <p class="p-5 m-5">
               Total Harga : {{ $filters.currency(orders.totalPrice) }}
             </p>
@@ -121,7 +123,8 @@ export default {
     return {
       recipientName: "",
       recipientAddress: "",
-      quantity: 0,
+      // quantity: 0,
+      // totalQty: 0,
       search: "",
       selected: [],
       isLoading: true,
@@ -156,6 +159,7 @@ export default {
       this.fetchProducts();
     }, 1000);
   },
+
   methods: {
     async fetchProducts() {
       try {
@@ -171,10 +175,12 @@ export default {
       return index % 2 === 0 ? "bg-gray-100" : "";
     },
     handleQuantity(quantity) {
-      this.quantity = quantity;
+      this.selected.forEach((obj, index) => {
+        this.selected[index].quantity = quantity;
+      });
     },
 
-    submitOrder() {
+    async submitOrder() {
       this.orders.recipientName = this.recipientName;
       this.orders.recipientAddress = this.recipientAddress;
       this.orders.items = this.selected.map((item) => {
@@ -182,14 +188,28 @@ export default {
           id: item._id,
           namaProduk: item.namaProduk,
           harga: item.harga,
+          quantity: item.quantity,
         };
       });
-      this.orders.quantity = this.quantity;
       this.orders.totalPrice = this.orders.items.reduce((total, item) => {
-        return total + item.harga * this.orders.quantity;
+        return total + item.harga * item.quantity;
       }, 0);
-      console.log(this.orders);
-      this.$emit("submit-order", this.orders);
+
+      const orderData = {
+        namaPemesan: this.orders.recipientName,
+        alamatPengiriman: this.orders.recipientAddress,
+        barangKeluar: this.orders.items.map((item) => ({
+          kodeProduk: item.id,
+          kuantitas: item.quantity,
+        })),
+      };
+
+      try {
+        await axiosInstance.post("transaction", orderData);
+        console.log("Pesanan berhasil dikirim:", orderData);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengirim pesanan:", error);
+      }
     },
   },
 };

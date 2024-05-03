@@ -6,6 +6,7 @@
         type="button"
         data-input-counter-decrement="counter-input"
         class="flex-shrink-0 bg-gray-100 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 focus:ring-2 focus:outline-none"
+        :disabled="selected.length === 0"
         @click="decrement"
       >
         <svg
@@ -62,6 +63,12 @@
 
 <script>
 export default {
+  props: {
+    selected: {
+      type: Array,
+      required: true,
+    },
+  },
   emits: ["quantity-changed"],
   data() {
     return {
@@ -70,7 +77,7 @@ export default {
   },
   methods: {
     increment: function () {
-      if (this.quantity >= 0) {
+      if (this.quantity >= 0 && this.selected.length !== 0) {
         this.quantity++;
         this.$emit("quantity-changed", this.quantity);
       }
