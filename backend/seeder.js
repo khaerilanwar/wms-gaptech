@@ -6,6 +6,7 @@ import InProducts from './models/InProductModel.js'
 import OutProducts from './models/OutProductModel.js'
 import bcrypt from 'bcrypt'
 import Transaction from './models/TransactionModel.js'
+import Racks from './models/RackModel.js'
 
 // Credential main admin
 // name     : Khaeril Anwar
@@ -140,3 +141,51 @@ async function transactionSeeder() {
 
 // uncomment code below to run in transaction seeder
 // transactionSeeder().then(() => console.log('Transaction seeder has been done!'))
+
+async function rackSeeder() {
+    const rakArray = []; // total posisi rak ada 48
+    // generate lokasi rak
+    // contoh posisi rak L1-2-3-4
+    // L1 = Lantai 1
+    // 2  = Baris rak ke-2
+    // 3  = Rak urutan ke-3
+    // 4  = Level rak ke-4
+    for (let i = 1; i < 2; i++) { // lantai ada 1
+        for (let j = 1; j <= 3; j++) { // baris rak ada 3
+            for (let k = 1; k <= 4; k++) { // urutan rak ada 4
+                for (let l = 1; l <= 4; l++) { // level rak ada 4
+                    rakArray.push(`L${i}-${j}-${k}-${l}`);
+                }
+            }
+        }
+    }
+
+    const products = await Products.find()
+
+    const inputedRack = []
+    let i = 0
+    while (i < 28) {
+        const rak = faker.helpers.arrayElement(rakArray)
+        const produk = faker.helpers.arrayElement(products).namaProduk
+        if (
+            inputedRack.find(item => item.rak === rak)
+            ||
+            inputedRack.find(item => item.produk === produk)
+        ) continue
+
+        const rackEntry = {
+            rak,
+            kapasitas: 100,
+            terisi: faker.number.int({ min: 1, max: 72 }),
+            status: 2,
+            produk
+        }
+        await Racks.create(rackEntry)
+        inputedRack.push({ rak, produk })
+        i++
+    }
+}
+
+// uncomment code below to run the rack seeder
+rackSeeder()
+    .then(() => console.log('Rack seeder has been done!'))

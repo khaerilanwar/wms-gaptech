@@ -26,7 +26,6 @@ import {
   inProductByPeriod,
   inProductLast30Days,
 } from "../controllers/InProducts.js";
-// import { develop } from "../controllers/Development.js";
 import {
   getOutProducts,
   outProductByMonth,
@@ -38,6 +37,7 @@ import {
   getTransaction,
   saveTransaction,
 } from "../controllers/Transaction.js";
+// import { getAllRacks } from "../controllers/Racks.js";
 
 const router = express.Router();
 
@@ -79,6 +79,9 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 router.get("/transaction/:idTransaksi(\\d+)", getTransaction)
 router.post("/transaction", verifyToken, saveTransaction);
 router.get("/transactions", verifyToken, getAllTransactions);
+
+// Router racks
+// router.get("/racks", getAllRacks)
 
 // Router Debug Development
 // router.get('/dev/sayang', develop)
