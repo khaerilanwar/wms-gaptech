@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-lg shadow-lg p-5 bg-white">
-    <h1 class="font-semibold">Ringkasan Barang Masuk dan Keluar</h1>
+    <h1 class="font-semibold xl:text-2xl">Ringkasan Barang Masuk dan Keluar</h1>
     <Bar :data="chartData" />
   </div>
 </template>
