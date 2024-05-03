@@ -145,7 +145,6 @@ const sendPasswordResetEmail = async (email, token) => {
   return transporter.sendMail(mailOptions);
 };
 
-// Fungsi untuk reset password
 export const resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -155,13 +154,13 @@ export const resetPassword = async (req, res) => {
       return res.status(404).json({ msg: "Email not found" });
     }
 
-    // Generate token untuk reset password
-    const token = jwt.sign({ id: user._id }, process.env.RESET_TOKEN_SECRET, {
+    // Generate reset token
+    const resetToken = jwt.sign({ id: user._id }, process.env.RESET_TOKEN_SECRET, {
       expiresIn: "15m",
     });
 
-    // Kirim email dengan token reset password
-    await sendPasswordResetEmail(email, token);
+    // Send email with reset token
+    await sendPasswordResetEmail(email, resetToken);
 
     res.json({ msg: "Email sent with password reset instructions" });
   } catch (error) {
@@ -169,6 +168,7 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+
 
 // Fungsi untuk mengecek validitas token reset password
 export const verifyResetToken = async (req, res) => {
@@ -179,10 +179,7 @@ export const verifyResetToken = async (req, res) => {
     jwt.verify(token, process.env.RESET_TOKEN_SECRET, async (err, decoded) => {
       if (err) return res.status(403).json({ msg: "Invalid token, please try again" });
 
-      const user = await Users.findById(decoded.id);
-      if (!user) return res.status(404).json({ msg: "User not found" });
-
-      res.json({ msg: "Token verified", user });
+      res.json({ msg: "Token verified", isValid: true });
     });
   } catch (error) {
     console.error(error);
@@ -190,7 +187,7 @@ export const verifyResetToken = async (req, res) => {
   }
 };
 
-// Fungsi untuk mengubah password setelah verifikasi token
+// Fungsi untuk update password terbaru
 export const updatePassword = async (req, res) => {
   try {
     const { newPassword, confirmNewPassword } = req.body;
@@ -199,7 +196,7 @@ export const updatePassword = async (req, res) => {
       return res.status(400).json({ msg: "Passwords do not match" });
     }
 
-    const token = req.headers.authorization.split(' ')[1]; // Ambil token dari header Authorization
+    const token = req.headers.authorization.split(' ')[1];
 
     jwt.verify(token, process.env.RESET_TOKEN_SECRET, async (err, decoded) => {
       if (err) return res.status(403).json({ msg: "Invalid token, please try again" });
@@ -217,6 +214,7 @@ export const updatePassword = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+
 
 export const Logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
