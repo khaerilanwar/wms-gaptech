@@ -158,6 +158,7 @@ export default {
       this.fetchProducts();
     }, 1000);
   },
+
   methods: {
     async fetchProducts() {
       try {
@@ -195,22 +196,22 @@ export default {
         return total + item.harga * item.quantity;
       }, 0);
 
-      // const orderData = {
-      //   namaPemesan: this.orders.recipientName,
-      //   alamatPengiriman: this.orders.recipientAddress,
-      //   barangKeluar: this.orders.items.map((item) => ({
-      //     kodeProduk: item.id,
-      //     kuantitas: item.quantity,
-      //   })),
-      // };
+      const orderData = {
+        namaPemesan: this.orders.recipientName,
+        alamatPengiriman: this.orders.recipientAddress,
+        barangKeluar: this.orders.items.map((item) => ({
+          kodeProduk: item.id,
+          kuantitas: item.quantity,
+        })),
+      };
 
-      // try {
-      //   await axiosInstance.post("transaction", orderData);
-      //   console.log("Pesanan berhasil dikirim:", orderData);
-      //   this.$emit("submit-order", this.orders);
-      // } catch (error) {
-      //   console.error("Terjadi kesalahan saat mengirim pesanan:", error);
-      // }
+      try {
+        await axiosInstance.post("transaction", orderData);
+        console.log("Pesanan berhasil dikirim:", orderData);
+        this.$emit("submit-order", this.orders);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengirim pesanan:", error);
+      }
     },
   },
 };
