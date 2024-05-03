@@ -84,13 +84,14 @@
                   <td>{{ $filters.currency(item.harga) }}</td>
                   <td>
                     <QuantityBtn
+                      :selected="selected"
                       @quantity-changed="handleQuantity"
                     ></QuantityBtn>
                   </td>
                 </tr>
               </template>
             </v-data-table>
-            <pre> {{ selected }}</pre>
+            <!-- <pre> {{ selected }}</pre> -->
             <p class="p-5 m-5">
               Total Harga : {{ $filters.currency(orders.totalPrice) }}
             </p>
@@ -174,10 +175,8 @@ export default {
       return index % 2 === 0 ? "bg-gray-100" : "";
     },
     handleQuantity(quantity) {
-      // this.quantity = quantity;
       this.selected.forEach((obj, index) => {
         this.selected[index].quantity = quantity;
-        console.log(this.selected[index].quantity);
       });
     },
 
@@ -208,7 +207,6 @@ export default {
       try {
         await axiosInstance.post("transaction", orderData);
         console.log("Pesanan berhasil dikirim:", orderData);
-        this.$emit("submit-order", this.orders);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);
       }
