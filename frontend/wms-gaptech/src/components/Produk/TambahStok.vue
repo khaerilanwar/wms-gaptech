@@ -1,85 +1,89 @@
 <template>
   <section>
-    <div>
-      <button class="flex items-center hover:text-blue-primary" @click="goBack">
-        <ChevronLeftIcon class="h-6 w-6" />
-        <span class="text-sm">Kembali</span>
-      </button>
+    <button class="flex items-center hover:text-blue-primary" @click="goBack">
+      <ChevronLeftIcon class="h-6 w-6" />
+      <span class="text-sm">Kembali</span>
+    </button>
+    <div v-if="loading" class="flex justify-center items-center h-screen">
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </div>
+    <div v-else>
       <div
         v-show="!showAlert"
         class="flex justify-center items-center font-semibold text-3xl mb-2"
       >
         <h1 class="font-semibold">Tambah Stok</h1>
       </div>
-    </div>
-    <div
-      v-show="!showAlert"
-      class="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 border-2 border-blue-primary mx-auto"
-    >
-      <div class="p-3">
-        <form class="space-y-2 md:space-y-2" action="" method="post">
-          <div>
-            <label
-              for="productName"
-              class="block mb-2 text-sm font-medium text-black"
-              >Kode Produk</label
+      <div
+        v-show="!showAlert"
+        class="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 border-2 border-blue-primary mx-auto"
+      >
+        <div class="p-3">
+          <form class="space-y-2 md:space-y-2" action="" method="post">
+            <div>
+              <label
+                for="productName"
+                class="block mb-2 text-sm font-medium text-black"
+                >Kode Produk</label
+              >
+              <input
+                id="productName"
+                type="text"
+                name="productName"
+                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
+                required
+                disabled
+                :value="products.kodeProduk"
+              />
+            </div>
+            <div>
+              <label
+                for="productName"
+                class="block mb-2 text-sm font-medium text-black"
+                >Nama Produk</label
+              >
+              <textarea
+                id="productName"
+                v-model="products.namaProduk"
+                name="productName"
+                rows="2"
+                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
+                disabled
+              ></textarea>
+            </div>
+            <div>
+              <label
+                for="stockAmount"
+                class="block mb-2 text-sm font-medium text-black"
+              >
+                Tambah Stok Baru <span class="text-red-secondary">*</span>
+              </label>
+              <input
+                id="stockAmountNew"
+                v-model="stockAmountNew"
+                type="text"
+                name="stockAmountNew"
+                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
+                required
+                @input="formatStokInput"
+              />
+              <p class="text-sm text-red-primary text-end">
+                Stok saat ini: {{ products.stok }}
+              </p>
+            </div>
+          </form>
+          <div class="flex items-center justify-center mt-2">
+            <ComponentButton intent="primary" class="mr-5" @click="saveData"
+              >Simpan
+            </ComponentButton>
+            <ComponentButton intent="danger" @click="cancel"
+              >Batal</ComponentButton
             >
-            <input
-              id="productName"
-              type="text"
-              name="productName"
-              class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-              required
-              disabled
-              :value="products.kodeProduk"
-            />
           </div>
-          <div>
-            <label
-              for="productName"
-              class="block mb-2 text-sm font-medium text-black"
-              >Nama Produk</label
-            >
-            <textarea
-              id="productName"
-              v-model="products.namaProduk"
-              name="productName"
-              rows="2"
-              class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-              disabled
-            ></textarea>
-          </div>
-          <div>
-            <label
-              for="stockAmount"
-              class="block mb-2 text-sm font-medium text-black"
-            >
-              Tambah Stok Baru <span class="text-red-secondary">*</span>
-            </label>
-            <input
-              id="stockAmountNew"
-              v-model="stockAmountNew"
-              type="text"
-              name="stockAmountNew"
-              class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-              required
-            />
-            <p class="text-sm text-red-primary text-end">
-              Stok saat ini: {{ products.stok }}
-            </p>
-          </div>
-        </form>
-        <div class="flex items-center justify-center mt-2">
-          <ComponentButton intent="primary" class="mr-5" @click="saveData"
-            >Simpan
-          </ComponentButton>
-          <ComponentButton intent="danger" @click="cancel"
-            >Batal</ComponentButton
-          >
         </div>
       </div>
+      <ShowAlert v-show="showAlert">Produk tidak ditemukan!</ShowAlert>
     </div>
-    <ShowAlert v-show="showAlert">Produk tidak ditemukan!</ShowAlert>
     <Notification ref="notification" />
   </section>
 </template>
@@ -103,6 +107,7 @@ export default {
       products: [],
       showAlert: false,
       stockAmountNew: null,
+      loading: false,
     };
   },
   created() {
@@ -111,11 +116,22 @@ export default {
   methods: {
     async fetchData() {
       try {
+        this.loading = true;
+        this.showAlert = false;
         const kodeProduk = this.$route.params.kodeProduk;
-        const response = await axiosInstance.get(`product/${kodeProduk}`);
-        this.products = response.data;
+        setTimeout(async () => {
+          try {
+            const response = await axiosInstance.get(`product/${kodeProduk}`);
+            this.products = response.data;
+            this.loading = false;
+          } catch (error) {
+            this.loading = false;
+            this.showAlert = true;
+            console.log(error);
+          }
+        }, 1000);
       } catch (error) {
-        this.showAlert = true;
+        console.log(error);
       }
     },
     saveData() {
@@ -133,8 +149,8 @@ export default {
         "Apakah Anda yakin untuk menambahkan data?",
       );
       if (isConfirmed) {
+        this.fetchData();
         this.saveDataToServer();
-        this.$router.push("/produk");
       }
     },
     async saveDataToServer() {
@@ -143,6 +159,7 @@ export default {
         await axiosInstance.patch(`product/${this.products.kodeProduk}`, {
           stokBaru: parseInt(this.stockAmountNew),
         });
+        this.$router.push("/produk");
       } catch (error) {
         console.log(error);
       }
@@ -162,6 +179,10 @@ export default {
       if (isConfirmed) {
         this.$router.push("/produk");
       }
+    },
+    formatStokInput() {
+      let input = this.stockAmountNew.replace(/\D/g, "");
+      this.stockAmountNew = input;
     },
   },
 };

@@ -55,14 +55,20 @@
               class="block mb-2 text-sm font-medium text-black"
               >Harga</label
             >
-            <input
-              id="productPrice"
-              v-model="products.harga"
-              type="text"
-              name="productPrice"
-              class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-              @input="formatHargaInput"
-            />
+            <div class="flex">
+              <span
+                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-l-lg flex items-center p-2.5"
+                >Rp</span
+              >
+              <input
+                id="productPrice"
+                v-model="products.harga"
+                type="text"
+                name="productPrice"
+                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-r-lg block w-full p-2.5"
+                @input="formatHargaInput"
+              />
+            </div>
           </div>
         </form>
         <div class="flex items-center justify-center mt-2">

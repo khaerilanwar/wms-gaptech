@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex mb-2 justify-between items-center">
+    <div class="flex mb-2 justify-end items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
@@ -13,13 +13,6 @@
           filled
           @input="searchItems"
         ></v-text-field>
-      </div>
-      <div>
-        <router-link to="/produk/tambah-produk-baru">
-          <ComponentButton intent="primary" :left-icon="PlusIcon">
-            Produk Baru
-          </ComponentButton>
-        </router-link>
       </div>
     </div>
     <v-data-table-server
@@ -47,53 +40,50 @@
           <td class="text-center">{{ index + 1 }}</td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
-          <td class="text-center">{{ item.posisiRak }}</td>
-          <td>{{ $filters.currency(item.harga) }}</td>
-          <td>
-            <v-chip :color="getColor(item.stok)">
-              {{ item.stok }}
-            </v-chip>
+          <td class="text-center">
+            {{ item.stokKeluar }}
           </td>
-          <td>
-            <div class="flex">
-              <router-link :to="`/produk/tambah-stok/${item.kodeProduk}`">
-                <ComponentButton intent="add"></ComponentButton>
-              </router-link>
-              <router-link :to="`/produk/edit-produk/${item.kodeProduk}`">
-                <ComponentButton intent="edit"></ComponentButton>
-              </router-link>
-              <button @click="deleteItem(item.kodeProduk)">
-                <ComponentButton intent="delete"></ComponentButton>
-              </button>
-            </div>
+          <td class="text-center">
+            {{ item.dateOutProduct }}
           </td>
         </tr>
       </template>
     </v-data-table-server>
   </div>
-  <Notification ref="notification" />
 </template>
 
 <script>
-import ComponentButton from "../../components/ComponentButton.vue";
-import { PlusIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
-import Notification from "../Notification.vue";
 
 async function fetchData() {
-  const response = await axiosInstance.get("products");
+  const response = await axiosInstance.get("/outproducts/last30days");
   return response.data;
 }
 
+function formatDateTime(dateTimeString) {
+  const dateTime = new Date(dateTimeString);
+  const localDateTime = new Date(
+    dateTime.getTime() + dateTime.getTimezoneOffset() * 60000,
+  );
+  const day = localDateTime.getDate().toString().padStart(2, "0");
+  const month = (localDateTime.getMonth() + 1).toString().padStart(2, "0");
+  const year = localDateTime.getFullYear();
+  const hours = localDateTime.getHours().toString().padStart(2, "0");
+  const minutes = localDateTime.getMinutes().toString().padStart(2, "0");
+  return `${day}-${month}-${year} ${hours}:${minutes}`;
+}
+
 const API = {
-  async fetch({ page, itemsPerPage, sortBy, search }) {
+  async fetch({ page, itemsPerPage, search, sortBy }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        const items = (await fetchData()).filter((item) => {
-          if (search && Object.keys(search).length > 0) {
+        let items = await fetchData();
+
+        if (search && Object.keys(search).length > 0) {
+          items = items.filter((item) => {
             if (
               search.namaProduk &&
               !item.namaProduk
@@ -102,19 +92,18 @@ const API = {
             ) {
               return false;
             }
-          }
-
-          return true;
-        });
+            return true;
+          });
+        }
 
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
           const sortOrder = sortBy[0].order;
-          if (sortKey === "stok" || sortKey === "harga") {
+          if (sortKey === "dateOutProduct") {
             items.sort((a, b) => {
-              const aValue = a[sortKey];
-              const bValue = b[sortKey];
-              return sortOrder === "desc" ? bValue - aValue : aValue - bValue;
+              const dateA = new Date(a[sortKey]).getTime();
+              const dateB = new Date(b[sortKey]).getTime();
+              return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
             });
           }
         }
@@ -128,13 +117,9 @@ const API = {
 };
 
 export default {
-  components: {
-    ComponentButton,
-    Notification,
-  },
+  components: {},
   data() {
     return {
-      PlusIcon: PlusIcon,
       itemsPerPage: 5,
       headers: [
         { title: "No", align: "start", sortable: false, width: "5%" },
@@ -153,25 +138,17 @@ export default {
           width: "40%",
         },
         {
-          title: "Posisi Rak",
+          title: "Stok Keluar",
           align: "center",
-          key: "posisiRak",
-          width: "15%",
+          key: "stokKeluar",
+          width: "10%",
           sortable: false,
         },
         {
-          title: "Harga",
+          title: "Tanggal Keluar",
           align: "center",
-          key: "harga",
-          width: "15%",
-        },
-        { title: "Stok", align: "center", key: "stok", width: "10%" },
-        {
-          title: "Edit",
-          align: "center",
-          sortable: false,
-          key: "actions",
-          width: "5%",
+          key: "dateOutProduct",
+          width: "20%",
         },
       ],
       serverItems: [],
@@ -180,10 +157,8 @@ export default {
       search: { namaProduk: "" },
     };
   },
-  watch: {
-    name() {
-      this.loadItems();
-    },
+  mounted() {
+    this.loadItems();
   },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
@@ -193,6 +168,10 @@ export default {
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
+      });
+
+      items.forEach((item) => {
+        item.dateOutProduct = formatDateTime(item.dateOutProduct);
       });
       this.serverItems = items;
       this.totalItems = total;
@@ -208,21 +187,6 @@ export default {
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
-    },
-    getColor(stock) {
-      if (stock > 100) return "green";
-      else if (stock > 50) return "orange";
-      else return "red";
-    },
-    async deleteItem(kodeProduk) {
-      const isConfirmed = window.confirm(
-        "Apakah Anda yakin untuk menghapus data?",
-      );
-      if (isConfirmed) {
-        await axiosInstance.delete(`product/${kodeProduk}`);
-        this.loadItems();
-        this.$refs.notification.showSuccess("Berhasil menghapus produk");
-      }
     },
   },
 };
