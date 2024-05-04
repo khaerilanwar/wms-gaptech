@@ -75,9 +75,9 @@
                 </span>
               </div>
             </div>
-            <ComponentButton intent="primary_full_width"
-              >Simpan</ComponentButton
-            >
+            <ComponentButton intent="primary_full_width" :disabled="isLoading">
+              {{ isLoading ? "Loading..." : "Kirim" }}
+            </ComponentButton>
           </form>
         </div>
       </div>
@@ -110,12 +110,14 @@ export default {
       confirm_password: "",
       showPassword: false,
       showConfirmPassword: false,
+      isLoading: false,
     };
   },
   methods: {
     async handleSubmit() {
       try {
-        await axios.put(
+        this.isLoading = true;
+        const response = await axios.put(
           "http://localhost:5000/update-password",
           {
             newPassword: this.password,
@@ -128,8 +130,12 @@ export default {
             },
           },
         );
-        this.$router.push("/login");
+        this.$refs.notification.showSuccess(response.data.msg);
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 2000);
       } catch (error) {
+        this.isLoading = false;
         console.log(error);
         this.$refs.notification.showError(error.response.data.msg);
       }

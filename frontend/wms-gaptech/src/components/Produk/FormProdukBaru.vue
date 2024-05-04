@@ -55,7 +55,7 @@
               class="block mb-2 text-sm font-medium text-black"
               >Harga</label
             >
-            <div class="flex focus:ring-blue-primary">
+            <!-- <div class="flex focus:ring-blue-primary">
               <span
                 class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-l-lg flex items-center p-2.5"
                 >Rp</span
@@ -66,6 +66,20 @@
                 type="text"
                 name="productPrice"
                 class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-r-lg block w-full p-2.5"
+                @input="formatHargaInput"
+              />
+            </div> -->
+            <div class="relative flex items-center w-full">
+              <span
+                class="absolute inset-y-0 left-0 pl-3 flex items-center cursor-pointer text-sm"
+                >Rp
+              </span>
+              <input
+                id="productPrice"
+                v-model="hargaProduk"
+                type="text"
+                name="productPrice"
+                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 pl-10 focus:ring-1 focus:ring-blue-primary"
                 @input="formatHargaInput"
               />
             </div>

@@ -72,7 +72,7 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        this.isLoading = true; // Atur isLoading menjadi true saat tombol diklik
+        this.isLoading = true;
         const response = await axiosInstance.post("reset-password", {
           email: this.email,
         });
@@ -82,7 +82,7 @@ export default {
         console.log(error);
         this.$refs.notification.showError(error.response.data.msg);
       } finally {
-        this.isLoading = false; // Atur isLoading kembali menjadi false setelah permintaan selesai
+        this.isLoading = false;
       }
     },
   },
