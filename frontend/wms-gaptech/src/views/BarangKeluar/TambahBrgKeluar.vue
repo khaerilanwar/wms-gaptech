@@ -84,9 +84,8 @@
                   <td>{{ $filters.currency(item.harga) }}</td>
                   <td>
                     <QuantityBtn
-                      @quantity-changed="
-                        handleQuantity(item.kodeProduk, quantity)
-                      "
+                      :kodeprod="item.kodeProduk"
+                      @quantity-changed="handleQuantity"
                     ></QuantityBtn>
                   </td>
                 </tr>
@@ -173,10 +172,13 @@ export default {
     diffRowColor(index) {
       return index % 2 === 0 ? "bg-gray-100" : "";
     },
-    handleQuantity(productid, quantity) {
-      console.log("Product ID:", productid);
-      console.log("Quantity:", quantity);
-      // Lakukan operasi lain yang diperlukan dengan id produk dan kuantitas
+    handleQuantity(dataQuantity) {
+      const index = this.selected.findIndex(
+        (item) => item.kodeProduk === dataQuantity.kodeprod,
+      );
+      if (index !== -1) {
+        this.selected[index].quantity = dataQuantity.quantity;
+      }
     },
 
     async submitOrder() {
@@ -190,7 +192,6 @@ export default {
           quantity: item.quantity,
         };
       });
-      console.log(this.orders.items);
 
       const orderData = {
         namaPemesan: this.orders.recipientName,

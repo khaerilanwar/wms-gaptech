@@ -63,8 +63,8 @@
 <script>
 export default {
   props: {
-    productid: {
-      type: String,
+    kodeprod: {
+      type: Number,
       required: true,
     },
   },
@@ -78,13 +78,19 @@ export default {
     increment: function () {
       if (this.quantity >= 0) {
         this.quantity++;
-        this.$emit("quantity-changed", this.quantity);
+        this.$emit("quantity-changed", {
+          kodeprod: this.kodeprod,
+          quantity: this.quantity,
+        });
       }
     },
     decrement: function () {
       if (this.quantity > 0) {
         this.quantity--;
-        this.$emit("quantity-changed", this.quantity);
+        this.$emit("quantity-changed", {
+          kodeprod: this.kodeprod,
+          quantity: this.quantity,
+        });
       }
     },
   },
