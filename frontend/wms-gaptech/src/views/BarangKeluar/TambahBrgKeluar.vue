@@ -84,14 +84,15 @@
                   <td>{{ $filters.currency(item.harga) }}</td>
                   <td>
                     <QuantityBtn
-                      :selected="selected"
-                      @quantity-changed="handleQuantity"
+                      @quantity-changed="
+                        handleQuantity(item.kodeProduk, quantity)
+                      "
                     ></QuantityBtn>
                   </td>
                 </tr>
               </template>
             </v-data-table>
-            <!-- <pre> {{ selected }}</pre> -->
+            <pre> {{ selected }}</pre>
             <p class="p-5 m-5">
               Total Harga : {{ $filters.currency(orders.totalPrice) }}
             </p>
@@ -123,8 +124,6 @@ export default {
     return {
       recipientName: "",
       recipientAddress: "",
-      // quantity: 0,
-      // totalQty: 0,
       search: "",
       selected: [],
       isLoading: true,
@@ -149,7 +148,6 @@ export default {
         recipientName: "",
         recipientAddress: "",
         items: [],
-        quantity: 0,
         totalPrice: 0,
       },
     };
@@ -166,6 +164,7 @@ export default {
         const response = await axiosInstance.get("products");
         this.products = response.data;
         this.isLoading = false;
+        console.log(this.products);
       } catch (error) {
         console.error("Error fetching products:", error);
         this.loading = false;
@@ -174,10 +173,10 @@ export default {
     diffRowColor(index) {
       return index % 2 === 0 ? "bg-gray-100" : "";
     },
-    handleQuantity(quantity) {
-      this.selected.forEach((obj, index) => {
-        this.selected[index].quantity = quantity;
-      });
+    handleQuantity(productid, quantity) {
+      console.log("Product ID:", productid);
+      console.log("Quantity:", quantity);
+      // Lakukan operasi lain yang diperlukan dengan id produk dan kuantitas
     },
 
     async submitOrder() {
@@ -185,21 +184,19 @@ export default {
       this.orders.recipientAddress = this.recipientAddress;
       this.orders.items = this.selected.map((item) => {
         return {
-          id: item._id,
+          kodeProduk: item.kodeProduk,
           namaProduk: item.namaProduk,
           harga: item.harga,
           quantity: item.quantity,
         };
       });
-      this.orders.totalPrice = this.orders.items.reduce((total, item) => {
-        return total + item.harga * item.quantity;
-      }, 0);
+      console.log(this.orders.items);
 
       const orderData = {
         namaPemesan: this.orders.recipientName,
         alamatPengiriman: this.orders.recipientAddress,
         barangKeluar: this.orders.items.map((item) => ({
-          kodeProduk: item.id,
+          kodeProduk: item.kodeProduk,
           kuantitas: item.quantity,
         })),
       };
