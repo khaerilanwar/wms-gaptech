@@ -163,7 +163,6 @@ export default {
         const response = await axiosInstance.get("products");
         this.products = response.data;
         this.isLoading = false;
-        console.log(this.products);
       } catch (error) {
         console.error("Error fetching products:", error);
         this.loading = false;
@@ -192,6 +191,9 @@ export default {
           quantity: item.quantity,
         };
       });
+      this.orders.totalPrice = this.orders.items.reduce((total, item) => {
+        return total + item.harga * item.quantity;
+      }, 0);
 
       const orderData = {
         namaPemesan: this.orders.recipientName,
@@ -207,6 +209,7 @@ export default {
         console.log("Pesanan berhasil dikirim:", orderData);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);
+        console.log(orderData);
       }
     },
   },
