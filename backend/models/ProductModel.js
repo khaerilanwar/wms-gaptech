@@ -16,7 +16,6 @@ const productSchema = new Schema(
     posisiRak: { type: String, required: true },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
-    quantity: { type: Number, default: 0 },
   },
   { versionKey: false }
 );

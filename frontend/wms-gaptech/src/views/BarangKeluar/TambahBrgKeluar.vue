@@ -175,9 +175,11 @@ export default {
       const index = this.selected.findIndex(
         (item) => item.kodeProduk === dataQuantity.kodeprod,
       );
-      if (index !== -1) {
-        this.selected[index].quantity = dataQuantity.quantity;
+
+      if (!this.selected[index].quantity) {
+        this.selected[index].quantity = 0;
       }
+      this.selected[index].quantity = dataQuantity.quantity;
     },
 
     async submitOrder() {
@@ -203,13 +205,12 @@ export default {
           kuantitas: item.quantity,
         })),
       };
-
+      console.log(orderData);
       try {
         await axiosInstance.post("transaction", orderData);
         console.log("Pesanan berhasil dikirim:", orderData);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);
-        console.log(orderData);
       }
     },
   },

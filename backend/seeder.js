@@ -214,5 +214,4 @@ async function rackSeeder() {
 }
 
 // uncomment code below to run the rack seeder
-rackSeeder()
-  .then(() => console.log('Rack seeder has been done!'))
+rackSeeder().then(() => console.log("Rack seeder has been done!"));
