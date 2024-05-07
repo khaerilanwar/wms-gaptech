@@ -16,6 +16,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
+import axiosInstance from "@/utils/api";
 
 ChartJS.register(
   Title,
@@ -33,33 +34,67 @@ export default {
     return {
       chartData: {
         labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agustus",
-          "September",
-          "Oktober",
-          "November",
-          "Desember",
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
         ],
         datasets: [
           {
             label: "Barang Masuk",
-            backgroundColor: "rgba(66, 125, 157, 1)", // Warna yang lebih transparan untuk membedakan dengan barang keluar
-            data: [40, 20, 12, 40, 20, 12, 40, 20, 12, 40, 20, 12],
+            backgroundColor: "rgba(66, 125, 157, 1)",
+            data: Array(12).fill(0),
           },
           {
             label: "Barang Keluar",
-            backgroundColor: "rgba(155, 190, 200, 1)", // Warna yang lebih transparan untuk membedakan dengan barang masuk
-            data: [20, 30, 15, 25, 10, 15, 30, 20, 15, 25, 30, 20],
+            backgroundColor: "rgba(155, 190, 200, 1)",
+            data: Array(12).fill(0),
           },
         ],
       },
     };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  methods: {
+    updateChartData(inProducts, outProducts) {
+      inProducts.forEach((item) => {
+        const date = new Date(item.dateInProduct);
+        const month = date.getMonth();
+        this.chartData.datasets[0].data[month] += item.stokMasuk;
+      });
+
+      outProducts.forEach((item) => {
+        const date = new Date(item.dateOutProduct);
+        const month = date.getMonth();
+        this.chartData.datasets[1].data[month] += item.stokKeluar;
+      });
+    },
+    async fetchData() {
+      try {
+        const inProducts = await axiosInstance.get(
+          "inproducts/data-by-period?start=2024-01-01&end=2024-12-31",
+        );
+        const outProducts = await axiosInstance.get(
+          "outproducts/data-by-period?start=2024-01-01&end=2024-12-31",
+        );
+
+        this.updateChartData(inProducts.data, outProducts.data);
+        console.log("In Products:", inProducts.data);
+        console.log("Out Products:", outProducts.data);
+      } catch (error) {
+        console.error("Error fetching data : ", error);
+      }
+    },
   },
 };
 </script>

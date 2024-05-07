@@ -3,14 +3,6 @@
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 font-Montserrat"
     >
-      <div class="flex items-center mb-3 text-2xl font-semibold text-black">
-        <img
-          class="w-8 h-8 mr-2"
-          src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-          alt="logo"
-        />
-        GapTech
-      </div>
       <div
         class="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 border-2 border-blue-primary"
       >
@@ -30,67 +22,129 @@
               <label
                 for="password"
                 class="block mb-2 text-sm font-medium text-black"
-                >Kata Sandi</label
+                >Kata Sandi <span class="text-red-secondary">*</span></label
               >
-              <input
-                id="password"
-                v-model="password"
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                autocomplete="off"
-                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-                required
-              />
+              <div class="relative flex items-center w-full">
+                <input
+                  id="password"
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  name="password"
+                  placeholder="••••••••"
+                  autocomplete="off"
+                  class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary pr-10"
+                  required
+                />
+                <span
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  @click="toggleShowPassword"
+                >
+                  <div v-if="showPassword">
+                    <EyeIcon class="h-4 w-4" />
+                  </div>
+                  <div v-else><EyeSlashIcon class="h-4 w-4" /></div>
+                </span>
+              </div>
             </div>
             <div>
               <label
-                for="password"
+                for="confirm_password"
                 class="block mb-2 text-sm font-medium text-black"
-                >Konfirmasi Kata Sandi</label
+                >Konfirmasi Kata Sandi
+                <span class="text-red-secondary">*</span></label
               >
-              <input
-                id="password"
-                v-model="confirm_password"
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                autocomplete="off"
-                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-                required
-              />
+              <div class="relative flex items-center w-full">
+                <input
+                  id="confirm_password"
+                  v-model="confirm_password"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  name="confirm_password"
+                  placeholder="••••••••"
+                  autocomplete="off"
+                  class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
+                  required
+                />
+                <span
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  @click="toggleShowConfirmPassword"
+                >
+                  <div v-if="showConfirmPassword">
+                    <EyeIcon class="h-4 w-4" />
+                  </div>
+                  <div v-else><EyeSlashIcon class="h-4 w-4" /></div>
+                </span>
+              </div>
             </div>
-            <ComponentButton intent="primary_full_width"
-              >Simpan</ComponentButton
-            >
+            <ComponentButton intent="primary_full_width" :disabled="isLoading">
+              {{ isLoading ? "Loading..." : "Kirim" }}
+            </ComponentButton>
           </form>
         </div>
       </div>
     </div>
+    <Notification ref="notification" />
   </section>
 </template>
 
 <script>
-import axiosInstance from "@/utils/api";
+import axios from "axios";
 import ComponentButton from ".././ComponentButton.vue";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
+import Notification from "../Notification.vue";
 export default {
   components: {
     ComponentButton,
+    EyeIcon,
+    EyeSlashIcon,
+    Notification,
+  },
+  props: {
+    token: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       password: "",
       confirm_password: "",
+      showPassword: false,
+      showConfirmPassword: false,
+      isLoading: false,
     };
   },
   methods: {
     async handleSubmit() {
-      await axiosInstance.post("reset", {
-        password: this.password,
-        confirm_password: this.confirm_password,
-        token: this.$route.params.token,
-      });
-      this.$router.push("/login");
+      try {
+        this.isLoading = true;
+        const response = await axios.put(
+          "http://localhost:5000/update-password",
+          {
+            newPassword: this.password,
+            confirmNewPassword: this.confirm_password,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        this.$refs.notification.showSuccess(response.data.msg);
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 2000);
+      } catch (error) {
+        this.isLoading = false;
+        console.log(error);
+        this.$refs.notification.showError(error.response.data.msg);
+      }
+    },
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
+    toggleShowConfirmPassword() {
+      this.showConfirmPassword = !this.showConfirmPassword;
     },
   },
 };

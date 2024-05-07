@@ -43,17 +43,19 @@
       </div>
     </div>
   </div>
-  <div>
-    <h2 v-show="show30Days || showPeriode" class="font-semibold py-3">
-      Hasil Filter Data:
-    </h2>
-    <div>
-      <v-chip v-show="show30Days" closable @click="toggleHide30DaysFilter">
-        30 hari terakhir
-      </v-chip>
-      <v-chip v-show="showPeriode" closable @click="toggleHidePeriodeFilter">
-        {{ formatDate(startDate) }} - {{ formatDate(endDate) }}
-      </v-chip>
+  <div class="mt-5">
+    <div class="flex items-center space-x-3 mb-5">
+      <h2 v-show="show30Days || showPeriode" class="font-semibold py-3">
+        Hasil Filter Data:
+      </h2>
+      <div>
+        <v-chip v-show="show30Days" closable @click="toggleHide30DaysFilter">
+          30 hari terakhir
+        </v-chip>
+        <v-chip v-show="showPeriode" closable @click="toggleHidePeriodeFilter">
+          {{ formatDate(startDate) }} - {{ formatDate(endDate) }}
+        </v-chip>
+      </div>
     </div>
     <RiwayatInputTanggal
       v-show="showPeriode"

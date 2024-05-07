@@ -8,12 +8,12 @@ import StatusRakView from "@/views/StatusRakView.vue";
 import DetailBrgKeluar from "@/views/BarangKeluar/DetailBrgKeluar.vue";
 import TambahBrgKeluar from "@/views/BarangKeluar/TambahBrgKeluar.vue";
 import Password from "@/components/Login/Password.vue";
-import ResetPassword from "@/components/Login/ResetPassword.vue";
 import TambahBarangMasukView from "@/views/BarangMasuk/TambahBarangMasukView.vue";
 import RiwayatBarangMasukView from "@/views/Riwayat/RiwayatBarangMasukView.vue";
 import RiwayatBarangKeluarView from "@/views/Riwayat/RiwayatBarangKeluarView.vue";
 import TambahStok from "@/components/Produk/TambahStok.vue";
 import EditProduk from "@/components/Produk/EditProduk.vue";
+import TokenPass from "@/components/Login/TokenPass.vue";
 
 const routes = [
   {
@@ -26,15 +26,10 @@ const routes = [
     name: "pengaturan-kata-sandi",
     component: Password,
   },
-  // {
-  //   path: "/ganti-kata-sandi/:token",
-  //   name: "ganti-kata-sandi",
-  //   component: ResetPassword,
-  // },
   {
-    path: "/ganti-kata-sandi",
-    name: "ganti-kata-sandi",
-    component: ResetPassword,
+    path: "/reset/:token",
+    name: "reset",
+    component: TokenPass,
   },
   {
     path: "/",

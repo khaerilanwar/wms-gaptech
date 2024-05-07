@@ -30,7 +30,7 @@
               <label
                 for="email"
                 class="block mb-2 text-sm font-medium text-black"
-                >Email</label
+                >Email <span class="text-red-secondary">*</span></label
               >
               <input
                 id="email"
@@ -42,31 +42,48 @@
                 required
               />
             </div>
-            <ComponentButton intent="primary_full_width">Kirim</ComponentButton>
+            <ComponentButton intent="primary_full_width" :disabled="isLoading">
+              {{ isLoading ? "Loading..." : "Kirim" }}
+            </ComponentButton>
           </form>
         </div>
       </div>
     </div>
   </section>
+  <Notification ref="notification" />
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
 import ComponentButton from ".././ComponentButton.vue";
+import Notification from "../Notification.vue";
+
 export default {
   components: {
     ComponentButton,
+    Notification,
   },
   data() {
     return {
       email: "",
+      isLoading: false,
     };
   },
   methods: {
     async handleSubmit() {
-      await axiosInstance.post("setting", {
-        email: this.email,
-      });
+      try {
+        this.isLoading = true;
+        const response = await axiosInstance.post("reset-password", {
+          email: this.email,
+        });
+        console.log(this.email);
+        this.$refs.notification.showSuccess(response.data.msg);
+      } catch (error) {
+        console.log(error);
+        this.$refs.notification.showError(error.response.data.msg);
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
 };

@@ -84,14 +84,14 @@
                   <td>{{ $filters.currency(item.harga) }}</td>
                   <td>
                     <QuantityBtn
-                      :selected="selected"
+                      :kodeprod="item.kodeProduk"
                       @quantity-changed="handleQuantity"
                     ></QuantityBtn>
                   </td>
                 </tr>
               </template>
             </v-data-table>
-            <!-- <pre> {{ selected }}</pre> -->
+            <pre> {{ selected }}</pre>
             <p class="p-5 m-5">
               Total Harga : {{ $filters.currency(orders.totalPrice) }}
             </p>
@@ -123,8 +123,6 @@ export default {
     return {
       recipientName: "",
       recipientAddress: "",
-      // quantity: 0,
-      // totalQty: 0,
       search: "",
       selected: [],
       isLoading: true,
@@ -149,7 +147,6 @@ export default {
         recipientName: "",
         recipientAddress: "",
         items: [],
-        quantity: 0,
         totalPrice: 0,
       },
     };
@@ -174,10 +171,15 @@ export default {
     diffRowColor(index) {
       return index % 2 === 0 ? "bg-gray-100" : "";
     },
-    handleQuantity(quantity) {
-      this.selected.forEach((obj, index) => {
-        this.selected[index].quantity = quantity;
-      });
+    handleQuantity(dataQuantity) {
+      const index = this.selected.findIndex(
+        (item) => item.kodeProduk === dataQuantity.kodeprod,
+      );
+
+      if (!this.selected[index].quantity) {
+        this.selected[index].quantity = 0;
+      }
+      this.selected[index].quantity = dataQuantity.quantity;
     },
 
     async submitOrder() {
@@ -185,7 +187,7 @@ export default {
       this.orders.recipientAddress = this.recipientAddress;
       this.orders.items = this.selected.map((item) => {
         return {
-          id: item._id,
+          kodeProduk: item.kodeProduk,
           namaProduk: item.namaProduk,
           harga: item.harga,
           quantity: item.quantity,
@@ -199,11 +201,11 @@ export default {
         namaPemesan: this.orders.recipientName,
         alamatPengiriman: this.orders.recipientAddress,
         barangKeluar: this.orders.items.map((item) => ({
-          kodeProduk: item.id,
+          kodeProduk: item.kodeProduk,
           kuantitas: item.quantity,
         })),
       };
-
+      console.log(orderData);
       try {
         await axiosInstance.post("transaction", orderData);
         console.log("Pesanan berhasil dikirim:", orderData);

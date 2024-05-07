@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex mb-2 justify-end items-center">
+    <div class="flex mb-2 justify-between items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
@@ -14,6 +14,20 @@
           @input="searchItems"
         ></v-text-field>
       </div>
+      <download-excel
+        :data="json_data"
+        :fields="json_fields"
+        worksheet="Riwayat Barang Masuk 30 Hari Terakhir"
+        name="Riwayat Barang Masuk 30 Hari Terakhir.xls"
+      >
+        <ComponentButton
+          intent="primary"
+          :right-icon="ArrowDownTrayIcon"
+          @click="fetchDataForExcel"
+        >
+          Unduh File
+        </ComponentButton>
+      </download-excel>
     </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
@@ -49,11 +63,16 @@
         </tr>
       </template>
     </v-data-table-server>
+    <Notification ref="notification" />
   </div>
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
+import JsonExcel from "vue-json-excel3";
+import ComponentButton from "../ComponentButton.vue";
+import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
+import Notification from "../Notification.vue";
 
 async function fetchData() {
   const response = await axiosInstance.get("/inproducts/last30days");
@@ -117,9 +136,10 @@ const API = {
 };
 
 export default {
-  components: {},
+  components: { downloadExcel: JsonExcel, ComponentButton, Notification },
   data() {
     return {
+      ArrowDownTrayIcon: ArrowDownTrayIcon,
       itemsPerPage: 5,
       headers: [
         { title: "No", align: "start", sortable: false, width: "5%" },
@@ -155,6 +175,13 @@ export default {
       loading: true,
       totalItems: 0,
       search: { namaProduk: "" },
+      json_data: [],
+      json_fields: {
+        "Kode Produk": "kodeProduk",
+        "Nama Produk": "namaProduk",
+        "Stok Masuk": "stokMasuk",
+        "Tanggal Masuk": "dateInProduct",
+      },
     };
   },
   mounted() {
@@ -187,6 +214,21 @@ export default {
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
+    },
+    async fetchDataForExcel() {
+      const data = await fetchData();
+      const filteredData = data.map(
+        ({ kodeProduk, namaProduk, stokMasuk, dateInProduct }) => ({
+          kodeProduk: kodeProduk,
+          namaProduk: namaProduk,
+          stokMasuk: stokMasuk,
+          dateInProduct: formatDateTime(dateInProduct),
+        }),
+      );
+      this.json_data = filteredData;
+      this.$refs.notification.showSuccess(
+        "Berhasil mengambil data untuk di unduh",
+      );
     },
   },
 };

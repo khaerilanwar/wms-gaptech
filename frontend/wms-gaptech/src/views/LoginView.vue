@@ -48,16 +48,27 @@
                 class="block mb-2 text-sm font-medium text-black"
                 >Kata Sandi <span class="text-red-secondary">*</span></label
               >
-              <input
-                id="password"
-                v-model="password"
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                autocomplete="off"
-                class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
-                required
-              />
+              <div class="relative flex items-center w-full">
+                <input
+                  id="password"
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  name="password"
+                  placeholder="••••••••"
+                  autocomplete="off"
+                  class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary pr-10"
+                  required
+                />
+                <span
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  @click="toggleShowPassword"
+                >
+                  <div v-if="showPassword">
+                    <EyeIcon class="h-4 w-4" />
+                  </div>
+                  <div v-else><EyeSlashIcon class="h-4 w-4" /></div>
+                </span>
+              </div>
             </div>
             <div class="grid place-items-end">
               <router-link
@@ -79,18 +90,20 @@
 import axiosInstance from "@/utils/api";
 import Notification from "../components/Notification.vue";
 import ComponentButton from "../components/ComponentButton.vue";
-import { HomeIcon } from "@heroicons/vue/24/outline";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 
 export default {
   components: {
     Notification,
     ComponentButton,
+    EyeIcon,
+    EyeSlashIcon,
   },
   data() {
     return {
       email: "",
       password: "",
-      HomeIcon: HomeIcon,
+      showPassword: false,
     };
   },
   methods: {
@@ -108,6 +121,9 @@ export default {
       } catch (error) {
         this.$refs.notification.showError(error.response.data.msg);
       }
+    },
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
     },
   },
 };

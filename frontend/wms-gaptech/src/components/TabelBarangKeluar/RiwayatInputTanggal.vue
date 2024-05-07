@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex mb-2 justify-end items-center">
+    <div class="flex mb-2 justify-between items-center">
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
@@ -14,6 +14,20 @@
           @input="searchItems"
         ></v-text-field>
       </div>
+      <download-excel
+        :data="json_data"
+        :fields="json_fields"
+        :worksheet="'Riwayat Barang Keluar ' + startDate + ' hingga ' + endDate"
+        :name="'Riwayat Barang Keluar ' + startDate + ' hingga ' + endDate"
+      >
+        <ComponentButton
+          intent="primary"
+          :right-icon="ArrowDownTrayIcon"
+          @click="fetchDataForExcel"
+        >
+          Unduh File
+        </ComponentButton>
+      </download-excel>
     </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
@@ -49,11 +63,16 @@
         </tr>
       </template>
     </v-data-table-server>
+    <Notification ref="notification" />
   </div>
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
+import ComponentButton from "../ComponentButton.vue";
+import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
+import JsonExcel from "vue-json-excel3";
+import Notification from "../Notification.vue";
 
 async function fetchData(startDate, endDate) {
   const response = await axiosInstance.get(
@@ -117,6 +136,7 @@ const API = {
 };
 
 export default {
+  components: { downloadExcel: JsonExcel, ComponentButton, Notification },
   props: {
     startDate: {
       type: String,
@@ -129,6 +149,7 @@ export default {
   },
   data() {
     return {
+      ArrowDownTrayIcon: ArrowDownTrayIcon,
       itemsPerPage: 5,
       headers: [
         { title: "No", align: "start", sortable: false, width: "5%" },
@@ -164,6 +185,13 @@ export default {
       loading: true,
       totalItems: 0,
       search: { namaProduk: "" },
+      json_data: [],
+      json_fields: {
+        "Kode Produk": "kodeProduk",
+        "Nama Produk": "namaProduk",
+        "Stok Keluar": "stokKeluar",
+        "Tanggal Keluar": "dateOutProduct",
+      },
     };
   },
   watch: {
@@ -213,6 +241,22 @@ export default {
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
+    },
+    async fetchDataForExcel() {
+      const { startDate, endDate } = this;
+      const data = await fetchData(startDate, endDate);
+      const filteredData = data.map(
+        ({ kodeProduk, namaProduk, stokKeluar, dateOutProduct }) => ({
+          kodeProduk: kodeProduk,
+          namaProduk: namaProduk,
+          stokKeluar: stokKeluar,
+          dateOutProduct: formatDateTime(dateOutProduct),
+        }),
+      );
+      this.json_data = filteredData;
+      this.$refs.notification.showSuccess(
+        "Berhasil mengambil data untuk di unduh",
+      );
     },
   },
 };

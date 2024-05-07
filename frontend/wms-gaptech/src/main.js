@@ -6,6 +6,7 @@ import App from "./App.vue";
 import router from "./router";
 import "./utils/api";
 import store from "./utils/vuex";
+import JsonExcel from "vue-json-excel3";
 
 // Vuetify
 import "vuetify/styles";
@@ -33,6 +34,9 @@ app.config.globalProperties.$filters = {
     return formatter.format(value);
   },
 };
+
+// export excel
+app.component("DownloadExcel", JsonExcel);
 
 app.use(router);
 app.use(store);
