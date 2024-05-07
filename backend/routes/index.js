@@ -33,9 +33,12 @@ import {
   outProductLast30Days,
 } from "../controllers/OutProducts.js";
 import {
+  deleteTransaction,
   getAllTransactions,
   getTransaction,
   saveTransaction,
+  updateStatus,
+  updateTransaction,
 } from "../controllers/Transaction.js";
 // import { getAllRacks } from "../controllers/Racks.js";
 
@@ -61,7 +64,7 @@ router.get("/product/:kodeProduk(\\d+)", verifyToken, getProduct); // kodeProduk
 router.post("/product", verifyToken, addProduct);
 router.put("/product/:kodeProduk(\\d+)", verifyToken, updateProduct);
 router.patch("/product/:kodeProduk(\\d+)", verifyToken, addStock);
-router.delete("/product/:kodeProduk(\\d+)", verifyToken, deleteProduct);
+router.delete("/product/:kodeProduk(\\d+)", deleteProduct);
 
 // Router in products (history)
 router.get("/inproducts", verifyToken, getInProducts);
@@ -79,6 +82,9 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 router.get("/transaction/:idTransaksi(\\d+)", getTransaction);
 router.post("/transaction", saveTransaction);
 router.get("/transactions", getAllTransactions);
+router.delete("/transaction/:idTransaksi(\\d+)", deleteTransaction)
+router.put("/transaction/:idTransaksi(\\d+)", updateTransaction)
+router.patch("/transaction/:idTransaksi(\\d+)", updateStatus)
 
 // Router racks
 // router.get("/racks", getAllRacks)

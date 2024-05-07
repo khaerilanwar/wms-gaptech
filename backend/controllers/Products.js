@@ -4,12 +4,11 @@ import { faker } from "@faker-js/faker/locale/id_ID";
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Products.find()
+        const products = await Products.find({}, { _id: 0 })
         res.json(products)
         console.log('Successfull for get all data products')
     } catch (error) {
-        res.sendStatus(400)
-        // console.log(error)
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
         console.log('Failed for get all data products')
     }
 }
@@ -17,13 +16,12 @@ export const getProducts = async (req, res) => {
 export const getProduct = async (req, res) => {
     const kodeProduk = req.params.kodeProduk
     try {
-        const product = await Products.findOne({ kodeProduk })
+        const product = await Products.findOne({ kodeProduk }, { _id: 0 })
         if (!product) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
         res.json(product)
         console.log('Successfull for get a data product')
     } catch (error) {
-        res.sendStatus(400)
-        // console.log(error)
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
         console.log('Failed for get a data product')
     }
 }
@@ -39,8 +37,7 @@ export const addProduct = async (req, res) => {
         res.status(201).json({ msg: 'Produk berhasil ditambahkan!', kodeProduk: req.body.kodeProduk })
         console.log('Successfull for add a data product')
     } catch (error) {
-        res.sendStatus(400)
-        // console.log(error)
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
         console.log('Failed for add a data product')
     }
 }
@@ -54,8 +51,7 @@ export const updateProduct = async (req, res) => {
         res.json({ msg: `${updated.namaProduk} berhasil diperbaharui!` })
         console.log('Successfull for update a data product')
     } catch (error) {
-        res.sendStatus(400)
-        // console.log(error)
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
         console.log('Failed for update a data product')
     }
 }
@@ -68,12 +64,11 @@ export const deleteProduct = async (req, res) => {
 
         // jika kode produk ada di database
         await Products.deleteOne({ kodeProduk })
-        res.status(204).json({ msg: "Produk berhasil dihapus!" })
+        res.sendStatus(204)
         console.log('Successfull for delete a data product')
     } catch (error) {
-        res.sendStatus(400)
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
         console.log('Failed for delete a data product')
-        // console.log(error)
     }
 }
 
@@ -97,8 +92,7 @@ export const addStock = async (req, res) => {
         res.json({ msg: `Berhasil menambah stok ${product.namaProduk}!` })
         console.log('Successfull for add new stock product')
     } catch (error) {
-        res.sendStatus(400)
-        // console.log(error)
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
         console.log('Failed for add new stock product')
     }
 }

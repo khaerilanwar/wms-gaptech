@@ -2,7 +2,7 @@ import OutProducts from "../models/OutProductModel.js";
 
 export const getOutProducts = async (req, res) => {
     try {
-        const outProducts = await OutProducts.find().sort({ dateOutProduct: -1 })
+        const outProducts = await OutProducts.find({}, { _id: 0 }).sort({ dateOutProduct: -1 })
         res.json(outProducts)
     } catch (error) {
         res.sendStatus(400)
@@ -16,7 +16,7 @@ export const outProductByPeriod = async (req, res) => {
                 $gte: new Date(req.query.start),
                 $lt: new Date(req.query.end)
             }
-        }).sort({ dateOutProduct: 1 })
+        }, { _id: 0 }).sort({ dateOutProduct: 1 })
         if (periodData.length == 0) return res.sendStatus(400)
         res.json(periodData)
     } catch (error) {
@@ -33,7 +33,7 @@ export const outProductLast30Days = async (req, res) => {
                 $gte: startDate,
                 $lt: new Date()
             }
-        }).sort({ dateOutProduct: 1 })
+        }, { _id: 0 }).sort({ dateOutProduct: 1 })
 
         res.json(lastMonthData)
     } catch (error) {
@@ -50,7 +50,7 @@ export const outProductByMonth = async (req, res) => {
                     { $eq: [{ $month: "$dateOutProduct" }, req.query.month] }
                 ]
             }
-        }).sort({ dateOutProduct: 1 })
+        }, { _id: 0 }).sort({ dateOutProduct: 1 })
         if (monthData.length == 0) return res.sendStatus(400)
         res.json(monthData)
     } catch (error) {

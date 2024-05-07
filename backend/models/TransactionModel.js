@@ -8,7 +8,9 @@ const transactionSchema = new Schema(
         alamatPengiriman: { type: String, required: true },
         barangKeluar: { type: Array, required: true },
         totalHarga: { type: Number, required: true },
-        tanggalTransaksi: { type: Date, default: Date.now() }
+        status: { type: Number, required: true, default: 0 },
+        tanggalTransaksi: { type: Date, default: Date.now() },
+        terakhirDiubah: { type: Date, default: Date.now() }
     },
     { versionKey: false }
 )

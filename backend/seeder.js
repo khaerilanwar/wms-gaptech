@@ -121,11 +121,14 @@ async function transactionSeeder() {
     { kodeProduk: 1, namaProduk: 1, harga: 1 }
   );
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 20; i++) {
     const outProducts = [];
     const totalHarga = [];
     for (let j = 0; j < faker.number.int({ min: 1, max: 12 }); j++) {
-      let outProduct = faker.helpers.arrayElement(products);
+      let outProduct;
+      do {
+        outProduct = faker.helpers.arrayElement(products)
+      } while (outProducts.find(item => item.kodeProduk == outProduct.kodeProduk));
       let kuantitas = faker.number.int({ min: 1, max: 35 });
       outProduct = {
         kodeProduk: outProduct.kodeProduk,
@@ -156,6 +159,10 @@ async function transactionSeeder() {
         from: new Date("2024-02-01"),
         to: new Date(),
       }),
+      terakhirDiubah: faker.date.between({
+        from: new Date("2024-02-25"),
+        to: new Date(),
+      })
     };
 
     await Transaction.create(transaction);
@@ -210,5 +217,5 @@ async function rackSeeder() {
 }
 
 // uncomment code below to run the rack seeder
-rackSeeder()
-  .then(() => console.log('Rack seeder has been done!'))
+// rackSeeder()
+//   .then(() => console.log('Rack seeder has been done!'))
