@@ -86,9 +86,11 @@ export const saveTransaction = async (req, res) => {
 export const deleteTransaction = async (req, res) => {
     const idTransaksi = req.params.idTransaksi
     try {
+        // Mengecek apakah data transaksi ada dalam database
         const transaction = await Transaction.findOne({ idTransaksi })
         if (!transaction) return res.status(404).json({ msg: "ID Transaksi tidak ditemukan!" })
-
+        // Mengecek apakah data transaksi sudah selesai
+        if (transaction.status === 1) return res.status(403).json({ msg: `Transaksi ${idTransaksi} sudah selesai!` })
         await Transaction.deleteOne({ idTransaksi })
         res.sendStatus(204)
         console.log('Successfull for delete a data transaction')
@@ -102,8 +104,12 @@ export const updateTransaction = async (req, res) => {
     const idTransaksi = req.params.idTransaksi
     const allProduct = await Products.find()
     try {
+        // Mengecek apakah data transaksi ada dalam database
         const transaction = await Transaction.findOne({ idTransaksi })
         if (!transaction) return res.status(404).json({ msg: "ID Transaksi tidak ditemukan!" })
+
+        // Mengecek apakah data transaksi sudah selesai
+        if (transaction.status === 1) return res.status(403).json({ msg: `Transaksi ${idTransaksi} sudah selesai!` })
 
         // Menyimpan semua data barang keluar baru ke dalam array
         const barangKeluarBaru = []
