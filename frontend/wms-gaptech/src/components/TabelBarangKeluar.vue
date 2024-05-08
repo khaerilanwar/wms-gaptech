@@ -20,7 +20,7 @@
                 <ComponentButton intent="edit"></ComponentButton>
               </button>
             </router-link>
-            <button>
+            <button @click="deleteTransaction(item.idTransaksi)">
               <ComponentButton intent="delete"></ComponentButton>
             </button>
           </div>
@@ -28,12 +28,14 @@
       </tr>
     </template>
   </v-data-table-server>
+  <Notification ref="notification" />
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
 import ComponentButton from "./ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
+import Notification from "./Notification.vue";
 
 async function fetchData() {
   const response = await axiosInstance.get("transactions");
@@ -72,6 +74,7 @@ const API = {
 export default {
   components: {
     ComponentButton,
+    Notification,
   },
   emits: ["transaction-details"],
   data: () => ({
@@ -112,6 +115,17 @@ export default {
 
     async showDetails(dataItem) {
       this.$emit("transaction-details", dataItem);
+    },
+
+    async deleteTransaction(idTransaksi) {
+      const isConfirmed = window.confirm(
+        "Apakah Anda yakin untuk menghapus data?",
+      );
+      if (isConfirmed) {
+        await axiosInstance.delete(`transaction/${idTransaksi}`);
+        this.loadItems();
+        this.$refs.notification.showSuccess("Transaksi berhasil dihapus");
+      }
     },
 
     diffRowColor(index) {
