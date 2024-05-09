@@ -23,9 +23,13 @@
           </svg>
           <!-- Stats -->
           <div
-            class="flex flex-row bg-emerald-100 p-2 space-x-1 rounded-md mr-2"
+            :class="[
+              backgroundColor,
+              'flex flex-row p-2 space-x-1 rounded-md mr-2',
+            ]"
           >
             <svg
+              v-if="isPercentageUp"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
@@ -37,7 +41,23 @@
                 clip-rule="evenodd"
               />
             </svg>
-            <p class="text-sm">37%</p>
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-5 h-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181"
+              />
+            </svg>
+
+            <p class="text-sm">{{ percentageChange }}%</p>
           </div>
         </div>
 
@@ -125,6 +145,8 @@ export default {
       },
       thisMonth: new Date().getMonth(),
       progressValue: 0,
+      percentageChange: 0,
+      isPercentageUp: false,
     };
   },
   mounted() {
@@ -157,8 +179,8 @@ export default {
       console.log("Monthly Data:", this.monthlyData);
     },
     salesGoals() {
-      const thisMonthIncome = this.monthlyData.income[this.thisMonth];
-      const targetGoals = thisMonthIncome + (30 / 100) * thisMonthIncome;
+      const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
+      const targetGoals = lastMonthIncome * (30 / 100) + lastMonthIncome;
       return targetGoals;
     },
     thisMonthProgressSales() {
@@ -166,6 +188,19 @@ export default {
       this.progressValue = Math.round(
         (thisMonthIncome / this.salesGoals()) * 100,
       );
+      const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
+
+      const percentage =
+        ((thisMonthIncome - lastMonthIncome) / lastMonthIncome) * 100;
+      this.percentageChange = Math.round(percentage);
+
+      this.isPercentageUp = percentage > 0;
+
+      if (this.isPercentageUp) {
+        this.backgroundColor = "bg-emerald-100";
+      } else {
+        this.backgroundColor = "bg-red-200";
+      }
     },
   },
 };
