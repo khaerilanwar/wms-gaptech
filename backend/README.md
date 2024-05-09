@@ -147,6 +147,9 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
        "confirmNewPassword": "newpassword"
     }
    ```
+25. ``GET`` ``/racks-all`` untuk mendapatkan semua data dan status rak 
+
+26. ``GET`` ``/racks-empty`` untuk mendapatkan data rak dengan kapasitas kosong 
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.
 
