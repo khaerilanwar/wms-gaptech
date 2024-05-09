@@ -5,7 +5,6 @@
     >
       <div class="ml-2">
         <div class="flex justify-between items-end mt-3">
-          <!-- Icon uang -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -22,7 +21,7 @@
               d="M2.25 18a.75.75 0 0 0 0 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 0 0-.75-.75H2.25Z"
             />
           </svg>
-
+          <!-- Stats -->
           <div
             class="flex flex-row bg-emerald-100 p-2 space-x-1 rounded-md mr-2"
           >
@@ -40,17 +39,15 @@
             </svg>
             <p class="text-sm">37%</p>
           </div>
-          <!-- Icon naik -->
         </div>
 
         <h1 class="font-semibold text-lg mt-2">Pemasukan/bulan</h1>
         <p
           class="font-extrabold text-2xl lg:text-4xl flex justify-center items-center mt-5"
         >
-          {{ $filters.currency(monthlyData.income[4]) }}
+          {{ $filters.currency(monthlyData.income[thisMonth]) }}
         </p>
       </div>
-      <!-- pengen nambahin kenaikan dibanding dengan minggu lalu -->
     </div>
 
     <div class="flex flex-row space-x-2 flex-grow">
@@ -72,7 +69,7 @@
           <p
             class="font-extrabold text-2xl lg:text-3xl flex justify-between items-end mt-2"
           >
-            {{ monthlyData.transaction[4] }}
+            {{ monthlyData.transaction[thisMonth] }}
           </p>
         </div>
       </div>
@@ -96,11 +93,20 @@
 
           <h1 class="font-semibold text-lg mt-3">Sales Goals</h1>
           <v-progress-linear
+            v-model="progressValue"
             color="primary"
-            model-value="70"
-            class="mt-3"
-          ></v-progress-linear>
-          <p class="text-sm mt-2 font-medium">54.795.000,00/75.000.000,00</p>
+            height="15"
+            class="mt-1 mb-2"
+          >
+            <template #default="{ value }">
+              <strong>{{ Math.round(value) }}%</strong>
+            </template>
+          </v-progress-linear>
+          <p class="text-sm mt-2 font-medium">
+            {{ $filters.currency(monthlyData.income[thisMonth]) }}/{{
+              $filters.currency(salesGoals())
+            }}
+          </p>
         </div>
       </div>
     </div>
@@ -117,6 +123,8 @@ export default {
         income: {},
         transaction: {},
       },
+      thisMonth: new Date().getMonth(),
+      progressValue: 0,
     };
   },
   mounted() {
@@ -127,15 +135,14 @@ export default {
       try {
         const response = await axiosInstance.get("transactions");
         this.monthlyReport(response.data);
-        console.log(response);
+        console.log(this.thisMonthProgressSales());
       } catch (error) {
         console.error("Error fetching data : ", error);
       }
     },
     monthlyReport(transactions) {
       transactions.forEach((transaction) => {
-        const month = new Date(transaction.tanggalTransaksi).getMonth(); // Mengambil bulan dari 1 hingga 12
-        console.log(month);
+        const month = new Date(transaction.tanggalTransaksi).getMonth();
 
         if (!this.monthlyData.income[month]) {
           this.monthlyData.income[month] = 0;
@@ -148,6 +155,17 @@ export default {
         this.monthlyData.transaction[month] += 1;
       });
       console.log("Monthly Data:", this.monthlyData);
+    },
+    salesGoals() {
+      const thisMonthIncome = this.monthlyData.income[this.thisMonth];
+      const targetGoals = thisMonthIncome + (30 / 100) * thisMonthIncome;
+      return targetGoals;
+    },
+    thisMonthProgressSales() {
+      const thisMonthIncome = this.monthlyData.income[this.thisMonth];
+      this.progressValue = Math.round(
+        (thisMonthIncome / this.salesGoals()) * 100,
+      );
     },
   },
 };

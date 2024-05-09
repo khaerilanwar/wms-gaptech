@@ -127,8 +127,10 @@ async function transactionSeeder() {
     for (let j = 0; j < faker.number.int({ min: 1, max: 12 }); j++) {
       let outProduct;
       do {
-        outProduct = faker.helpers.arrayElement(products)
-      } while (outProducts.find(item => item.kodeProduk == outProduct.kodeProduk));
+        outProduct = faker.helpers.arrayElement(products);
+      } while (
+        outProducts.find((item) => item.kodeProduk == outProduct.kodeProduk)
+      );
       let kuantitas = faker.number.int({ min: 1, max: 35 });
       outProduct = {
         kodeProduk: outProduct.kodeProduk,
@@ -162,7 +164,7 @@ async function transactionSeeder() {
       terakhirDiubah: faker.date.between({
         from: new Date("2024-02-25"),
         to: new Date(),
-      })
+      }),
     };
 
     await Transaction.create(transaction);
