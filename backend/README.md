@@ -102,7 +102,9 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
 17. ``GET`` ``/outproducts/last30days`` untuk mendapatkan history barang keluar 30 hari terakhir
 18. ``GET`` ``/outproducts/data-by-period`` untuk mendapatkan history barang keluar berdasarkan periode waktu awal dan akhir tertentu. Data dikirimkan dengan metode `GET` <br> Contoh request data :<br>`http://localhost:5000/outproducts/data-by-period?start=2024-03-09&end=2024-03-25`
 19. ``GET`` ``/outproducts/data-by-month`` untuk mendapatkan history barang keluar perbulan. Data request dikirim dengan menggunakan method `GET` <br>Contoh request data :<br> `http://localhost:5000/inproducts/data-by-month?month=03&year=2024`
-20. ``GET`` ``/transactions`` untuk mendapatkan semua data transaksi atau history transaksi barang keluar
+20. ``GET`` ``/transactions`` untuk mendapatkan semua data transaksi barang keluar
+21. ``GET`` ``/transactions/process`` untuk mendapatkan semua data transaksi barang keluar yang statusnya masih dalam proses
+22. ``GET`` ``/transactions/success`` untuk mendapatkan semua data transaksi barang keluar yang statusnya sudah selesai
 21. ``GET`` ``/transaction/{idTransaksi}`` untuk mendapatkan satu data transaksi berdasarkan id transaksi
 21. ``POST`` ``/transaction`` untuk menambahkan data transaksi baru `otorisasi` <br> Contoh request data : 
     ```json

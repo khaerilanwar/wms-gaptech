@@ -5,8 +5,27 @@ import Transaction from "../models/TransactionModel.js";
 // for get all data transaction
 export const getAllTransactions = async (req, res) => {
     try {
-        const transactions = await Transaction.find().sort({ tanggalTransaksi: -1 })
+        const transactions = await Transaction.find({}, { _id: 0 }).sort({ tanggalTransaksi: -1 })
         res.json(transactions)
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
+// untuk mendapatkan data transaksi yang statusnya masih on proses
+export const getProcessTransactions = async (req, res) => {
+    try {
+        const processTransactions = await Transaction.find({ status: 0 }, { _id: 0 }).sort({ tanggalTransaksi: -1 })
+        res.json(processTransactions)
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
+export const getSuccessTransactions = async (req, res) => {
+    try {
+        const successTransations = await Transaction.find({ status: 1 }, { _id: 0 }).sort({ tanggalTransaksi: -1 })
+        res.json(successTransations)
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
     }
