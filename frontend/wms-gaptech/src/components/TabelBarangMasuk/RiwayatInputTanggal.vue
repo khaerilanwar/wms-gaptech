@@ -85,6 +85,23 @@ async function fetchData(startDate, endDate) {
   return response.data;
 }
 
+// async function fetchData(startDate, endDate) {
+//   try {
+//     const response = await axiosInstance.get(
+//       `inproducts/data-by-period?start=${startDate}&end=${endDate}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     if (error.response.status === 400) {
+//       console.log(true);
+//       return { noData: true };
+//     } else {
+//       console.error("Error fetching data:", error);
+//     }
+//     throw error;
+//   }
+// }
+
 function formatDateTime(dateTimeString) {
   const dateTime = new Date(dateTimeString);
   const localDateTime = new Date(
@@ -197,6 +214,7 @@ export default {
         "Tanggal Masuk": "dateInProduct",
       },
       currentPage: 1,
+      noData: false,
     };
   },
   watch: {

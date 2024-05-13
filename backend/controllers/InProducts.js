@@ -17,7 +17,7 @@ export const inProductByPeriod = async (req, res) => {
                 $lt: new Date(req.query.end)
             }
         }, { _id: 0 }).sort({ dateInProduct: 1 })
-        if (periodData.length == 0) return res.sendStatus(400)
+        // if (periodData.length == 0) return res.sendStatus(400)
         res.json(periodData)
     } catch (error) {
         res.sendStatus(400)
