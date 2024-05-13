@@ -85,18 +85,6 @@
                 <span class="text-sm">Daftar Transaksi</span>
               </router-link>
             </li>
-            <li>
-              <router-link
-                to="/transaksi/riwayat"
-                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
-                :class="{
-                  sidebar_active: isActive('/transaksi/riwayat'),
-                }"
-              >
-                <ArchiveBoxIcon class="h-6 w-6" />
-                <span class="text-sm">Riwayat Transaksi</span>
-              </router-link>
-            </li>
           </ul>
         </div>
 
@@ -145,6 +133,18 @@
               >
                 <ArrowRightStartOnRectangleIcon class="h-6 w-6" />
                 <span class="text-sm">Riwayat Barang Keluar</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/transaksi/riwayat"
+                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+                :class="{
+                  sidebar_active: isActive('/transaksi/riwayat'),
+                }"
+              >
+                <ArchiveBoxIcon class="h-6 w-6" />
+                <span class="text-sm">Riwayat Transaksi</span>
               </router-link>
             </li>
           </ul>

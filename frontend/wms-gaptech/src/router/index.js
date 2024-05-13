@@ -69,7 +69,7 @@ const routes = [
         component: DaftarTransaksi,
       },
       {
-        path: "/transaksi/detail/:idTransaksi",
+        path: "/daftar-transaksi/detail/:idTransaksi",
         name: "DetailTransaksi",
         component: DetailTransaksi,
       },
