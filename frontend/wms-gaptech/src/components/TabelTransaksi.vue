@@ -1,6 +1,7 @@
 <template>
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
+    v-model:page="currentPage"
     :headers="headers"
     :items="serverItems"
     :items-length="totalItems"
@@ -10,7 +11,9 @@
   >
     <template #item="{ item, index }">
       <tr :class="diffRowColor(index)">
-        <td>{{ index + 1 }}</td>
+        <td>
+          {{ getRowNumber(index, itemsPerPage, totalItems) }}
+        </td>
         <td>{{ item.idTransaksi }}</td>
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
         <td class="flex">
@@ -96,6 +99,7 @@ export default {
     serverItems: [],
     loading: true,
     totalItems: 0,
+    currentPage: 1,
   }),
   created() {
     this.loadItems();
@@ -103,8 +107,9 @@ export default {
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
       this.loading = true;
+      this.currentPage = page || 1;
       const { items, total } = await API.fetch({
-        page: page || 1,
+        page: this.currentPage,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
       });
@@ -130,6 +135,10 @@ export default {
 
     diffRowColor(index) {
       return (index + 1) % 2 !== 0 ? "bg-slate-100" : "";
+    },
+
+    getRowNumber(index, itemsPerPage) {
+      return (this.currentPage - 1) * itemsPerPage + index + 1;
     },
   },
 };

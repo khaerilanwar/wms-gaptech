@@ -31,6 +31,7 @@
     </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
+      v-model:page="currentPage"
       class="border rounded-lg"
       :headers="headers"
       :items="serverItems"
@@ -51,7 +52,9 @@
           :class="getRowClass(index)"
           class="hover:bg-grey-primary hover:bg-opacity-15"
         >
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">
+            {{ getRowNumber(index, itemsPerPage, totalItems) }}
+          </td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
           <td class="text-center">
@@ -182,6 +185,7 @@ export default {
         "Stok Keluar": "stokKeluar",
         "Tanggal keluar": "dateOutProduct",
       },
+      currentPage: 1,
     };
   },
   mounted() {
@@ -190,8 +194,9 @@ export default {
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
       this.loading = true;
+      this.currentPage = page || 1;
       const { items, total } = await API.fetch({
-        page: page || 1,
+        page: this.currentPage,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
@@ -214,6 +219,9 @@ export default {
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
+    },
+    getRowNumber(index, itemsPerPage) {
+      return (this.currentPage - 1) * itemsPerPage + index + 1;
     },
     async fetchDataForExcel() {
       const data = await fetchData();
