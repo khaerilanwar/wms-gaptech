@@ -17,6 +17,7 @@
       <download-excel
         :data="json_data"
         :fields="json_fields"
+        stringify-long-num="true"
         worksheet="Riwayat Barang Keluar 30 Hari Terakhir"
         name="Riwayat Barang Keluar 30 Hari Terakhir.xls"
       >
@@ -233,6 +234,7 @@ export default {
           dateOutProduct: formatDateTime(dateOutProduct),
         }),
       );
+
       this.json_data = filteredData;
       this.$refs.notification.showSuccess(
         "Berhasil mengambil data untuk di unduh",

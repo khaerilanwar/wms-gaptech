@@ -45,19 +45,19 @@
           :class="getRowClass(index)"
           class="hover:bg-grey-primary hover:bg-opacity-15"
         >
-          <td class="text-center bg-blue-200">
+          <td class="text-center">
             {{ getRowNumber(index, itemsPerPage, totalItems) }}
           </td>
-          <td class="text-center bg-red-200">{{ item.kodeProduk }}</td>
-          <td class="bg-green-200">{{ item.namaProduk }}</td>
-          <td class="text-center bg-slate-200">{{ item.posisiRak }}</td>
-          <td class="bg-yellow-200">{{ $filters.currency(item.harga) }}</td>
-          <td class="bg-pink-200">
+          <td class="text-center">{{ item.kodeProduk }}</td>
+          <td>{{ item.namaProduk }}</td>
+          <td class="text-center">{{ item.posisiRak }}</td>
+          <td>{{ $filters.currency(item.harga) }}</td>
+          <td>
             <v-chip :color="getColor(item.stok)">
               {{ item.stok }}
             </v-chip>
           </td>
-          <td class="bg-purple-200">
+          <td>
             <div class="flex">
               <router-link :to="`/produk/tambah-stok/${item.kodeProduk}`">
                 <ComponentButton intent="add"></ComponentButton>
