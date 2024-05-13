@@ -7,7 +7,7 @@
 
     <div v-else>
       <div class="bg-white border p-4 shadow-md rounded-md">
-        <h1 class="text-xl font-semibold">Barang Keluar</h1>
+        <h1 class="text-xl font-semibold">Tambah Transaksi</h1>
       </div>
 
       <form @submit.prevent="submitOrder">
@@ -108,15 +108,18 @@
       </form>
     </div>
   </div>
+  <Notification ref="notification" />
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
 import QuantityBtn from "@/components/QuantityBtn.vue";
+import Notification from "@/components/Notification.vue";
 
 export default {
   components: {
     QuantityBtn,
+    Notification,
   },
   emits: ["submit-order"],
   data() {
@@ -209,6 +212,7 @@ export default {
       try {
         await axiosInstance.post("transaction", orderData);
         console.log("Pesanan berhasil dikirim:", orderData);
+        this.$refs.notification.showSuccess("Transaksi berhasil ditambahkan");
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);
       }

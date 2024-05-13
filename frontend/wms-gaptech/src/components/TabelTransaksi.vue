@@ -15,7 +15,7 @@
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
         <td class="flex">
           <div class="mt-3">
-            <router-link :to="'/barang-keluar/detail/' + item.idTransaksi">
+            <router-link :to="'/transaksi/detail/' + item.idTransaksi">
               <button @click="showDetails(item.idTransaksi)">
                 <ComponentButton intent="edit"></ComponentButton>
               </button>
@@ -38,7 +38,7 @@ import { PlusIcon } from "@heroicons/vue/24/outline";
 import Notification from "./Notification.vue";
 
 async function fetchData() {
-  const response = await axiosInstance.get("transactions");
+  const response = await axiosInstance.get("transactions/process");
   return response.data;
 }
 
