@@ -15,7 +15,7 @@
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
         <td class="flex">
           <div class="mt-3">
-            <router-link :to="'/transaksi/detail/' + item.idTransaksi">
+            <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
               <button @click="showDetails(item.idTransaksi)">
                 <ComponentButton intent="edit"></ComponentButton>
               </button>
