@@ -89,8 +89,6 @@ export default {
         );
 
         this.updateChartData(inProducts.data, outProducts.data);
-        console.log("In Products:", inProducts.data);
-        console.log("Out Products:", outProducts.data);
       } catch (error) {
         console.error("Error fetching data : ", error);
       }

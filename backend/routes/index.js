@@ -61,12 +61,12 @@ router.put("/update-password", authToken, updatePassword);
 
 // Router products
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
-router.get("/products", verifyToken, getProducts);
-router.get("/product/:kodeProduk(\\d+)", verifyToken, getProduct); // kodeProduk hanya menerima numeric
-router.post("/product", verifyToken, addProduct);
-router.put("/product/:kodeProduk(\\d+)", verifyToken, updateProduct);
-router.patch("/product/:kodeProduk(\\d+)", verifyToken, addStock);
-router.delete("/product/:kodeProduk(\\d+)", verifyToken, deleteProduct);
+router.get("/products", getProducts);
+router.get("/product/:kodeProduk(\\d+)", getProduct); // kodeProduk hanya menerima numeric
+router.post("/product", addProduct);
+router.put("/product/:kodeProduk(\\d+)", updateProduct);
+router.patch("/product/:kodeProduk(\\d+)", addStock);
+router.delete("/product/:kodeProduk(\\d+)", deleteProduct);
 
 // Router in products (history)
 router.get("/inproducts", verifyToken, getInProducts);
