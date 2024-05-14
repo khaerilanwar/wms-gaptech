@@ -14,7 +14,7 @@ import TokenPass from "@/components/Login/TokenPass.vue";
 import DaftarTransaksi from "@/views/Transaksi/DaftarTransaksi.vue";
 import DetailTransaksi from "@/views/Transaksi/DetailTransaksi.vue";
 import TambahTransaksi from "@/views/Transaksi/TambahTransaksi.vue";
-import RiwayatTransaksi from "@/views/Transaksi/RiwayatTransaksi.vue";
+import RiwayatTransaksi from "@/views/Riwayat/RiwayatTransaksi.vue";
 
 const routes = [
   {

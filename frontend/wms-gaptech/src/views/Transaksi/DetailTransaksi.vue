@@ -8,7 +8,7 @@
     <!-- Content -->
     <div v-else>
       <div class="flex justify-end m-2">
-        <router-link to="/transaksi">
+        <router-link to="/daftar-transaksi">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

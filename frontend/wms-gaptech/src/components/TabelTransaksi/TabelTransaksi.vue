@@ -10,19 +10,31 @@
     @update:options="loadItems"
   >
     <template #item="{ item, index }">
-      <tr :class="diffRowColor(index)">
+      <tr :class="diffRowColor(index)" class="">
         <td>
           {{ getRowNumber(index, itemsPerPage, totalItems) }}
         </td>
         <td>{{ item.idTransaksi }}</td>
+        <td>{{ item.namaPemesan }}</td>
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
+        <td>
+          <v-chip :color="changeColorStatus(item.status)">
+            <span v-if="item.status === 0">On Process</span>
+          </v-chip>
+        </td>
         <td class="flex">
           <div class="mt-3">
-            <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
-              <button @click="showDetails(item.idTransaksi)">
+            <router-link to="">
+              <button>
                 <ComponentButton intent="edit"></ComponentButton>
               </button>
             </router-link>
+            <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
+              <button @click="showDetails(item.idTransaksi)">
+                <ComponentButton intent="detail"></ComponentButton>
+              </button>
+            </router-link>
+
             <button @click="deleteTransaction(item.idTransaksi)">
               <ComponentButton intent="delete"></ComponentButton>
             </button>
@@ -36,9 +48,9 @@
 
 <script>
 import axiosInstance from "@/utils/api";
-import ComponentButton from "./ComponentButton.vue";
+import ComponentButton from "../ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
-import Notification from "./Notification.vue";
+import Notification from "../Notification.vue";
 
 async function fetchData() {
   const response = await axiosInstance.get("transactions/process");
@@ -90,8 +102,19 @@ export default {
       },
       { title: "ID Transaksi", key: "id", align: "start", sortable: false },
       {
-        title: "Tanggal Keluar",
+        title: "Nama Pemesan",
+        key: "namaPemesan",
+        align: "start",
+        sortable: false,
+      },
+      {
+        title: "Tanggal Transaksi",
         key: "tanggalTransaksi",
+        align: "start",
+      },
+      {
+        title: "Status",
+        key: "status",
         align: "start",
       },
       { title: "Action", key: "action", align: "start", sortable: false },
@@ -139,6 +162,11 @@ export default {
 
     getRowNumber(index, itemsPerPage) {
       return (this.currentPage - 1) * itemsPerPage + index + 1;
+    },
+
+    changeColorStatus(status) {
+      if (status == 0) return "orange";
+      else return "green";
     },
   },
 };

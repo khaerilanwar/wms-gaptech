@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import TabelTransaksi from "@/components/TabelTransaksi.vue";
+import TabelTransaksi from "@/components/TabelTransaksi/TabelTransaksi.vue";
 
 export default {
   components: {
