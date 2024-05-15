@@ -14,6 +14,7 @@ import {
   PencilSquareIcon,
   PlusIcon,
   EllipsisVerticalIcon,
+  DocumentTextIcon,
 } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
@@ -41,6 +42,7 @@ const props = defineProps({
         "edit",
         "add",
         "danger",
+        "detail",
       ].includes(val),
   },
 });
@@ -59,6 +61,7 @@ const buttonClass = computed(() => {
         delete: "py-1 px-1 mr-1 bg-red-primary hover:bg-red-secondary",
         edit: "py-1 px-1 mr-1 bg-yellow-primary hover:bg-yellow-secondary",
         add: "py-1 px-1 mr-1 bg-green-primary hover:bg-green-secondary",
+        detail: "py-1 px-1 mr-1 bg-blue-secondary hover:bg-blue-primary",
       },
     },
   })({ intent: props.intent });
@@ -73,6 +76,8 @@ const leftIcon = computed(() => {
     return EllipsisVerticalIcon;
   } else if (props.intent === "add") {
     return PlusIcon;
+  } else if (props.intent === "detail") {
+    return DocumentTextIcon;
   }
   return props.leftIcon;
 });

@@ -17,6 +17,7 @@
       <download-excel
         :data="json_data"
         :fields="json_fields"
+        stringify-long-num="true"
         :worksheet="'Riwayat Barang Masuk ' + startDate + ' hingga ' + endDate"
         :name="'Riwayat Barang Masuk ' + startDate + ' hingga ' + endDate"
       >
@@ -31,6 +32,7 @@
     </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
+      v-model:page="currentPage"
       class="border rounded-lg"
       :headers="headers"
       :items="serverItems"
@@ -51,7 +53,9 @@
           :class="getRowClass(index)"
           class="hover:bg-grey-primary hover:bg-opacity-15"
         >
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">
+            {{ getRowNumber(index, itemsPerPage, totalItems) }}
+          </td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
           <td class="text-center">
@@ -80,6 +84,23 @@ async function fetchData(startDate, endDate) {
   );
   return response.data;
 }
+
+// async function fetchData(startDate, endDate) {
+//   try {
+//     const response = await axiosInstance.get(
+//       `inproducts/data-by-period?start=${startDate}&end=${endDate}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     if (error.response.status === 400) {
+//       console.log(true);
+//       return { noData: true };
+//     } else {
+//       console.error("Error fetching data:", error);
+//     }
+//     throw error;
+//   }
+// }
 
 function formatDateTime(dateTimeString) {
   const dateTime = new Date(dateTimeString);
@@ -192,6 +213,8 @@ export default {
         "Stok Masuk": "stokMasuk",
         "Tanggal Masuk": "dateInProduct",
       },
+      currentPage: 1,
+      noData: false,
     };
   },
   watch: {
@@ -217,8 +240,9 @@ export default {
         return;
       }
       this.loading = true;
+      this.currentPage = page || 1;
       const { items, total } = await API.fetch({
-        page: page || 1,
+        page: this.currentPage,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
@@ -241,6 +265,9 @@ export default {
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
+    },
+    getRowNumber(index, itemsPerPage) {
+      return (this.currentPage - 1) * itemsPerPage + index + 1;
     },
     async fetchDataForExcel() {
       const { startDate, endDate } = this;

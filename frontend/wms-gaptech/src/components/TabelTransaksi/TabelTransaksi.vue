@@ -1,25 +1,47 @@
 <template>
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
+    v-model:page="currentPage"
+    class="border rounded-lg"
     :headers="headers"
     :items="serverItems"
     :items-length="totalItems"
     :loading="loading"
+    :items-per-page-options="[
+      { value: 10, title: '10' },
+      { value: 25, title: '25' },
+      { value: 50, title: '50' },
+      { value: 100, title: '100' },
+    ]"
     item-value="name"
     @update:options="loadItems"
   >
     <template #item="{ item, index }">
-      <tr :class="diffRowColor(index)">
-        <td>{{ index + 1 }}</td>
+      <tr :class="diffRowColor(index)" class="">
+        <td>
+          {{ getRowNumber(index, itemsPerPage, totalItems) }}
+        </td>
         <td>{{ item.idTransaksi }}</td>
+        <td>{{ item.namaPemesan }}</td>
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
+        <td>
+          <v-chip :color="changeColorStatus(item.status)">
+            <span v-if="item.status === 0">On Process</span>
+          </v-chip>
+        </td>
         <td class="flex">
           <div class="mt-3">
-            <router-link :to="'/barang-keluar/detail/' + item.idTransaksi">
-              <button @click="showDetails(item.idTransaksi)">
+            <router-link to="">
+              <button>
                 <ComponentButton intent="edit"></ComponentButton>
               </button>
             </router-link>
+            <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
+              <button @click="showDetails(item.idTransaksi)">
+                <ComponentButton intent="detail"></ComponentButton>
+              </button>
+            </router-link>
+
             <button @click="deleteTransaction(item.idTransaksi)">
               <ComponentButton intent="delete"></ComponentButton>
             </button>
@@ -33,12 +55,12 @@
 
 <script>
 import axiosInstance from "@/utils/api";
-import ComponentButton from "./ComponentButton.vue";
+import ComponentButton from "../ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
-import Notification from "./Notification.vue";
+import Notification from "../Notification.vue";
 
 async function fetchData() {
-  const response = await axiosInstance.get("transactions");
+  const response = await axiosInstance.get("transactions/process");
   return response.data;
 }
 
@@ -87,8 +109,19 @@ export default {
       },
       { title: "ID Transaksi", key: "id", align: "start", sortable: false },
       {
-        title: "Tanggal Keluar",
+        title: "Nama Pemesan",
+        key: "namaPemesan",
+        align: "start",
+        sortable: false,
+      },
+      {
+        title: "Tanggal Transaksi",
         key: "tanggalTransaksi",
+        align: "start",
+      },
+      {
+        title: "Status",
+        key: "status",
         align: "start",
       },
       { title: "Action", key: "action", align: "start", sortable: false },
@@ -96,6 +129,7 @@ export default {
     serverItems: [],
     loading: true,
     totalItems: 0,
+    currentPage: 1,
   }),
   created() {
     this.loadItems();
@@ -103,8 +137,9 @@ export default {
   methods: {
     async loadItems({ page, itemsPerPage, sortBy } = {}) {
       this.loading = true;
+      this.currentPage = page || 1;
       const { items, total } = await API.fetch({
-        page: page || 1,
+        page: this.currentPage,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
       });
@@ -130,6 +165,15 @@ export default {
 
     diffRowColor(index) {
       return (index + 1) % 2 !== 0 ? "bg-slate-100" : "";
+    },
+
+    getRowNumber(index, itemsPerPage) {
+      return (this.currentPage - 1) * itemsPerPage + index + 1;
+    },
+
+    changeColorStatus(status) {
+      if (status == 0) return "orange";
+      else return "green";
     },
   },
 };

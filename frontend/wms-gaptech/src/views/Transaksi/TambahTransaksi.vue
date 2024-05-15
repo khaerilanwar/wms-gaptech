@@ -7,7 +7,7 @@
 
     <div v-else>
       <div class="bg-white border p-4 shadow-md rounded-md">
-        <h1 class="text-xl font-semibold">Barang Keluar</h1>
+        <h1 class="text-xl font-semibold">Tambah Transaksi</h1>
       </div>
 
       <form @submit.prevent="submitOrder">
@@ -65,6 +65,12 @@
               items-per-page="5"
               :loading="loading"
               :search="search"
+              :items-per-page-options="[
+                { value: 10, title: '10' },
+                { value: 25, title: '25' },
+                { value: 50, title: '50' },
+                { value: 100, title: '100' },
+              ]"
               return-object
               show-select
               color="primary"
@@ -83,7 +89,13 @@
                   <td>{{ item.namaProduk }}</td>
                   <td>{{ $filters.currency(item.harga) }}</td>
                   <td>
+                    <v-chip :color="changeColorForStock(item.stok)">
+                      {{ item.stok }}
+                    </v-chip>
+                  </td>
+                  <td>
                     <QuantityBtn
+                      :stok="item.stok"
                       :kodeprod="item.kodeProduk"
                       @quantity-changed="handleQuantity"
                     ></QuantityBtn>
@@ -108,15 +120,18 @@
       </form>
     </div>
   </div>
+  <Notification ref="notification" />
 </template>
 
 <script>
 import axiosInstance from "@/utils/api";
 import QuantityBtn from "@/components/QuantityBtn.vue";
+import Notification from "@/components/Notification.vue";
 
 export default {
   components: {
     QuantityBtn,
+    Notification,
   },
   emits: ["submit-order"],
   data() {
@@ -134,6 +149,12 @@ export default {
           sortable: false,
         },
         { title: "Harga", align: "start", key: "harga" },
+        {
+          title: "Stok",
+          align: "start",
+          key: "stok",
+          sortable: false,
+        },
         {
           title: "Kuantitas",
           align: "start",
@@ -163,6 +184,7 @@ export default {
         const response = await axiosInstance.get("products");
         this.products = response.data;
         this.isLoading = false;
+        console.log(this.products);
       } catch (error) {
         console.error("Error fetching products:", error);
         this.loading = false;
@@ -170,6 +192,11 @@ export default {
     },
     diffRowColor(index) {
       return index % 2 === 0 ? "bg-gray-100" : "";
+    },
+    changeColorForStock(stock) {
+      if (stock > 100) return "green";
+      else if (stock > 50) return "orange";
+      else return "red";
     },
     handleQuantity(dataQuantity) {
       const index = this.selected.findIndex(
@@ -179,7 +206,25 @@ export default {
       if (!this.selected[index].quantity) {
         this.selected[index].quantity = 0;
       }
-      this.selected[index].quantity = dataQuantity.quantity;
+
+      if (dataQuantity.quantity > this.selected[index].quantity) {
+        // Increment
+        const requestedQuantity =
+          dataQuantity.quantity - this.selected[index].quantity;
+        console.log("Requested quantity:", requestedQuantity);
+        console.log("Data Quantity:", dataQuantity.quantity);
+        console.log("Selected Quantity:", this.selected[index].quantity);
+
+        if (this.selected[index].stok >= requestedQuantity) {
+          this.selected[index].quantity = dataQuantity.quantity;
+          this.selected[index].stok -= requestedQuantity;
+        }
+      } else {
+        // Decrement
+        this.selected[index].stok +=
+          this.selected[index].quantity - dataQuantity.quantity;
+        this.selected[index].quantity = dataQuantity.quantity;
+      }
     },
 
     async submitOrder() {
@@ -209,6 +254,7 @@ export default {
       try {
         await axiosInstance.post("transaction", orderData);
         console.log("Pesanan berhasil dikirim:", orderData);
+        this.$refs.notification.showSuccess("Transaksi berhasil ditambahkan");
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);
       }

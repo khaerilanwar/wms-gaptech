@@ -38,6 +38,7 @@
         type="button"
         data-input-counter-increment="counter-input"
         class="flex-shrink-0 bg-gray-100 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 focus:ring-2 focus:outline-none"
+        :disabled="isBtnDisabled"
         @click="increment"
       >
         <svg
@@ -58,12 +59,21 @@
       </button>
     </div>
   </form>
+  <Notification ref="notification" />
 </template>
 
 <script>
+import Notification from "./Notification.vue";
 export default {
+  components: {
+    Notification,
+  },
   props: {
     kodeprod: {
+      type: Number,
+      required: true,
+    },
+    stok: {
       type: Number,
       required: true,
     },
@@ -72,6 +82,7 @@ export default {
   data() {
     return {
       quantity: 0,
+      isBtnDisabled: false,
     };
   },
   methods: {
@@ -82,6 +93,10 @@ export default {
           kodeprod: this.kodeprod,
           quantity: this.quantity,
         });
+        if (this.stok <= 1) {
+          this.isBtnDisabled = true;
+          this.$refs.notification.showError("Stok Produk Habis");
+        }
       }
     },
     decrement: function () {

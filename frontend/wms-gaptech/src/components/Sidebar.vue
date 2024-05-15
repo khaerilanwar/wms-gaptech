@@ -33,14 +33,52 @@
           <CubeIcon class="h-6 w-6" />
           <span class="text-sm">Produk</span>
         </router-link>
-        <router-link
-          to="/barang-keluar"
-          class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
-          :class="{ sidebar_active: isActive('/barang-keluar') }"
+
+        <button
+          class="py-3 px-4 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200 w-full"
+          @click="toggleTransaksiDropdown"
         >
-          <ArrowRightStartOnRectangleIcon class="h-6 w-6" />
-          <span class="text-sm">Barang Keluar</span>
-        </router-link>
+          <div class="flex justify-between">
+            <div class="flex items-center space-x-2">
+              <ArrowRightStartOnRectangleIcon class="h-6 w-6" />
+              <span class="text-sm">Transaksi</span>
+            </div>
+            <ChevronDownIcon class="h-6 w-6" />
+          </div>
+        </button>
+        <!-- Dropdown menu -->
+        <div
+          v-show="transaksiDropdownOpen"
+          class="z-10 w-full shadow-xl rounded-lg"
+        >
+          <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+            <li>
+              <router-link
+                to="/transaksi/tambah-barang"
+                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+                :class="{
+                  sidebar_active: isActive('/transaksi/tambah-barang'),
+                }"
+              >
+                <PlusIcon class="h-6 w-6" />
+                <span class="text-sm">Tambah Transaksi</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/daftar-transaksi/"
+                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+                :class="{
+                  sidebar_active: isActive('/daftar-transaksi'),
+                }"
+              >
+                <ClipboardDocumentListIcon class="h-6 w-6" />
+                <span class="text-sm">Daftar Transaksi</span>
+              </router-link>
+            </li>
+          </ul>
+        </div>
+
         <router-link
           to="/status-rak"
           class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
@@ -49,9 +87,10 @@
           <InboxStackIcon class="h-6 w-6" />
           <span class="text-sm">Status Rak</span>
         </router-link>
+
         <button
           class="py-3 px-4 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200 w-full"
-          @click="toggleDropdown"
+          @click="toggleRiwayatDropdown"
         >
           <div class="flex justify-between">
             <div class="flex items-center space-x-2">
@@ -62,7 +101,10 @@
           </div>
         </button>
         <!-- Dropdown menu -->
-        <div v-show="dropdownOpen" class="z-10 w-full shadow-xl rounded-lg">
+        <div
+          v-show="riwayatDropdownOpen"
+          class="z-10 w-full shadow-xl rounded-lg"
+        >
           <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
             <li>
               <router-link
@@ -82,6 +124,18 @@
               >
                 <ArrowRightStartOnRectangleIcon class="h-6 w-6" />
                 <span class="text-sm">Riwayat Barang Keluar</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/transaksi/riwayat"
+                class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
+                :class="{
+                  sidebar_active: isActive('/transaksi/riwayat'),
+                }"
+              >
+                <ArchiveBoxIcon class="h-6 w-6" />
+                <span class="text-sm">Riwayat Transaksi</span>
               </router-link>
             </li>
           </ul>
@@ -123,6 +177,9 @@ import {
   DocumentIcon,
   ChevronDownIcon,
   CubeIcon,
+  PlusIcon,
+  ClipboardDocumentListIcon,
+  ArchiveBoxIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -135,13 +192,17 @@ export default {
     DocumentIcon,
     ChevronDownIcon,
     CubeIcon,
+    PlusIcon,
+    ClipboardDocumentListIcon,
+    ArchiveBoxIcon,
   },
   setup() {
     const route = useRoute();
     const showSidebar = ref(false);
     const screenWidth = computed(() => window.innerWidth);
     const isMobile = computed(() => screenWidth.value <= 768);
-    const dropdownOpen = ref(false);
+    const transaksiDropdownOpen = ref(false);
+    const riwayatDropdownOpen = ref(false);
 
     const sidebarClasses = computed(() => {
       if (isMobile.value) {
@@ -185,16 +246,22 @@ export default {
       window.removeEventListener("resize", updateScreenWidth);
     });
 
-    const toggleDropdown = () => {
-      dropdownOpen.value = !dropdownOpen.value;
+    const toggleTransaksiDropdown = () => {
+      transaksiDropdownOpen.value = !transaksiDropdownOpen.value;
+    };
+
+    const toggleRiwayatDropdown = () => {
+      riwayatDropdownOpen.value = !riwayatDropdownOpen.value;
     };
 
     return {
       showSidebar,
       sidebarClasses,
       isMobile,
-      dropdownOpen,
-      toggleDropdown,
+      transaksiDropdownOpen,
+      riwayatDropdownOpen,
+      toggleRiwayatDropdown,
+      toggleTransaksiDropdown,
       isActive(path) {
         if (route.path === path) {
           return true;

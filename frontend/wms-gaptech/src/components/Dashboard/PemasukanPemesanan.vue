@@ -157,7 +157,6 @@ export default {
       try {
         const response = await axiosInstance.get("transactions");
         this.monthlyReport(response.data);
-        console.log(this.thisMonthProgressSales());
       } catch (error) {
         console.error("Error fetching data : ", error);
       }
@@ -176,7 +175,6 @@ export default {
         this.monthlyData.income[month] += transaction.totalHarga;
         this.monthlyData.transaction[month] += 1;
       });
-      console.log("Monthly Data:", this.monthlyData);
     },
     salesGoals() {
       const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
