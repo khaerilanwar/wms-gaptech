@@ -1,43 +1,11 @@
 import { faker } from "@faker-js/faker/locale/id_ID";
 import Database from "./config/Database.js";
-import Users from "./models/UserModel.js";
 import Products from "./models/ProductModel.js";
 import InProducts from "./models/InProductModel.js";
 import OutProducts from "./models/OutProductModel.js";
 import bcrypt from "bcrypt";
 import Transaction from "./models/TransactionModel.js";
 import Racks from "./models/RackModel.js";
-
-// Credential main admin
-// name     : Khaeril Anwar
-// username : admin
-// email    : 12210952@bsi.ac.id
-// password : 12345
-
-async function userSeeder() {
-  // iterasi data seeder user
-  let jumlahUser = 5;
-  for (let i = 0; i < jumlahUser; i++) {
-    await Users.create({
-      name: faker.person.fullName(),
-      username: faker.internet.userName().toLowerCase(),
-      email: faker.internet
-        .email({ provider: "gmail.com", allowSpecialCharacters: false })
-        .toLowerCase(),
-      password: bcrypt.hashSync(`anwar0${i}`, 10),
-    });
-  }
-
-  // nambah user yang akan digunakan untuk proses pengembangan
-  // Users.create({
-  //     name: "Khaeril Anwar",
-  //     username: "admin",
-  //     email: "12210952@bsi.ac.id",
-  //     password: "12345",
-  // });
-
-  console.log("User seeder has been done!");
-}
 
 async function productSeeder() {
   const rakArray = []; // total posisi rak ada 48
@@ -74,7 +42,7 @@ async function productSeeder() {
     });
   }
 
-console.log("Product seeder has been done!");
+  console.log("Product seeder has been done!");
 }
 
 async function inProductSeeder() {
@@ -196,30 +164,22 @@ async function rackSeeder() {
     }
   }
 
-  const products = await Products.find();
+  const allProduct = await Products.find()
 
-  const inputedRack = [];
-  let i = 0;
-  while (i < 28) {
-    const rak = faker.helpers.arrayElement(rakArray);
-    const produk = faker.helpers.arrayElement(products).namaProduk;
-    if (
-      inputedRack.find((item) => item.rak === rak) ||
-      inputedRack.find((item) => item.produk === produk)
-    )
-      continue;
+  // Mendapatkan persentase data dummy produk
+  const percent = Math.floor((80 / 100) * allProduct.length)
 
-    const rackEntry = {
-      rak,
-      kapasitas: 100,
-      terisi: faker.number.int({ min: 1, max: 72 }),
-      status: 2,
-      produk,
-    };
-    await Racks.create(rackEntry);
-    inputedRack.push({ rak, produk });
-    i++;
+  for (let i = 0; i < percent; i++) {
+    const dataInput = {
+      kodeProduk: faker.string.numeric(13),
+      namaProduk: faker.commerce.productName(),
+      harga:
+        faker.number.int({ min: 10000 / 5000, max: 1000000 / 5000 }) * 5000,
+      stok: faker.number.int({ min: 0, max: 100 }),
+      posisiRak: faker.helpers.arrayElement(rakArray),
+    }
   }
+
 }
 
 // uncomment code below to run the rack seeder
