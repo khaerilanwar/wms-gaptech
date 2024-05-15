@@ -10,7 +10,7 @@ const rackSchema = new Schema(
         // 1 = terisi (kuning)
         // 2 = penuh (merah)
         terisi: { type: Number, required: true, default: 0 },
-        produk: { type: String, unique: true }
+        produk: { type: String, unique: true, default: null }
     },
     { versionKey: false }
 )

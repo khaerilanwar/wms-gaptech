@@ -94,9 +94,6 @@ router.patch("/transaction/:idTransaksi(\\d+)", updateStatus);
 router.get("/racks", getAllRacks);
 router.get("/racks/empty", getEmptyRacks);
 
-// Router Debug Development
-// router.get('/dev/sayang', develop)
-
 router.use((req, res) => {
   res.status(404);
   res.send("<h1>404 Not Found Sayangku!!</h1>");

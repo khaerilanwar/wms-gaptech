@@ -13,6 +13,7 @@ async function transaksiMasuk() {
     for (const coll of colls) {
         if (coll.name == 'users') continue
         await mongoose.connection.dropCollection(coll.name)
+        // console.log(coll.name)
     }
 
     // Menambahkan generate data rak ke database
@@ -37,10 +38,11 @@ async function transaksiMasuk() {
                     await Racks.create(
                         {
                             rak: `L${i}-${j}-${k}-${l}`,
-                            kapasitas: 100,
+                            kapasitas: 500,
                             terisi: 0
                         }
                     )
+                    // console.log(`L${i}-${j}-${k}-${l}`)
                 }
             }
         }
@@ -50,19 +52,26 @@ async function transaksiMasuk() {
 
     // Menambahkan data produk baru
     // Atur jumlah produk yang mau ditambahkan
-    let jumlahProduk = 28
+    let jumlahProduk = 30
     // Perulangan untuk menambah produk baru ke products collection
     for (let x = 0; x < jumlahProduk; x++) {
         const newProduct = {
             kodeProduk: faker.string.numeric(13),
             namaProduk: faker.commerce.productName(),
             harga: faker.number.int({ min: 10000 / 5000, max: 1000000 / 5000 }) * 5000,
-            stok: faker.number.int({ min: 40, max: 100 }),
-            posisiRak: faker.helpers.arrayElement(rakArray)
+            stok: faker.number.int({ min: 300, max: 500 }),
+            posisiRak: faker.helpers.arrayElement(rakArray),
+            createdAt: new Date("2024-02-01"),
+            updatedAt: new Date("2024-02-01")
         }
+
+        // console.log(`Tambah produk ${newProduct.namaProduk}`)
 
         // Mengecek apakah posisi rak sudah terisi
         if (rakTerisi.includes(newProduct.posisiRak)) continue
+
+        // Menambahkan rak yang sudah terisi
+        rakTerisi.push(newProduct.posisiRak)
 
         // Menambahkan data ke products collection
         await Products.create(newProduct)
@@ -72,7 +81,13 @@ async function transaksiMasuk() {
             {
                 kodeProduk: newProduct.kodeProduk,
                 namaProduk: newProduct.namaProduk,
-                stokMasuk: newProduct.stok
+                stokMasuk: newProduct.stok,
+                dateInProduct: faker.date.between(
+                    {
+                        from: new Date("2024-02-10"),
+                        to: new Date("2024-02-20")
+                    }
+                )
             }
         )
 
@@ -89,7 +104,7 @@ async function transaksiMasuk() {
 
 async function transaksiKeluar() {
 
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 40; j++) {
 
         // Mendapatkan semua data products
         const allProducts = await Products.find()
@@ -102,7 +117,7 @@ async function transaksiKeluar() {
         const totalHarga = []
 
         // Jumlah barang keluar
-        const jumlahBarang = faker.number.int({ min: 1, max: 4 })
+        const jumlahBarang = faker.number.int({ min: 1, max: 6 })
 
         // Looping untuk mendapatkan random data-data produk
         for (let k = 0; k < jumlahBarang; k++) {
@@ -151,7 +166,14 @@ async function transaksiKeluar() {
                 0
             ),
 
-            status: faker.helpers.arrayElement([0, 1])
+            status: faker.helpers.arrayElement([0, 1]),
+
+            tanggalTransaksi: faker.date.between(
+                {
+                    from: new Date("2024-03-01"),
+                    to: new Date()
+                }
+            )
 
         }
 
@@ -164,7 +186,8 @@ async function transaksiKeluar() {
                 {
                     kodeProduk: item.kodeProduk,
                     namaProduk: item.namaProduk,
-                    stokKeluar: item.kuantitas
+                    stokKeluar: item.kuantitas,
+                    dateOutProduct: transaction.tanggalTransaksi
                 }
             )
 

@@ -20,3 +20,7 @@ export const getEmptyRacks = async (req, res) => {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
     }
 }
+
+export const updateRack = async (req, res) => {
+
+}
