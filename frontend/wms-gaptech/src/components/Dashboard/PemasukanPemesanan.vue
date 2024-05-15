@@ -147,6 +147,7 @@ export default {
       progressValue: 0,
       percentageChange: 0,
       isPercentageUp: false,
+      backgroundColor: "",
     };
   },
   mounted() {
@@ -157,6 +158,7 @@ export default {
       try {
         const response = await axiosInstance.get("transactions");
         this.monthlyReport(response.data);
+        this.thisMonthProgressSales();
       } catch (error) {
         console.error("Error fetching data : ", error);
       }
