@@ -128,10 +128,10 @@
             </li>
             <li>
               <router-link
-                to="/transaksi/riwayat"
+                to="/riwayat-transaksi"
                 class="flex items-center py-3 px-4 space-x-2 mb-1 hover:bg-blue-light hover:text-blue-primary rounded transition duration-200"
                 :class="{
-                  sidebar_active: isActive('/transaksi/riwayat'),
+                  sidebar_active: isActive('/riwayat-transaksi'),
                 }"
               >
                 <ArchiveBoxIcon class="h-6 w-6" />

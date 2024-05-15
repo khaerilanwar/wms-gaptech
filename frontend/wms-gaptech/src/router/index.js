@@ -15,6 +15,7 @@ import DaftarTransaksi from "@/views/Transaksi/DaftarTransaksi.vue";
 import DetailTransaksi from "@/views/Transaksi/DetailTransaksi.vue";
 import TambahTransaksi from "@/views/Transaksi/TambahTransaksi.vue";
 import RiwayatTransaksi from "@/views/Riwayat/RiwayatTransaksi.vue";
+import DetailRiwayatTransaksi from "@/views/Transaksi/DetailRiwayatTransaksi.vue";
 
 const routes = [
   {
@@ -79,11 +80,6 @@ const routes = [
         component: TambahTransaksi,
       },
       {
-        path: "/transaksi/riwayat",
-        name: RiwayatTransaksi,
-        component: RiwayatTransaksi,
-      },
-      {
         path: "/status-rak",
         name: "status-rak",
         component: StatusRakView,
@@ -97,6 +93,16 @@ const routes = [
         path: "/riwayat-barang-keluar",
         name: "riwayat-barang-keluar",
         component: RiwayatBarangKeluarView,
+      },
+      {
+        path: "/riwayat-transaksi",
+        name: RiwayatTransaksi,
+        component: RiwayatTransaksi,
+      },
+      {
+        path: "/riwayat-transaksi/detail/:idTransaksi",
+        name: DetailRiwayatTransaksi,
+        component: DetailRiwayatTransaksi,
       },
     ],
   },

@@ -8,7 +8,7 @@
     <!-- Content -->
     <div v-else>
       <div class="flex justify-end m-2">
-        <router-link to="/daftar-transaksi">
+        <router-link to="/riwayat-transaksi">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -26,7 +26,7 @@
       <p
         class="flex justify-center font-mono items-center font-semibold text-3xl mt-10"
       >
-        DETAIL TRANSAKSI
+        DETAIL RIWAYAT TRANSAKSI
       </p>
 
       <div class="flex flex-col mt-14 mb-10 ml-15 gap-3">

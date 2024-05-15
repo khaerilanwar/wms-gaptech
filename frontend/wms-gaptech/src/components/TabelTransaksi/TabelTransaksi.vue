@@ -25,7 +25,7 @@
         <td>{{ item.namaPemesan }}</td>
         <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
         <td>
-          <v-chip :color="changeColorStatus(item.status)">
+          <v-chip class="ml-0 mr-8" :color="changeColorStatus(item.status)">
             <span v-if="item.status === 0">On Process</span>
           </v-chip>
         </td>
@@ -37,7 +37,7 @@
               </button>
             </router-link>
             <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
-              <button @click="showDetails(item.idTransaksi)">
+              <button class="mx-1" @click="showDetails(item.idTransaksi)">
                 <ComponentButton intent="detail"></ComponentButton>
               </button>
             </router-link>
