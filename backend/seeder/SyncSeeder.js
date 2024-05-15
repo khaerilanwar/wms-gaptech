@@ -7,16 +7,14 @@ import Transaction from "../models/TransactionModel.js";
 import Racks from "../models/RackModel.js";
 import mongoose from "mongoose";
 
-async function deleteCollections() {
+async function transaksiMasuk() {
     // Menghapus semua collections kecuali collection user
     const colls = await mongoose.connection.listCollections()
     for (const coll of colls) {
         if (coll.name == 'users') continue
         await mongoose.connection.dropCollection(coll.name)
     }
-}
 
-async function transaksiMasuk() {
     // Menambahkan generate data rak ke database
     // total posisi rak ada 48
     const rakArray = [];
@@ -186,8 +184,7 @@ async function transaksiKeluar() {
 }
 
 // Menjalankan seeder transaksi
-deleteCollections()
-    .then(() => transaksiMasuk())
+transaksiMasuk()
     .then(() => console.log('Transaksi masuk seeder has been done!'))
     .then(() => transaksiKeluar())
     .then(() => console.log('Transaksi keluar seeder has been done!'))

@@ -42,7 +42,7 @@ import {
   updateStatus,
   updateTransaction,
 } from "../controllers/Transaction.js";
-import { getAllRack, getEmptyRacks } from "../controllers/Racks.js"; // Import fungsi dari Rack controller
+import { getAllRacks, getEmptyRacks } from "../controllers/Racks.js"; // Import fungsi dari Rack controller
 
 const router = express.Router();
 
@@ -91,8 +91,8 @@ router.put("/transaction/:idTransaksi(\\d+)", updateTransaction);
 router.patch("/transaction/:idTransaksi(\\d+)", updateStatus);
 
 // Router racks
-router.get("/racks-all", verifyToken, getAllRack);
-router.get("/racks-empty", verifyToken, getEmptyRacks);
+router.get("/racks", getAllRacks);
+router.get("/racks/empty", getEmptyRacks);
 
 // Router Debug Development
 // router.get('/dev/sayang', develop)
