@@ -181,15 +181,22 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
 23. ``GET`` ``/verify-reset-token/:token`` untuk verifikasi token yang didapatkan dari link yang dikirimkan
 
 24. ``GET`` ``/update-password`` untuk mengubah password terbaru dengan `auth` token yang didapatkan
-   ```json
+    ```json
     {
        "newPassword": "newpassword",
        "confirmNewPassword": "newpassword"
     }
-   ```
-25. ``GET`` ``/racks-all`` untuk mendapatkan semua data dan status rak 
+    ```
+25. ``GET`` ``/racks`` untuk mendapatkan semua data dan status rak 
 
-26. ``GET`` ``/racks-empty`` untuk mendapatkan data rak dengan kapasitas kosong 
+26. ``GET`` ``/racks/empty`` untuk mendapatkan data rak dengan kapasitas kosong 
+27. ``GET`` ``/rack/{rak}`` untuk mendapatkan detail data dari suatu rak
+28. ``PATCH`` ``/rack/{rak}`` untuk mengubah kapasitas suatu rak
+    ```json
+    {
+        "kapasitas": 400
+    }
+    ```
 
 Demikianlah dokumentasi yang disajikan oleh Server Back End.
 

@@ -38,7 +38,7 @@ async function transaksiMasuk() {
                     await Racks.create(
                         {
                             rak: `L${i}-${j}-${k}-${l}`,
-                            kapasitas: 500,
+                            kapasitas: 400,
                             terisi: 0
                         }
                     )
@@ -58,8 +58,8 @@ async function transaksiMasuk() {
         const newProduct = {
             kodeProduk: faker.string.numeric(13),
             namaProduk: faker.commerce.productName(),
-            harga: faker.number.int({ min: 10000 / 5000, max: 1000000 / 5000 }) * 5000,
-            stok: faker.number.int({ min: 300, max: 500 }),
+            harga: faker.number.int({ min: 8000 / 5000, max: 75000 / 5000 }) * 5000,
+            stok: faker.number.int({ min: 250, max: 400 }),
             posisiRak: faker.helpers.arrayElement(rakArray),
             createdAt: new Date("2024-02-01"),
             updatedAt: new Date("2024-02-01")
@@ -104,7 +104,7 @@ async function transaksiMasuk() {
 
 async function transaksiKeluar() {
 
-    for (let j = 0; j < 40; j++) {
+    for (let j = 0; j < 80; j++) {
 
         // Mendapatkan semua data products
         const allProducts = await Products.find()
