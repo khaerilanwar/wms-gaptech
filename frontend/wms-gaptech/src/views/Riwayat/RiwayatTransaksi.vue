@@ -46,10 +46,6 @@
                   <ComponentButton intent="detail"></ComponentButton>
                 </button>
               </router-link>
-
-              <button @click="deleteTransaction(item.idTransaksi)">
-                <ComponentButton intent="delete"></ComponentButton>
-              </button>
             </div>
           </td>
         </tr>
@@ -156,17 +152,6 @@ export default {
 
     async showDetails(dataItem) {
       this.$emit("transaction-details", dataItem);
-    },
-
-    async deleteTransaction(idTransaksi) {
-      const isConfirmed = window.confirm(
-        "Apakah Anda yakin untuk menghapus data?",
-      );
-      if (isConfirmed) {
-        await axiosInstance.delete(`transaction/${idTransaksi}`);
-        this.loadItems();
-        this.$refs.notification.showSuccess("Transaksi berhasil dihapus");
-      }
     },
 
     diffRowColor(index) {
