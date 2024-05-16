@@ -38,7 +38,7 @@ async function transaksiMasuk() {
                     await Racks.create(
                         {
                             rak: `L${i}-${j}-${k}-${l}`,
-                            kapasitas: 400,
+                            kapasitas: 500,
                             terisi: 0
                         }
                     )
@@ -59,13 +59,11 @@ async function transaksiMasuk() {
             kodeProduk: faker.string.numeric(13),
             namaProduk: faker.commerce.productName(),
             harga: faker.number.int({ min: 8000 / 5000, max: 75000 / 5000 }) * 5000,
-            stok: faker.number.int({ min: 250, max: 400 }),
+            stok: 0,
             posisiRak: faker.helpers.arrayElement(rakArray),
-            createdAt: new Date("2024-02-01"),
-            updatedAt: new Date("2024-02-01")
+            createdAt: new Date("2024-01-01"),
+            updatedAt: new Date("2024-01-01")
         }
-
-        // console.log(`Tambah produk ${newProduct.namaProduk}`)
 
         // Mengecek apakah posisi rak sudah terisi
         if (rakTerisi.includes(newProduct.posisiRak)) continue
@@ -76,21 +74,6 @@ async function transaksiMasuk() {
         // Menambahkan data ke products collection
         await Products.create(newProduct)
 
-        // Menambahkan data ke inproducts collection
-        await InProducts.create(
-            {
-                kodeProduk: newProduct.kodeProduk,
-                namaProduk: newProduct.namaProduk,
-                stokMasuk: newProduct.stok,
-                dateInProduct: faker.date.between(
-                    {
-                        from: new Date("2024-02-10"),
-                        to: new Date("2024-02-20")
-                    }
-                )
-            }
-        )
-
         // Mengubah field produk pada racks collection
         await Racks.updateOne(
             { rak: newProduct.posisiRak },
@@ -100,11 +83,56 @@ async function transaksiMasuk() {
             }
         )
     }
+
+    const allProducts = await Products.find()
+
+    for (let b = 0; b < 100; b++) {
+        const randProduct = faker.helpers.arrayElement(allProducts)
+        const stokBaru = faker.number.int({ min: 50, max: 80 })
+
+        // Mengecek apakah suatu produk pada rak melebihi kapasitas
+        const rakProduk = await Racks.findOne({ rak: randProduct.posisiRak })
+        if (stokBaru > (rakProduk.kapasitas - rakProduk.terisi)) {
+            console.log(`Stok ${randProduct.namaProduk} melebihi kapasitas kosong!`)
+            continue
+        }
+
+        // Mengupdate stok masuk di products collection
+        await Products.updateOne(
+            { kodeProduk: randProduct.kodeProduk },
+            {
+                $inc: { stok: +stokBaru }
+            }
+        )
+
+        // Menambahkan data ke inproducts collection
+        await InProducts.create(
+            {
+                kodeProduk: randProduct.kodeProduk,
+                namaProduk: randProduct.namaProduk,
+                stokMasuk: stokBaru,
+                dateInProduct: faker.date.between(
+                    {
+                        from: new Date("2024-01-01"),
+                        to: new Date("2024-05-10")
+                    }
+                )
+            }
+        )
+
+        // Mengupdate stok terisi pada racks collection
+        await Racks.updateOne(
+            { rak: randProduct.posisiRak },
+            {
+                $inc: { terisi: +stokBaru }
+            }
+        )
+    }
 }
 
 async function transaksiKeluar() {
 
-    for (let j = 0; j < 80; j++) {
+    for (let j = 0; j < 50; j++) {
 
         // Mendapatkan semua data products
         const allProducts = await Products.find()
@@ -117,12 +145,12 @@ async function transaksiKeluar() {
         const totalHarga = []
 
         // Jumlah barang keluar
-        const jumlahBarang = faker.number.int({ min: 1, max: 6 })
+        const jumlahBarang = faker.number.int({ min: 3, max: 6 })
 
         // Looping untuk mendapatkan random data-data produk
         for (let k = 0; k < jumlahBarang; k++) {
             // Mengatur jumlah kuantitas barang keluar
-            let kuantitas = faker.number.int({ min: 1, max: 10 })
+            let kuantitas = faker.number.int({ min: 1, max: 8 })
 
             // Looping akan terus berjalan sampai random produk
             // tidak ada pada array outProducts dan
@@ -133,8 +161,14 @@ async function transaksiKeluar() {
             } while (
                 outProducts.find(
                     (item) => item.kodeProduk == outProduct.kodeProduk
-                ) || kuantitas > outProduct.stok
+                )
             );
+
+            // Mengecek apakah kuantitas melebihi dari stok yang ada
+            if (kuantitas > outProduct.stok) {
+                console.log(`Kuantitas ${outProduct.namaProduk} melebihi stok!`)
+                continue
+            }
 
             // Mendefinisikan data barang keluar
             outProduct = {
@@ -149,6 +183,8 @@ async function transaksiKeluar() {
             totalHarga.push(outProduct.subTotal)
             outProducts.push(outProduct)
         }
+
+
 
         // Mendefinisikan data untuk tiap transaksi
         const current = new Date();
@@ -170,7 +206,7 @@ async function transaksiKeluar() {
 
             tanggalTransaksi: faker.date.between(
                 {
-                    from: new Date("2024-03-01"),
+                    from: new Date("2024-01-15"),
                     to: new Date()
                 }
             )
