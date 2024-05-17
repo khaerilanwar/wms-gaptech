@@ -9,9 +9,9 @@
         class="flex items-center text-2xl font-semibold text-black space-x-2 px-4 py-3"
       >
         <img
-          class="w-8 h-8 mr-2"
-          src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-          alt="logo"
+          class="w-10 h-8 mr-2"
+          :src="gaptechLogo"
+          alt="GapTech Logo"
         />
         <span class="text-2xl font-extrabold text-blue-primary">GapTech</span>
       </a>
@@ -110,6 +110,7 @@
 </template>
 
 <script>
+import gaptechLogo from "@/assets/gaptechlogo.png";
 import { mapGetters, mapActions } from "vuex";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRoute } from "vue-router";
@@ -211,6 +212,7 @@ export default {
   data() {
     return {
       user: null,
+      gaptechLogo,
     };
   },
   computed: {
