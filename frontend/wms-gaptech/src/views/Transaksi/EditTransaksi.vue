@@ -75,9 +75,9 @@
                 <td class="text-center border">{{ item.kodeProduk }}</td>
                 <td class="text-center border">{{ item.namaProduk }}</td>
                 <td class="text-center border">{{ item.kuantitas }}</td>
-                <td class="text-center border">
+                <!-- <td class="text-center border">
                   {{ $filters.currency(item.subTotal) }}
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </v-table>
