@@ -31,7 +31,7 @@
         </td>
         <td class="flex">
           <div class="mt-3">
-            <router-link to="">
+            <router-link :to="'/daftar-transaksi/edit/' + item.idTransaksi">
               <button>
                 <ComponentButton intent="edit"></ComponentButton>
               </button>

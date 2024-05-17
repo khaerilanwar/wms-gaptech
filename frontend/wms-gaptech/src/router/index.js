@@ -16,6 +16,7 @@ import DetailTransaksi from "@/views/Transaksi/DetailTransaksi.vue";
 import TambahTransaksi from "@/views/Transaksi/TambahTransaksi.vue";
 import RiwayatTransaksi from "@/views/Riwayat/RiwayatTransaksi.vue";
 import DetailRiwayatTransaksi from "@/views/Transaksi/DetailRiwayatTransaksi.vue";
+import EditTransaksi from "@/views/Transaksi/EditTransaksi.vue";
 
 const routes = [
   {
@@ -68,6 +69,11 @@ const routes = [
         path: "/daftar-transaksi",
         name: "daftar-transaksi",
         component: DaftarTransaksi,
+      },
+      {
+        path: "/daftar-transaksi/edit/:idTransaksi",
+        name: "EditTransaksi",
+        component: EditTransaksi,
       },
       {
         path: "/daftar-transaksi/detail/:idTransaksi",
