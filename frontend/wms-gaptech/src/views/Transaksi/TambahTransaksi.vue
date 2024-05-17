@@ -252,9 +252,14 @@ export default {
       };
       console.log(orderData);
       try {
-        await axiosInstance.post("transaction", orderData);
-        console.log("Pesanan berhasil dikirim:", orderData);
-        this.$refs.notification.showSuccess("Transaksi berhasil ditambahkan");
+        const isConfirmed = window.confirm(
+          "Apakah anda yakin ingin menambahkan transaksi?",
+        );
+        if (isConfirmed) {
+          await axiosInstance.post("transaction", orderData);
+          console.log("Pesanan berhasil dikirim:", orderData);
+          this.$refs.notification.showSuccess("Transaksi berhasil ditambahkan");
+        }
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);
       }
