@@ -3,13 +3,9 @@
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 font-Montserrat"
     >
-      <div class="flex items-center mb-3 text-2xl font-semibold text-black">
-        <img
-          class="w-10 h-8 mr-2"
-          :src="gaptechLogo"
-          alt="GapTech Logo"
-        />
-        GapTech
+      <div class="flex items-center mb-4 text-2xl font-semibold text-black">
+        <img class="w-10 h-8 mr-2" :src="gaptechLogo" alt="GapTech Logo" />
+        GAPTECH
       </div>
       <div
         class="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 border-2 border-blue-primary"
@@ -129,7 +125,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style scoped>

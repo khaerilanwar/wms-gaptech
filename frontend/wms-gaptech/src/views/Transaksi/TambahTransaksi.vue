@@ -6,6 +6,13 @@
     </div>
 
     <div v-else>
+      <button
+        class="flex items-center hover:text-blue-primary mb-3"
+        @click="goBack"
+      >
+        <ChevronLeftIcon class="h-6 w-6" />
+        <span class="text-sm">Kembali</span>
+      </button>
       <div class="bg-white border p-4 shadow-md rounded-md">
         <h1 class="text-xl font-semibold">Tambah Transaksi</h1>
       </div>
@@ -127,11 +134,13 @@
 import axiosInstance from "@/utils/api";
 import QuantityBtn from "@/components/QuantityBtn.vue";
 import Notification from "@/components/Notification.vue";
+import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
 export default {
   components: {
     QuantityBtn,
     Notification,
+    ChevronLeftIcon,
   },
   emits: ["submit-order"],
   data() {
@@ -184,10 +193,17 @@ export default {
         const response = await axiosInstance.get("products");
         this.products = response.data;
         this.isLoading = false;
-        console.log(this.products);
       } catch (error) {
         console.error("Error fetching products:", error);
         this.loading = false;
+      }
+    },
+    goBack() {
+      const isConfirmed = window.confirm(
+        "Apakah Anda yakin ingin meninggalkan halaman ini?",
+      );
+      if (isConfirmed) {
+        this.$router.push("/daftar-transaksi");
       }
     },
     diffRowColor(index) {
@@ -211,9 +227,6 @@ export default {
         // Increment
         const requestedQuantity =
           dataQuantity.quantity - this.selected[index].quantity;
-        console.log("Requested quantity:", requestedQuantity);
-        console.log("Data Quantity:", dataQuantity.quantity);
-        console.log("Selected Quantity:", this.selected[index].quantity);
 
         if (this.selected[index].stok >= requestedQuantity) {
           this.selected[index].quantity = dataQuantity.quantity;
@@ -250,15 +263,18 @@ export default {
           kuantitas: item.quantity,
         })),
       };
-      console.log(orderData);
       try {
         const isConfirmed = window.confirm(
           "Apakah anda yakin ingin menambahkan transaksi?",
         );
         if (isConfirmed) {
           await axiosInstance.post("transaction", orderData);
-          console.log("Pesanan berhasil dikirim:", orderData);
           this.$refs.notification.showSuccess("Transaksi berhasil ditambahkan");
+
+          this.recipientName = "";
+          this.recipientAddress = "";
+          this.selected = [];
+          this.orders.totalPrice = 0;
         }
       } catch (error) {
         console.error("Terjadi kesalahan saat mengirim pesanan:", error);

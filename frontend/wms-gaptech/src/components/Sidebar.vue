@@ -6,14 +6,10 @@
     <div :class="sidebarClasses" class="bg-white text-black w-64 px-3 z-10">
       <a
         href="#"
-        class="flex items-center text-2xl font-semibold text-black space-x-2 px-4 py-3"
+        class="flex items-center text-2xl font-semibold text-black space-x-2 px-4 py-3 my-2"
       >
-        <img
-          class="w-10 h-8 mr-2"
-          :src="gaptechLogo"
-          alt="GapTech Logo"
-        />
-        <span class="text-2xl font-extrabold text-blue-primary">GapTech</span>
+        <img class="w-10 h-8 mr-2" :src="gaptechLogo" alt="GapTech Logo" />
+        <span class="text-2xl font-extrabold text-blue-primary">GAPTECH</span>
       </a>
       <nav>
         <router-link
