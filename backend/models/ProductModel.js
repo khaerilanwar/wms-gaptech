@@ -10,7 +10,7 @@ const productSchema = new Schema(
       minlength: 13,
       maxlength: 13,
     },
-    namaProduk: { type: String, required: true },
+    namaProduk: { type: String, required: true, unique: true },
     harga: { type: Number, required: true },
     stok: { type: Number, required: true },
     posisiRak: { type: String, required: true },
