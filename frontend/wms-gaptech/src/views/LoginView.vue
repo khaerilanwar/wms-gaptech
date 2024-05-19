@@ -3,13 +3,9 @@
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 font-Montserrat"
     >
-      <div class="flex items-center mb-3 text-2xl font-semibold text-black">
-        <img
-          class="w-8 h-8 mr-2"
-          src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-          alt="logo"
-        />
-        GapTech
+      <div class="flex items-center mb-4 text-2xl font-semibold text-black">
+        <img class="w-10 h-8 mr-2" :src="gaptechLogo" alt="GapTech Logo" />
+        GAPTECH
       </div>
       <div
         class="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 border-2 border-blue-primary"
@@ -91,6 +87,7 @@ import axiosInstance from "@/utils/api";
 import Notification from "../components/Notification.vue";
 import ComponentButton from "../components/ComponentButton.vue";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
+import gaptechLogo from "@/assets/gaptechlogo.png";
 
 export default {
   components: {
@@ -104,6 +101,7 @@ export default {
       email: "",
       password: "",
       showPassword: false,
+      gaptechLogo, // Tambahkan gambar ke data
     };
   },
   methods: {
@@ -128,3 +126,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.logo {
+  width: 2rem; /* Atur lebar gambar sesuai keinginan Anda */
+  height: 2rem; /* Atur tinggi gambar sesuai keinginan Anda */
+  object-fit: contain; /* Memastikan gambar tidak terdistorsi */
+}
+</style>
