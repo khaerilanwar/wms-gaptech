@@ -5,7 +5,7 @@ import Racks from "../models/RackModel.js";
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Products.find({}, { _id: 0 })
+        const products = await Products.find({}, { _id: 0 }).sort({ namaProduk: 1 })
         res.json(products)
         console.log('Successfull for get all data products')
     } catch (error) {

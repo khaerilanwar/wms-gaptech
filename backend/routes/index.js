@@ -61,12 +61,12 @@ router.put("/update-password", authToken, updatePassword);
 
 // Router products
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
-router.get("/products", getProducts);
-router.get("/product/:kodeProduk(\\d+)", getProduct); // kodeProduk hanya menerima numeric
-router.post("/product", addProduct);
-router.put("/product/:kodeProduk(\\d+)", updateProduct);
-router.patch("/product/:kodeProduk(\\d+)", addStock);
-router.delete("/product/:kodeProduk(\\d+)", deleteProduct);
+router.get("/products", verifyToken, getProducts);
+router.get("/product/:kodeProduk(\\d+)", verifyToken, getProduct); // kodeProduk hanya menerima numeric
+router.post("/product", verifyToken, addProduct);
+router.put("/product/:kodeProduk(\\d+)", verifyToken, updateProduct);
+router.patch("/product/:kodeProduk(\\d+)", verifyToken, addStock);
+router.delete("/product/:kodeProduk(\\d+)", verifyToken, deleteProduct);
 
 // Router in products (history)
 router.get("/inproducts", verifyToken, getInProducts);
@@ -81,20 +81,20 @@ router.get("/outproducts/data-by-period", verifyToken, outProductByPeriod);
 router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
-router.get("/transaction/:idTransaksi(\\d+)", getTransaction);
-router.post("/transaction", saveTransaction);
-router.get("/transactions", getAllTransactions);
-router.get("/transactions/process", getProcessTransactions);
-router.get("/transactions/success", getSuccessTransactions);
-router.delete("/transaction/:idTransaksi(\\d+)", deleteTransaction);
-router.put("/transaction/:idTransaksi(\\d+)", updateTransaction);
-router.patch("/transaction/:idTransaksi(\\d+)", updateStatus);
+router.get("/transaction/:idTransaksi(\\d+)", verifyToken, getTransaction);
+router.post("/transaction", verifyToken, saveTransaction);
+router.get("/transactions", verifyToken, getAllTransactions);
+router.get("/transactions/process", verifyToken, getProcessTransactions);
+router.get("/transactions/success", verifyToken, getSuccessTransactions);
+router.delete("/transaction/:idTransaksi(\\d+)", verifyToken, deleteTransaction);
+router.put("/transaction/:idTransaksi(\\d+)", verifyToken, updateTransaction);
+router.patch("/transaction/:idTransaksi(\\d+)", verifyToken, updateStatus);
 
 // Router racks
-router.get("/racks", getAllRacks);
-router.get("/racks/empty", getEmptyRacks);
-router.get("/rack/:rak", getRack)
-router.patch("/rack/:rak", updateRack)
+router.get("/racks", verifyToken, getAllRacks);
+router.get("/racks/empty", verifyToken, getEmptyRacks);
+router.get("/rack/:rak", verifyToken, getRack)
+router.patch("/rack/:rak", verifyToken, updateRack)
 
 router.use((req, res) => {
   res.status(404);
