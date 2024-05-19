@@ -14,7 +14,7 @@ export const outProductByPeriod = async (req, res) => {
         const periodData = await OutProducts.find({
             dateOutProduct: {
                 $gte: new Date(req.query.start),
-                $lt: new Date(req.query.end)
+                $lt: new Date(req.query.end).setHours(23, 59, 59, 999)
             }
         }, { _id: 0 }).sort({ dateOutProduct: 1 })
         // if (periodData.length == 0) return res.sendStatus(400)
