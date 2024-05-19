@@ -82,7 +82,7 @@
             </tbody>
           </v-table>
 
-          <label class="block text-gray-700 text-sm font-bold mb-2 ml-1"
+          <label class="mt-4 block text-gray-700 text-sm font-bold mb-2 ml-1"
             >Status Pengiriman</label
           >
           <div class="relative">
@@ -121,7 +121,7 @@
           <div class="flex justify-center items-center p-5 mt-5">
             <button
               type="submit"
-              class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 hover:bg-blue-600"
+              class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 mt-2 hover:bg-blue-600"
             >
               Edit
             </button>

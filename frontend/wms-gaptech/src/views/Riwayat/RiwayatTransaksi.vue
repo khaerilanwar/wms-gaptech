@@ -125,6 +125,7 @@ export default {
         title: "Status",
         key: "status",
         align: "start",
+        sortable: false,
       },
       { title: "Action", key: "action", align: "start", sortable: false },
     ],

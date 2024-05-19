@@ -58,6 +58,7 @@
             <template #text>
               <v-text-field
                 v-model="search"
+                variant="outlined"
                 label="Search"
                 prepend-inner-icon="mdi-magnify"
                 hide-details
