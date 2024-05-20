@@ -1,6 +1,5 @@
 <template>
-  <div class="rounded-lg shadow-lg p-5 bg-white">
-    <h1 class="font-semibold xl:text-2xl">Ringkasan Barang Masuk dan Keluar</h1>
+  <div class="rounded-lg shadow-lg p-2 bg-white h-full">
     <Bar :data="chartData" />
   </div>
 </template>
@@ -32,20 +31,21 @@ export default {
   components: { Bar },
   data() {
     return {
+      currentYear: new Date().getFullYear(),
       chartData: {
         labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
+          "Januari",
+          "Februari",
+          "Maret",
+          "April",
+          "Mei",
+          "Juni",
+          "Juli",
+          "Agustus",
+          "September",
+          "Oktober",
+          "November",
+          "Desember",
         ],
         datasets: [
           {
@@ -62,7 +62,7 @@ export default {
       },
     };
   },
-  mounted() {
+  created() {
     this.fetchData();
   },
   methods: {
@@ -81,16 +81,17 @@ export default {
     },
     async fetchData() {
       try {
+        const year = this.currentYear;
         const inProducts = await axiosInstance.get(
-          "inproducts/data-by-period?start=2024-01-01&end=2024-12-31",
+          `inproducts/data-by-period?start=${year}-01-01&end=${year}-12-31`,
         );
         const outProducts = await axiosInstance.get(
-          "outproducts/data-by-period?start=2024-01-01&end=2024-12-31",
+          `outproducts/data-by-period?start=${year}-01-01&end=${year}-12-31`,
         );
 
         this.updateChartData(inProducts.data, outProducts.data);
       } catch (error) {
-        console.error("Error fetching data : ", error);
+        console.error("Error fetching data:", error);
       }
     },
   },

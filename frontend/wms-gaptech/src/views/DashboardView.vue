@@ -1,8 +1,15 @@
 <template>
   <div>
-    <div class="mb-2 flex justify-between space-x-2">
-      <div class="w-3/5"><Diagram></Diagram></div>
-      <div class="w-2/5"><PemasukanPemesanan></PemasukanPemesanan></div>
+    <div class="flex space-x-2">
+      <div class="w-3/4 flex flex-col">
+        <h1 class="font-semibold xl:text-2xl mb-2">
+          Ringkasan Barang Masuk dan Keluar
+        </h1>
+        <div class="flex-grow"><Diagram></Diagram></div>
+      </div>
+      <div class="w-1/2 flex flex-col">
+        <PemasukanPemesanan class="flex-grow"></PemasukanPemesanan>
+      </div>
     </div>
     <div class="w-full"><RingkasanBarang></RingkasanBarang></div>
   </div>
