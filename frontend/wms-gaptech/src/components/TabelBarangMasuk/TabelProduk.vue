@@ -61,12 +61,21 @@
             <div class="flex">
               <router-link :to="`/produk/tambah-stok/${item.kodeProduk}`">
                 <ComponentButton intent="add"></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Tambah Stok
+                </v-tooltip>
               </router-link>
               <router-link :to="`/produk/edit-produk/${item.kodeProduk}`">
                 <ComponentButton intent="edit"></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Edit Produk
+                </v-tooltip>
               </router-link>
               <button @click="deleteItem(item.kodeProduk)">
                 <ComponentButton intent="delete"></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Hapus Produk
+                </v-tooltip>
               </button>
             </div>
           </td>

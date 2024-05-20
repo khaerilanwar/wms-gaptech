@@ -24,7 +24,7 @@
             <label
               for="recipientName"
               class="block text-gray-700 text-sm font-medium mb-2"
-              >Nama Pemesan</label
+              >Nama Pemesan <span class="text-red-secondary">*</span></label
             >
             <input
               id="recipientName"
@@ -39,7 +39,8 @@
             <label
               for="recipientAddress"
               class="block text-gray-700 text-sm font-medium mb-2"
-              >Alamat Pengiriman</label
+              >Alamat Pengiriman
+              <span class="text-red-secondary">*</span></label
             >
             <textarea
               id="recipientAddress"
@@ -116,12 +117,7 @@
               Total Harga : {{ $filters.currency(orders.totalPrice) }}
             </p>
             <div class="flex justify-center items-center p-5 m-5">
-              <button
-                type="submit"
-                class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 hover:bg-blue-600"
-              >
-                Submit
-              </button>
+              <ComponentButton intent="primary">Submit</ComponentButton>
             </div>
           </v-card>
         </div>
@@ -136,12 +132,14 @@ import axiosInstance from "@/utils/api";
 import QuantityBtn from "@/components/QuantityBtn.vue";
 import Notification from "@/components/Notification.vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import ComponentButton from "@/components/ComponentButton.vue";
 
 export default {
   components: {
     QuantityBtn,
     Notification,
     ChevronLeftIcon,
+    ComponentButton,
   },
   emits: ["submit-order"],
   data() {

@@ -119,12 +119,7 @@
             </svg>
           </div>
           <div class="flex justify-center items-center p-5 mt-5">
-            <button
-              type="submit"
-              class="bg-blue-500 text-white font-medium rounded-md shadow-sm px-4 py-2 mt-2 hover:bg-blue-600"
-            >
-              Edit
-            </button>
+            <ComponentButton intent="primary">Edit</ComponentButton>
           </div>
         </div>
       </form>
@@ -137,11 +132,13 @@
 import axiosInstance from "@/utils/api";
 import Notification from "@/components/Notification.vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import ComponentButton from "@/components/ComponentButton.vue";
 
 export default {
   components: {
     Notification,
     ChevronLeftIcon,
+    ComponentButton,
   },
   data() {
     return {

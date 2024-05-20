@@ -42,7 +42,7 @@
         @click="increment"
       >
         <svg
-          class="w-2.5 h-2.5 text-gray-900 dark:text-white"
+          class="w-2.5 h-2.5 text-gray-900"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

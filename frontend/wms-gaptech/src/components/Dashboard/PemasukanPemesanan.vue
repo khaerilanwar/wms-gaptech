@@ -1,6 +1,8 @@
 <template>
-  <div class="flex flex-col h-full space-y-2">
-    <h1 class="font-semibold xl:text-2xl">Ringkasan Bulan Ini</h1>
+  <h1 class="font-semibold xl:text-2xl mb-2">Ringkasan Bulan Ini</h1>
+  <PuSkeleton v-if="loading" height="78px" :count="3" class="space-y-2">
+  </PuSkeleton>
+  <div v-else class="flex flex-col h-full space-y-2">
     <!-- PEMASUKAN -->
     <div
       class="bg-white p-2 shadow-lg rounded-lg flex flex-col justify-between"
@@ -149,18 +151,24 @@ export default {
       percentageChange: 0,
       isPercentageUp: false,
       backgroundColor: "",
+      loading: false,
     };
   },
-  mounted() {
+  created() {
     this.fetchData();
   },
   methods: {
     async fetchData() {
       try {
+        this.loading = true;
         const response = await axiosInstance.get("transactions");
         this.monthlyReport(response.data);
         this.thisMonthProgressSales();
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       } catch (error) {
+        this.loading = false;
         console.error("Error fetching data : ", error);
       }
     },

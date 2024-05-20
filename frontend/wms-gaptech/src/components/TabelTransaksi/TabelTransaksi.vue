@@ -55,15 +55,24 @@
             <div class="flex">
               <router-link :to="'/daftar-transaksi/edit/' + item.idTransaksi">
                 <ComponentButton intent="edit"></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Edit Transaksi
+                </v-tooltip>
               </router-link>
               <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
                 <ComponentButton
                   intent="detail"
                   @click="showDetails(item.idTransaksi)"
                 ></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Detail Transaksi
+                </v-tooltip>
               </router-link>
               <button @click="deleteTransaction(item.idTransaksi)">
                 <ComponentButton intent="delete"></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Hapus Transaksi
+                </v-tooltip>
               </button>
             </div>
           </td>

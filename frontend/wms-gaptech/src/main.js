@@ -7,6 +7,8 @@ import router from "./router";
 import "./utils/api";
 import store from "./utils/vuex";
 import JsonExcel from "vue-json-excel3";
+import Skeleton from "vue-loading-skeleton";
+import "vue-loading-skeleton/dist/style.css";
 
 // Vuetify
 import "vuetify/styles";
@@ -41,4 +43,5 @@ app.component("DownloadExcel", JsonExcel);
 app.use(router);
 app.use(store);
 app.use(vuetify);
+app.use(Skeleton);
 app.mount("#app");

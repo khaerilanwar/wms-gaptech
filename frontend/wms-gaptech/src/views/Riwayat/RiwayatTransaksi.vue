@@ -1,11 +1,8 @@
 <template>
-  <div class="bg-white p-4 h-full border rounded border-black">
-    <p
-      class="flex justify-center font-mono items-center font-semibold text-3xl mt-15 mb-10"
-    >
-      Riwayat Transaksi
-    </p>
-
+  <div class="h-full">
+    <div class="flex justify-center items-center font-semibold text-3xl mb-2">
+      <h1 class="font-semibold">Riwayat Transaksi</h1>
+    </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
       v-model:page="currentPage"
@@ -44,6 +41,9 @@
               >
                 <button @click="showDetails(item.idTransaksi)">
                   <ComponentButton intent="detail"></ComponentButton>
+                  <v-tooltip activator="parent" location="top">
+                    Detail Transaksi
+                  </v-tooltip>
                 </button>
               </router-link>
             </div>

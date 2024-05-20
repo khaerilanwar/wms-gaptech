@@ -44,7 +44,7 @@
           </td>
           <td class="text-center">{{ item.kodeProduk }}</td>
           <td>{{ item.namaProduk }}</td>
-          <td>
+          <td class="text-center">
             <v-chip :color="getColor(item.stok)">
               {{ item.stok }}
             </v-chip>

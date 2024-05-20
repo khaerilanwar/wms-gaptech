@@ -1,5 +1,6 @@
 <template>
-  <div class="rounded-lg shadow-lg p-2 bg-white h-full">
+  <PuSkeleton v-if="loading" height="250px"> </PuSkeleton>
+  <div v-else class="rounded-lg shadow-lg p-2 h-full bg-white">
     <Bar :data="chartData" />
   </div>
 </template>
@@ -32,6 +33,7 @@ export default {
   data() {
     return {
       currentYear: new Date().getFullYear(),
+      loading: false,
       chartData: {
         labels: [
           "Januari",
@@ -81,6 +83,7 @@ export default {
     },
     async fetchData() {
       try {
+        this.loading = true;
         const year = this.currentYear;
         const inProducts = await axiosInstance.get(
           `inproducts/data-by-period?start=${year}-01-01&end=${year}-12-31`,
@@ -88,9 +91,12 @@ export default {
         const outProducts = await axiosInstance.get(
           `outproducts/data-by-period?start=${year}-01-01&end=${year}-12-31`,
         );
-
         this.updateChartData(inProducts.data, outProducts.data);
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       } catch (error) {
+        this.loading = false;
         console.error("Error fetching data:", error);
       }
     },
