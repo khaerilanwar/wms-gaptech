@@ -47,7 +47,7 @@ export default {
             console.log(error);
             this.$refs.notification.showError(error.response.data.msg);
           }
-        }, 1000);
+        }, 2000);
       } catch (error) {
         console.log(error);
       }
