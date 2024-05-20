@@ -1,21 +1,24 @@
 <template>
-  <v-card>
-    <template #text>
-      <v-text-field
-        v-model="search.namaPemesan"
-        label="Cari Nama Pemesan"
-        prepend-inner-icon="mdi-magnify"
-        variant="outlined"
-        hide-details
-        single-line
-        class="w-full"
-        @input="searchItems"
-      ></v-text-field>
-    </template>
+  <div>
+    <div class="flex mb-2 items-center">
+      <div class="flex items-center">
+        <p>Pencarian</p>
+        <v-text-field
+          v-model="search.namaPemesan"
+          class="ma-2"
+          density="compact"
+          placeholder="Cari Nama Pemesan"
+          hide-details
+          outlined
+          filled
+          @input="searchItems"
+        ></v-text-field>
+      </div>
+    </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
       v-model:page="currentPage"
-      class="border rounded-lg p-3"
+      class="border rounded-lg"
       :headers="headers"
       :items="serverItems"
       :items-length="totalItems"
@@ -31,31 +34,34 @@
       @update:options="loadItems"
     >
       <template #item="{ item, index }">
-        <tr :class="diffRowColor(index)" class="">
+        <tr
+          :class="diffRowColor(index)"
+          class="hover:bg-grey-primary hover:bg-opacity-15"
+        >
           <td>
             {{ getRowNumber(index, itemsPerPage, totalItems) }}
           </td>
-          <td>{{ item.idTransaksi }}</td>
+          <td class="text-center">{{ item.idTransaksi }}</td>
           <td>{{ item.namaPemesan }}</td>
-          <td>{{ item.tanggalTransaksi.slice(0, 10) }}</td>
+          <td class="text-center">
+            {{ item.tanggalTransaksi.slice(0, 10) }}
+          </td>
           <td>
-            <v-chip class="ml-0 mr-8" :color="changeColorStatus(item.status)">
+            <v-chip :color="changeColorStatus(item.status)">
               <span v-if="item.status === 0">On Process</span>
             </v-chip>
           </td>
-          <td class="flex">
-            <div class="mt-3">
+          <td>
+            <div class="flex">
               <router-link :to="'/daftar-transaksi/edit/' + item.idTransaksi">
-                <button>
-                  <ComponentButton intent="edit"></ComponentButton>
-                </button>
+                <ComponentButton intent="edit"></ComponentButton>
               </router-link>
               <router-link :to="'/daftar-transaksi/detail/' + item.idTransaksi">
-                <button class="mx-1" @click="showDetails(item.idTransaksi)">
-                  <ComponentButton intent="detail"></ComponentButton>
-                </button>
+                <ComponentButton
+                  intent="detail"
+                  @click="showDetails(item.idTransaksi)"
+                ></ComponentButton>
               </router-link>
-
               <button @click="deleteTransaction(item.idTransaksi)">
                 <ComponentButton intent="delete"></ComponentButton>
               </button>
@@ -64,7 +70,7 @@
         </tr>
       </template>
     </v-data-table-server>
-  </v-card>
+  </div>
   <Notification ref="notification" />
 </template>
 
@@ -134,31 +140,42 @@ export default {
       {
         title: "No",
         align: "start",
+        width: "5%",
       },
       {
         title: "ID Transaksi",
         key: "idTransaksi",
-        align: "start",
+        align: "center",
         sortable: false,
+        width: "10%",
       },
       {
         title: "Nama Pemesan",
         key: "namaPemesan",
-        align: "start",
+        align: "center",
         sortable: false,
+        width: "65%",
       },
       {
         title: "Tanggal Transaksi",
         key: "tanggalTransaksi",
-        align: "start",
+        align: "center",
+        width: "10%",
       },
       {
         title: "Status",
         key: "status",
-        align: "start",
+        align: "center",
         sortable: false,
+        width: "5%",
       },
-      { title: "Action", key: "action", align: "start", sortable: false },
+      {
+        title: "Edit",
+        key: "action",
+        align: "center",
+        sortable: false,
+        width: "5%",
+      },
     ],
     serverItems: [],
     loading: true,
@@ -222,3 +239,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.v-text-field {
+  width: 400px;
+}
+</style>
