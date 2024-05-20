@@ -173,6 +173,7 @@ export default {
       }
     },
     monthlyReport(transactions) {
+      this.loading = true;
       transactions.forEach((transaction) => {
         const month = new Date(transaction.tanggalTransaksi).getMonth();
 
@@ -186,6 +187,9 @@ export default {
         this.monthlyData.income[month] += transaction.totalHarga;
         this.monthlyData.transaction[month] += 1;
       });
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
     },
     salesGoals() {
       const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
@@ -193,6 +197,7 @@ export default {
       return targetGoals;
     },
     thisMonthProgressSales() {
+      this.loading = true;
       const thisMonthIncome = this.monthlyData.income[this.thisMonth];
       this.progressValue = Math.round(
         (thisMonthIncome / this.salesGoals()) * 100,
@@ -210,6 +215,9 @@ export default {
       } else {
         this.backgroundColor = "bg-red-200";
       }
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
     },
   },
 };
