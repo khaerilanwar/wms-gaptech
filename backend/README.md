@@ -44,6 +44,8 @@ Maka server backend akan berjalan secara live di localhost:{port}. Dengan menggu
 
 ## Endpoint API Yang Tersedia
 
+berikut url API Dokumentation yang sudah dipublish : https://documenter.getpostman.com/view/30298242/2sA3QmDubt
+
 Berikut adalah endpoint API yang bisa digunakan di server backend :
 
 1. ``POST`` ``/login`` untuk melakukan proses login pengguna
