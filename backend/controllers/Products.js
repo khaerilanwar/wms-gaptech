@@ -52,6 +52,15 @@ export const addProduct = async (req, res) => {
 
         // save new product to database
         await Products.create(req.body)
+
+        // mengisi rak kosong dengan produk yang baru
+        await Racks.updateOne(
+            { rak: req.body.posisiRak.toUpperCase() },
+            {
+                produk: req.body.namaProduk,
+                terisi: req.body.stok
+            })
+
         res.status(201).json({ msg: 'Produk berhasil ditambahkan!', kodeProduk: req.body.kodeProduk })
         console.log('Successfull for add a data product')
     } catch (error) {
@@ -64,8 +73,20 @@ export const updateProduct = async (req, res) => {
     const kodeProduk = req.params.kodeProduk
     req.body.updatedAt = new Date()
     try {
-        const updated = await Products.findOneAndUpdate({ kodeProduk }, req.body)
-        if (!updated) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
+        // cek apakah produk ada dalam database
+        const cekProduk = await Products.exists({ kodeProduk })
+        if (!cekProduk) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
+
+        // cek nama produk apakah sama dengan produk lain
+        const cekNamaProduk = await Products.exists({ namaProduk: req.body.namaProduk })
+        if (cekNamaProduk) return res.status(409).json({ msg: `Nama produk ${req.body.namaProduk} sudah ada!` })
+
+        // Mengupdate perubahan pada data produk
+        await Products.updateOne({ kodeProduk }, req.body)
+
+        // const updated = await Products.findOneAndUpdate({ kodeProduk }, req.body)
+        // if (!updated) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
+
         res.json({ msg: `${updated.namaProduk} berhasil diperbaharui!` })
         console.log('Successfull for update a data product')
     } catch (error) {
@@ -82,6 +103,12 @@ export const deleteProduct = async (req, res) => {
 
         // jika kode produk ada di database
         await Products.deleteOne({ kodeProduk })
+
+        // Mengosongkan data rak ketika produk di hapus
+        await Racks.updateOne(
+            { rak: product.posisiRak },
+            { terisi: 0, produk: null }
+        )
         res.sendStatus(204)
         console.log('Successfull for delete a data product')
     } catch (error) {

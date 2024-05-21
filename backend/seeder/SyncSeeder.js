@@ -52,7 +52,7 @@ async function transaksiMasuk() {
 
     // Menambahkan data produk baru
     // Atur jumlah produk yang mau ditambahkan
-    let jumlahProduk = 30
+    let jumlahProduk = 40
     // Perulangan untuk menambah produk baru ke products collection
     for (let x = 0; x < jumlahProduk; x++) {
         const newProduct = {
@@ -86,7 +86,7 @@ async function transaksiMasuk() {
 
     const allProducts = await Products.find()
 
-    for (let b = 0; b < 100; b++) {
+    for (let b = 0; b < 150; b++) {
         const randProduct = faker.helpers.arrayElement(allProducts)
         const stokBaru = faker.number.int({ min: 50, max: 80 })
 
@@ -132,7 +132,7 @@ async function transaksiMasuk() {
 
 async function transaksiKeluar() {
 
-    for (let j = 0; j < 50; j++) {
+    for (let j = 0; j < 70; j++) {
 
         // Mendapatkan semua data products
         const allProducts = await Products.find()

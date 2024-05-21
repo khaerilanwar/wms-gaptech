@@ -31,6 +31,26 @@ export const getSuccessTransactions = async (req, res) => {
     }
 }
 
+// get success transaction by period
+export const successTransationsByPeriod = async (req, res) => {
+    try {
+        const periodData = await Transaction.find(
+            {
+                status: 1,
+                tanggalTransaksi: {
+                    $gte: new Date(req.query.start),
+                    $lt: new Date(req.query.end).setHours(23, 59, 59, 999)
+                }
+            },
+            { _id: 0 }
+        ).sort({ tanggalTransaksi: 1 })
+
+        res.json(periodData)
+    } catch (error) {
+        res.sendStatus(400)
+    }
+}
+
 // for get a transaction data
 export const getTransaction = async (req, res) => {
     if (!req.params.idTransaksi) return res.status(400).json({ msg: "Id transaksi tidak dikirim" })
