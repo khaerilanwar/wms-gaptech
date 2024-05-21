@@ -1,5 +1,6 @@
 import OutProducts from "../models/OutProductModel.js";
 import Products from "../models/ProductModel.js";
+import Racks from "../models/RackModel.js";
 import Transaction from "../models/TransactionModel.js";
 
 // for get all data transaction
@@ -103,16 +104,6 @@ export const saveTransaction = async (req, res) => {
             await Products.updateOne(
                 { kodeProduk: itemBarangKeluar.kodeProduk },
                 { $inc: { stok: -itemBarangKeluar.kuantitas } })
-
-            // -------- PENDING --------
-            // Menambahkan data barang keluar
-            // await OutProducts.create({
-            //     kodeProduk: itemBarangKeluar.kodeProduk,
-            //     namaProduk: itemBarangKeluar.namaProduk,
-            //     stokKeluar: itemBarangKeluar.kuantitas,
-            //     dateOutProduct: new Date()
-            // })
-            // -------- PENDING --------
         }
 
         res.status(201).json({ msg: "Transaksi baru berhasil ditambahkan!" })
@@ -128,8 +119,25 @@ export const deleteTransaction = async (req, res) => {
         // Mengecek apakah data transaksi ada dalam database
         const transaction = await Transaction.findOne({ idTransaksi })
         if (!transaction) return res.status(404).json({ msg: "ID Transaksi tidak ditemukan!" })
+
         // Mengecek apakah data transaksi sudah selesai
         if (transaction.status === 1) return res.status(403).json({ msg: `Transaksi ${idTransaksi} sudah selesai!` })
+
+        // Mengembalikan stok produk persediaan ketika dihapus
+        for (const item of transaction.barangKeluar) {
+            // mengembalikan ke product collection
+            await Products.updateOne(
+                { kodeProduk: item.kodeProduk },
+                { $inc: { stok: +item.kuantitas } }
+            )
+
+            // Mengembalikan stok terisi
+            await Racks.updateOne(
+                { produk: item.namaProduk },
+                { $inc: { terisi: +item.kuantitas } }
+            )
+        }
+
         await Transaction.deleteOne({ idTransaksi })
         res.sendStatus(204)
         console.log('Successfull for delete a data transaction')
@@ -137,6 +145,42 @@ export const deleteTransaction = async (req, res) => {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
     }
 }
+
+// untuk mengubah status transaksi menjadi selesai
+// sekaligus menambahkan history barang keluar
+export const updateStatus = async (req, res) => {
+    const idTransaksi = req.params.idTransaksi
+    try {
+        // Mengecek apakah data transaksi ada dalam database
+        const transaction = await Transaction.findOne({ idTransaksi })
+        if (!transaction) return res.status(404).json({ msg: "ID Transaksi tidak ditemukan!" })
+
+        // Mengupdate status ke selesai
+        await Transaction.updateOne(
+            { idTransaksi },
+            { status: 1 }
+        )
+
+        // Menambahkan data barang keluar ke history outproducts
+        for (const itemBarangKeluar of transaction.barangKeluar) {
+            const dataBarang = {
+                kodeProduk: itemBarangKeluar.kodeProduk,
+                namaProduk: itemBarangKeluar.namaProduk,
+                stokKeluar: itemBarangKeluar.kuantitas
+            }
+
+            // Menambahkan data ke dalam database
+            await OutProducts.create(dataBarang)
+        }
+
+        res.status(201).json({ msg: `Transaksi ${idTransaksi} telah selesai!` })
+
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
+// ----- ENDPOINT TIDAK TERPAKAI -----
 
 // for update a transaction data
 export const updateTransaction = async (req, res) => {
@@ -210,40 +254,6 @@ export const updateTransaction = async (req, res) => {
         }
 
         res.status(201).json({ msg: `Transaksi ${idTransaksi} berhasil di update!` })
-
-    } catch (error) {
-        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-    }
-}
-
-// untuk mengubah status transaksi menjadi selesai
-// sekaligus menambahkan history barang keluar
-export const updateStatus = async (req, res) => {
-    const idTransaksi = req.params.idTransaksi
-    try {
-        // Mengecek apakah data transaksi ada dalam database
-        const transaction = await Transaction.findOne({ idTransaksi })
-        if (!transaction) return res.status(404).json({ msg: "ID Transaksi tidak ditemukan!" })
-
-        // Mengupdate status ke selesai
-        await Transaction.updateOne(
-            { idTransaksi },
-            { status: 1 }
-        )
-
-        // Menambahkan data barang keluar ke history outproducts
-        for (const itemBarangKeluar of transaction.barangKeluar) {
-            const dataBarang = {
-                kodeProduk: itemBarangKeluar.kodeProduk,
-                namaProduk: itemBarangKeluar.namaProduk,
-                stokKeluar: itemBarangKeluar.kuantitas
-            }
-
-            // Menambahkan data ke dalam database
-            await OutProducts.create(dataBarang)
-        }
-
-        res.status(201).json({ msg: `Transaksi ${idTransaksi} telah selesai!` })
 
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })

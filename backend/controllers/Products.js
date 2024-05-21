@@ -44,6 +44,7 @@ export const addProduct = async (req, res) => {
             // ketika rak tidak ada dalam database
             return res.status(400).json({ msg: `Rak ${req.body.posisiRak} tidak terdaftar!` })
         } else {
+            // ketika rak sudah terisi
             if (cekRak.terisi !== 0) return res.status(406).json({ msg: `Rak ${req.body.posisiRak} sudah terisi` })
         }
 
@@ -127,6 +128,13 @@ export const addStock = async (req, res) => {
             stok: req.body.stokBaru + product.stok,
             updatedAt: new Date()
         })
+
+        // update rak terisi
+        await Racks.updateOne(
+            { rak: product.posisiRak },
+            { terisi: req.body.stokBaru + product.stok }
+        )
+
         // add in product data to in product collection for history
         await InProducts.create({
             kodeProduk: kodeProduk,
@@ -134,6 +142,7 @@ export const addStock = async (req, res) => {
             stokMasuk: req.body.stokBaru,
             dateInProduct: new Date()
         })
+
         res.json({ msg: `Berhasil menambah stok ${product.namaProduk}!` })
         console.log('Successfull for add new stock product')
     } catch (error) {
