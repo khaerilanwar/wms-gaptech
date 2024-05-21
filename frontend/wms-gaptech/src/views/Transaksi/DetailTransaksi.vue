@@ -77,7 +77,12 @@
       </p>
 
       <div class="flex justify-center items-center mt-14">
-        <ComponentButton intent="primary"> Cetak </ComponentButton>
+        <div id="qrcode" style="display: none">
+          <QRCode :id="products.idTransaksi" />
+        </div>
+        <ComponentButton intent="primary" @click="printQRCode"
+          >Cetak</ComponentButton
+        >
       </div>
     </div>
   </div>
@@ -86,10 +91,12 @@
 <script>
 import ComponentButton from "@/components/ComponentButton.vue";
 import axiosInstance from "@/utils/api";
+import QRCode from "@/components/QRCode.vue";
 
 export default {
   components: {
     ComponentButton,
+    QRCode,
   },
   data() {
     return {
@@ -120,6 +127,14 @@ export default {
     },
     diffRowColor(index) {
       return (index + 1) % 2 !== 0 ? "bg-slate-100" : "";
+    },
+    printQRCode() {
+      const printContents = document.getElementById("qrcode").innerHTML;
+      const originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      window.location.reload();
     },
   },
 };
