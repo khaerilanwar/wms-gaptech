@@ -37,9 +37,10 @@ import {
   getAllTransactions,
   getProcessTransactions,
   getSuccessTransactions,
+  getSuccessTransactionsByPeriod,
+  getSuccessTransactionsLast30Days,
   getTransaction,
   saveTransaction,
-  successTransationsByPeriod,
   updateStatus,
   updateTransaction,
 } from "../controllers/Transaction.js";
@@ -85,9 +86,10 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 router.get("/transaction/:idTransaksi(\\d+)", verifyToken, getTransaction);
 router.post("/transaction", verifyToken, saveTransaction);
 router.get("/transactions", verifyToken, getAllTransactions);
-router.get("/transactions/data-by-period", verifyToken, successTransationsByPeriod);
 router.get("/transactions/process", verifyToken, getProcessTransactions);
 router.get("/transactions/success", verifyToken, getSuccessTransactions);
+router.get("/transactions/success/last30days", verifyToken, getSuccessTransactionsLast30Days);
+router.get("/transactions/success/data-by-period", verifyToken, getSuccessTransactionsByPeriod);
 router.delete("/transaction/:idTransaksi(\\d+)", verifyToken, deleteTransaction);
 router.put("/transaction/:idTransaksi(\\d+)", verifyToken, updateTransaction);
 router.patch("/transaction/:idTransaksi(\\d+)", verifyToken, updateStatus);

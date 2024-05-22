@@ -33,7 +33,7 @@ export const getSuccessTransactions = async (req, res) => {
 }
 
 // get success transaction by period
-export const successTransationsByPeriod = async (req, res) => {
+export const getSuccessTransactionsByPeriod = async (req, res) => {
     try {
         const periodData = await Transaction.find(
             {
@@ -49,6 +49,29 @@ export const successTransationsByPeriod = async (req, res) => {
         res.json(periodData)
     } catch (error) {
         res.sendStatus(400)
+    }
+}
+
+// get success transaction 30 last days
+export const getSuccessTransactionsLast30Days = async (req, res) => {
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - 30)
+
+    try {
+        const lastMonthData = await Transaction.find(
+            {
+                status: 1,
+                tanggalTransaksi: {
+                    $gte: startDate,
+                    $lt: new Date()
+                }
+            }, { _id: 0 }
+        ).sort({ tanggalTransaksi: 1 })
+
+        res.json(lastMonthData)
+    } catch (error) {
+        res.sendStatus(400)
+        console.log(error)
     }
 }
 

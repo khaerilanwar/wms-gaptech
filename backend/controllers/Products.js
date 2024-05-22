@@ -2,6 +2,7 @@ import Products from "../models/ProductModel.js";
 import InProducts from "../models/InProductModel.js";
 import { faker } from "@faker-js/faker/locale/id_ID";
 import Racks from "../models/RackModel.js";
+import Transaction from "../models/TransactionModel.js";
 
 export const getProducts = async (req, res) => {
     try {
@@ -101,6 +102,16 @@ export const deleteProduct = async (req, res) => {
     try {
         const product = await Products.findOne({ kodeProduk })
         if (!product) return res.status(404).json({ msg: "Kode produk tidak ditemukan!" })
+
+        // Mengecek produk jika ada transaksi yang belum selesai
+        const transactionsProcess = await Transaction.find(
+            { status: 0 }
+        )
+
+        for (const itemProcess of transactionsProcess) {
+            const cekProduk = itemProcess.barangKeluar.find(produk => produk.kodeProduk == kodeProduk)
+            if (cekProduk) return res.status(423).json({ msg: "Tidak bisa menghapus produk, masih ada transaksi yang belum selesai!" })
+        }
 
         // jika kode produk ada di database
         await Products.deleteOne({ kodeProduk })
