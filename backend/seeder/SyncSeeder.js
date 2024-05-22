@@ -187,7 +187,7 @@ async function transaksiKeluar() {
 
 
         // Mendefinisikan data untuk tiap transaksi
-        const current = new Date();
+        const current = faker.date.between({ from: "2024-01-15", to: "2024-05-10" });
         const transaction = {
             idTransaksi: `${current.getFullYear()}${String(current.getMonth() + 1).padStart(2, "0")}${String(current.getDate()).padStart(2, "0")}${faker.string.numeric({ length: 4 })}`,
 
@@ -204,12 +204,7 @@ async function transaksiKeluar() {
 
             status: faker.helpers.arrayElement([0, 1]),
 
-            tanggalTransaksi: faker.date.between(
-                {
-                    from: new Date("2024-01-15"),
-                    to: new Date()
-                }
-            )
+            tanggalTransaksi: current
 
         }
 
