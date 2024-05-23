@@ -2,8 +2,8 @@
 <template>
   <div>
     <QRCodeVue3
-      :width="500"
-      :height="500"
+      :width="400"
+      :height="400"
       :value="id"
       :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
       :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 10 }"

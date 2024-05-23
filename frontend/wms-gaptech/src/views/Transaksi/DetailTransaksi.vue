@@ -77,7 +77,7 @@
       </p>
 
       <div class="flex justify-center items-center mt-14">
-        <div id="qrcode" style="display: none">
+        <div id="qrcode" class="hidden">
           <QRCode :id="products.idTransaksi" />
         </div>
         <ComponentButton intent="primary" @click="printQRCode"
@@ -129,15 +129,25 @@ export default {
       return (index + 1) % 2 !== 0 ? "bg-slate-100" : "";
     },
     printQRCode() {
-      const printContents = document.getElementById("qrcode").innerHTML;
+      const qrElement = document.getElementById("qrcode");
+      qrElement.classList.remove("hidden");
+      const printContents = qrElement.innerHTML;
       const originalContents = document.body.innerHTML;
-      document.body.innerHTML = printContents;
+      document.body.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+          ${printContents}
+        </div>`;
       window.print();
       document.body.innerHTML = originalContents;
+      qrElement.classList.add("hidden");
       window.location.reload();
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.hidden {
+  display: none;
+}
+</style>
