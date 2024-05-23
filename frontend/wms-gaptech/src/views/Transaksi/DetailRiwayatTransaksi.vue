@@ -72,25 +72,17 @@
         </tbody>
       </v-table>
 
-      <p class="mt-14 mb-10 ml-15 font-medium">
-        Total Harga : {{ $filters.currency(totalHarga) }}
+      <p class="mt-16 mb-10 ml-15 font-bold text-center">
+        Jumlah Transaksi : {{ $filters.currency(totalHarga) }}
       </p>
-
-      <div class="flex justify-center items-center mt-14">
-        <ComponentButton intent="primary"> Cetak </ComponentButton>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import ComponentButton from "@/components/ComponentButton.vue";
 import axiosInstance from "@/utils/api";
 
 export default {
-  components: {
-    ComponentButton,
-  },
   data() {
     return {
       products: [],
