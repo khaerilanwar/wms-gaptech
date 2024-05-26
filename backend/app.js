@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import router from "./routes/index.js";
+import morgan from "morgan";
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ try {
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(router);
 
