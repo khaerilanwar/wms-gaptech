@@ -47,6 +47,9 @@
                 class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
                 required
               >
+                <option>
+                  {{ originalProduct.posisiRak }}
+                </option>
                 <option v-for="rack in racks" :key="rack" :value="rack">
                   {{ rack }}
                 </option>
@@ -114,6 +117,7 @@ export default {
         harga: null,
         posisiRak: "",
       },
+      originalProduct: { namaProduk: "", harga: null, posisiRak: "" },
       loading: false,
     };
   },
@@ -129,6 +133,7 @@ export default {
         try {
           const response = await axiosInstance.get(`product/${kodeProduk}`);
           this.products = response.data;
+          this.originalProduct = { ...this.products };
           this.editProduct = { ...this.products };
           await this.fetchRacks();
           this.loading = false;
@@ -147,28 +152,52 @@ export default {
         console.log(error);
       }
     },
-    saveData() {
+    async saveData() {
       const isConfirmed = window.confirm(
         "Apakah Anda yakin untuk menyimpan perubahan?",
       );
       if (isConfirmed) {
-        this.saveDataToServer();
-      }
-    },
-    async saveDataToServer() {
-      try {
-        await axiosInstance.put(`product/${this.products.kodeProduk}`, {
-          namaProduk: this.editProduct.namaProduk,
-          harga: this.editProduct.harga,
-          posisiRak: this.editProduct.posisiRak,
-        });
-        this.$refs.notification.showSuccess("Berhasil memperbarui produk!");
-        setTimeout(() => {
-          this.$router.push("/produk");
-        }, 2000);
-      } catch (error) {
-        console.log(error);
-        this.$refs.notification.showError("Gagal memperbarui produk.");
+        const dataToUpdate = {};
+        if (this.editProduct.namaProduk !== this.originalProduct.namaProduk) {
+          dataToUpdate.namaProduk = this.editProduct.namaProduk;
+          console.log("edit nama", this.editProduct.namaProduk);
+          console.log("ori nama", this.originalProduct.namaProduk);
+        }
+        // if (this.editProduct.harga !== this.originalProduct.harga) {
+        //   dataToUpdate.harga = this.editProduct.harga;
+        //   console.log("edit harga", this.editProduct.harga);
+        //   console.log("ori harga", this.originalProduct.harga);
+        // }
+        if (parseFloat(this.editProduct.harga) !== this.originalProduct.harga) {
+          dataToUpdate.harga = parseFloat(this.editProduct.harga);
+          console.log("edit harga", this.editProduct.harga);
+          console.log("ori harga", this.originalProduct.harga);
+        }
+        if (this.editProduct.posisiRak !== this.originalProduct.posisiRak) {
+          dataToUpdate.posisiRak = this.editProduct.posisiRak;
+          console.log("edit rak", this.editProduct.posisiRak);
+          console.log("ori rak", this.originalProduct.posisiRak);
+        }
+        console.log(dataToUpdate);
+        if (Object.keys(dataToUpdate).length > 0) {
+          try {
+            await axiosInstance.put(
+              `product/${this.products.kodeProduk}`,
+              dataToUpdate,
+            );
+            this.$refs.notification.showSuccess("Berhasil memperbarui produk!");
+            setTimeout(() => {
+              this.$router.push("/produk");
+            }, 2000);
+          } catch (error) {
+            console.log(error);
+            this.$refs.notification.showError("Gagal memperbarui produk.");
+          }
+        } else {
+          this.$refs.notification.showInfo(
+            "Tidak ada perubahan yang disimpan.",
+          );
+        }
       }
     },
     cancel() {

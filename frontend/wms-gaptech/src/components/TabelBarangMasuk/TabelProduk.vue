@@ -236,9 +236,18 @@ export default {
         "Apakah Anda yakin untuk menghapus data?",
       );
       if (isConfirmed) {
-        await axiosInstance.delete(`product/${kodeProduk}`);
-        this.loadItems();
-        this.$refs.notification.showSuccess("Berhasil menghapus produk");
+        try {
+          await axiosInstance.delete(`product/${kodeProduk}`);
+          this.loadItems();
+          this.$refs.notification.showSuccess("Berhasil menghapus produk");
+        } catch (error) {
+          let errorMessage =
+            "Gagal menghapus produk. Terjadi kesalahan pada server.";
+          if (error.response) {
+            errorMessage = error.response.data.msg;
+          }
+          this.$refs.notification.showError(errorMessage);
+        }
       }
     },
   },
