@@ -8,10 +8,8 @@ export const getProducts = async (req, res) => {
     try {
         const products = await Products.find({}, { _id: 0 }).sort({ namaProduk: 1 })
         res.json(products)
-        console.log('Successfull for get all data products')
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-        console.log('Failed for get all data products')
     }
 }
 
@@ -21,10 +19,8 @@ export const getProduct = async (req, res) => {
         const product = await Products.findOne({ kodeProduk }, { _id: 0 })
         if (!product) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
         res.json(product)
-        console.log('Successfull for get a data product')
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-        console.log('Failed for get a data product')
     }
 }
 
@@ -67,7 +63,6 @@ export const addProduct = async (req, res) => {
         console.log('Successfull for add a data product')
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-        console.log('Failed for add a data product')
     }
 }
 
@@ -76,24 +71,41 @@ export const updateProduct = async (req, res) => {
     req.body.updatedAt = new Date()
     try {
         // cek apakah produk ada dalam database
-        const cekProduk = await Products.exists({ kodeProduk })
+        const cekProduk = await Products.findOne({ kodeProduk })
         if (!cekProduk) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
 
         // cek nama produk apakah sama dengan produk lain
         const cekNamaProduk = await Products.exists({ namaProduk: req.body.namaProduk })
         if (cekNamaProduk) return res.status(409).json({ msg: `Nama produk ${req.body.namaProduk} sudah ada!` })
 
+        // validasi rak ketika produk di update
+        const cekRak = await Racks.findOne({ rak: req.body.posisiRak })
+        if (!cekRak) {
+            // ketika rak tidak ada dalam database
+            return res.status(400).json({ msg: `Rak ${req.body.posisiRak} tidak terdaftar!` })
+        } else {
+            // ketika rak sudah terisi
+            if (cekRak.terisi !== 0) return res.status(406).json({ msg: `Rak ${req.body.posisiRak} sudah terisi` })
+        }
+
         // Mengupdate perubahan pada data produk
         await Products.updateOne({ kodeProduk }, req.body)
 
-        // const updated = await Products.findOneAndUpdate({ kodeProduk }, req.body)
-        // if (!updated) return res.status(404).json({ msg: 'Produk tidak ditemukan' })
+        // Mengupdate posisi rak ketika rak berubah
+        if (cekProduk.posisiRak !== req.body.posisiRak) {
+            await Racks.updateOne(
+                { rak: cekProduk.posisiRak },
+                { terisi: 0, produk: null }
+            )
+            await Racks.updateOne(
+                { rak: req.body.posisiRak },
+                { terisi: cekProduk.stok, produk: req.body.namaProduk }
+            )
+        }
 
-        res.json({ msg: `${updated.namaProduk} berhasil diperbaharui!` })
-        console.log('Successfull for update a data product')
+        res.json({ msg: `Kode produk ${cekProduk.kodeProduk} berhasil diperbaharui!` })
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-        console.log('Failed for update a data product')
     }
 }
 
@@ -125,7 +137,6 @@ export const deleteProduct = async (req, res) => {
         console.log('Successfull for delete a data product')
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-        console.log('Failed for delete a data product')
     }
 }
 
@@ -155,10 +166,8 @@ export const addStock = async (req, res) => {
         })
 
         res.json({ msg: `Berhasil menambah stok ${product.namaProduk}!` })
-        console.log('Successfull for add new stock product')
     } catch (error) {
         res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
-        console.log('Failed for add new stock product')
     }
 }
 
