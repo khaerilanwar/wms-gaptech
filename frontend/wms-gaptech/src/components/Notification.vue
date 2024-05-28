@@ -24,6 +24,14 @@ export default {
         dangerouslyHTMLString: true,
       });
     },
+    showInfo(message) {
+      toast(message, {
+        type: "info",
+        position: "bottom-right",
+        transition: "slide",
+        dangerouslyHTMLString: true,
+      });
+    },
   },
 };
 </script>
