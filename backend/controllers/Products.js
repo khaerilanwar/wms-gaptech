@@ -78,14 +78,17 @@ export const updateProduct = async (req, res) => {
         const cekNamaProduk = await Products.exists({ namaProduk: req.body.namaProduk })
         if (cekNamaProduk) return res.status(409).json({ msg: `Nama produk ${req.body.namaProduk} sudah ada!` })
 
-        // validasi rak ketika produk di update
-        const cekRak = await Racks.findOne({ rak: req.body.posisiRak })
-        if (!cekRak) {
-            // ketika rak tidak ada dalam database
-            return res.status(400).json({ msg: `Rak ${req.body.posisiRak} tidak terdaftar!` })
-        } else {
-            // ketika rak sudah terisi
-            if (cekRak.terisi !== 0) return res.status(406).json({ msg: `Rak ${req.body.posisiRak} sudah terisi` })
+        // Mengecek jika posisi rak tidak dikirim dalam request
+        if (req.body.posisiRak) {
+            // validasi rak ketika produk di update
+            const cekRak = await Racks.findOne({ rak: req.body.posisiRak })
+            if (!cekRak) {
+                // ketika rak tidak ada dalam database
+                return res.status(400).json({ msg: `Rak ${req.body.posisiRak} tidak terdaftar!` })
+            } else {
+                // ketika rak sudah terisi
+                if (cekRak.terisi !== 0) return res.status(406).json({ msg: `Rak ${req.body.posisiRak} sudah terisi` })
+            }
         }
 
         // Mengupdate perubahan pada data produk
