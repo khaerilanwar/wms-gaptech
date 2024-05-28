@@ -42,7 +42,11 @@
           <td class="text-center">{{ item.kapasitas }}</td>
           <td class="text-center">{{ item.terisi }}</td>
           <td>{{ item.produk }}</td>
-          <td class="text-center">{{ getStatus(item.kapasitas, item.terisi) }}</td>
+          <td class="text-center">
+            <v-chip :color="getStatusColor(getStatus(item.kapasitas, item.terisi))">
+              {{ getStatus(item.kapasitas, item.terisi) }}
+            </v-chip>
+          </td>
           <td>
             <div class="flex justify-center">
               <router-link :to="'/status-rack/edit/' + item.rak">
@@ -58,7 +62,6 @@
     <Notification ref="notification" />
   </div>
 </template>
-
 <script>
 import ComponentButton from "../../components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
@@ -231,9 +234,23 @@ export default {
         return "Tersedia";
       }
     },
+    getStatusColor(status) {
+      switch (status) {
+        case "Kosong":
+          return "gray";
+        case "Penuh":
+          return "red";
+        case "Hampir Penuh":
+          return "orange";
+        case "Tersedia":
+          return "green";
+        default:
+          return "";
+      }
+    },
     async editKapasitas(item) {
       try {
-        const response = await axiosInstance.get(`http://localhost:5000/rack/${item.rak}`);
+        const response = await axiosInstance.get(`rack/${item.rak}`);
         const rackDetail = response.data;
         this.selectedItem = { ...item, ...rackDetail };
         this.isEditDialogOpen = true;
@@ -245,12 +262,12 @@ export default {
     async saveKapasitas(updatedItem) {
       console.log('Updated Item:', updatedItem);
       try {
-        const response = await axiosInstance.patch(`http://localhost:5000/rack/${updatedItem.rak}`, {
+        const response = await axiosInstance.patch(`rack/${updatedItem.rak}`, {
           kapasitas: updatedItem.kapasitas,
         });
         console.log('API Response:', response);
         this.isEditDialogOpen = false; // Close the dialog after successful save
-        this.loadItems(); // Ensure the latest data is loaded after update
+        await this.loadItems(); // Ensure the latest data is loaded after update
         this.$refs.notification.showSuccess("Berhasil mengubah kapasitas");
       } catch (error) {
         console.error('API Error:', error);
@@ -260,10 +277,4 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.v-text-field {
-  width: 400px;
-}
-</style>
 
