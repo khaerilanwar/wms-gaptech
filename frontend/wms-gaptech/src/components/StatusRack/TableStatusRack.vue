@@ -4,7 +4,7 @@
       <div class="flex items-center">
         <p>Pencarian</p>
         <v-text-field
-          v-model="search.namaProduk"
+          v-model="search.produk"
           class="ma-2"
           density="compact"
           placeholder="Cari Produk"
@@ -23,7 +23,7 @@
       :items="serverItems"
       :items-length="totalItems"
       :loading="loading"
-      :search="search.namaProduk"
+      :search="search.produk"
       :items-per-page-options="[
         { value: 10, title: '10' },
         { value: 25, title: '25' },
@@ -34,7 +34,10 @@
       @update:options="loadItems"
     >
       <template #item="{ item, index }">
-        <tr :class="getRowClass(index)" class="hover:bg-grey-primary hover:bg-opacity-15">
+        <tr
+          :class="getRowClass(index)"
+          class="hover:bg-grey-primary hover:bg-opacity-15"
+        >
           <td class="text-center">
             {{ getRowNumber(index, itemsPerPage) }}
           </td>
@@ -43,7 +46,9 @@
           <td class="text-center">{{ item.terisi }}</td>
           <td>{{ item.produk }}</td>
           <td class="text-center">
-            <v-chip :color="getStatusColor(getStatus(item.kapasitas, item.terisi))">
+            <v-chip
+              :color="getStatusColor(getStatus(item.kapasitas, item.terisi))"
+            >
               {{ getStatus(item.kapasitas, item.terisi) }}
             </v-chip>
           </td>
@@ -67,10 +72,11 @@ import ComponentButton from "../../components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
 import Notification from "../Notification.vue";
-import EditKapasitasDialog from "../../components/StatusRack/EditKapasitasDialog.vue";
+// import EditKapasitasDialog from "../../components/StatusRack/EditKapasitasDialog.vue";
 
 async function fetchData() {
   const response = await axiosInstance.get("racks");
+  console.log(response);
   return response.data;
 }
 
@@ -84,8 +90,8 @@ const API = {
         let items = (await fetchData()).filter((item) => {
           if (search && Object.keys(search).length > 0) {
             if (
-              search.namaProduk &&
-              !item.produk.toLowerCase().includes(search.namaProduk.toLowerCase())
+              search.produk &&
+              !item.produk.toLowerCase().includes(search.produk.toLowerCase())
             ) {
               return false;
             }
@@ -98,17 +104,10 @@ const API = {
           const sortOrder = sortBy[0].order;
 
           items.sort((a, b) => {
-            if (sortKey === "status") {
-              const statusA = getStatus(a.kapasitas, a.terisi);
-              const statusB = getStatus(b.kapasitas, b.terisi);
-              if (sortOrder === "desc") {
-                return statusB.localeCompare(statusA);
-              }
-              return statusA.localeCompare(statusB);
-            } else {
+            if (sortKey === "terisi") {
               const aValue = a[sortKey];
               const bValue = b[sortKey];
-              if (sortOrder === "desc") {
+              if (sortOrder === "asc") {
                 return bValue - aValue;
               }
               return aValue - bValue;
@@ -128,7 +127,7 @@ export default {
   components: {
     ComponentButton,
     Notification,
-    EditKapasitasDialog,
+    // EditKapasitasDialog,
   },
   data() {
     return {
@@ -139,50 +138,49 @@ export default {
         {
           title: "Rak",
           align: "center",
-          sortable: true,
           key: "rak",
           width: "15%",
+          sortable: false,
         },
         {
           title: "Kapasitas",
           align: "center",
-          sortable: true,
           key: "kapasitas",
           width: "15%",
+          sortable: false,
         },
         {
           title: "Terisi",
           align: "center",
-          sortable: true,
           key: "terisi",
           width: "15%",
         },
         {
           title: "Produk",
           align: "center",
-          sortable: true,
           key: "produk",
           width: "15%",
+          sortable: false,
         },
         {
           title: "Status",
           align: "center",
-          sortable: true,
           key: "status",
           width: "20%",
+          sortable: false,
         },
         {
           title: "Edit",
           align: "center",
-          sortable: false,
           key: "actions",
           width: "15%",
+          sortable: false,
         },
       ],
       serverItems: [],
       loading: true,
       totalItems: 0,
-      search: { namaProduk: "" },
+      search: { produk: "" },
       currentPage: 1,
       isEditDialogOpen: false,
       selectedItem: null,
@@ -255,26 +253,25 @@ export default {
         this.selectedItem = { ...item, ...rackDetail };
         this.isEditDialogOpen = true;
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         this.$refs.notification.showError("Gagal memuat detail rak");
       }
     },
     async saveKapasitas(updatedItem) {
-      console.log('Updated Item:', updatedItem);
+      console.log("Updated Item:", updatedItem);
       try {
         const response = await axiosInstance.patch(`rack/${updatedItem.rak}`, {
           kapasitas: updatedItem.kapasitas,
         });
-        console.log('API Response:', response);
+        console.log("API Response:", response);
         this.isEditDialogOpen = false; // Close the dialog after successful save
         await this.loadItems(); // Ensure the latest data is loaded after update
         this.$refs.notification.showSuccess("Berhasil mengubah kapasitas");
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
         this.$refs.notification.showError("Gagal mengubah kapasitas");
       }
     },
   },
 };
 </script>
-

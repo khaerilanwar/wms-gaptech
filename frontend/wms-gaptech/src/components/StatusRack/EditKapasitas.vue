@@ -10,7 +10,12 @@
           type="number"
           :rules="[rules.required, rules.number]"
         ></v-text-field>
-        <v-text-field v-model="rak.terisi" label="Terisi" type="number" readonly></v-text-field>
+        <v-text-field
+          v-model="rak.terisi"
+          label="Terisi"
+          type="number"
+          readonly
+        ></v-text-field>
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -19,7 +24,7 @@
       <v-btn @click="$router.back()">Batal</v-btn>
     </v-card-actions>
   </v-card>
-  
+  <Notification ref="notification" />
 </template>
 
 <script>
@@ -33,13 +38,13 @@ export default {
   data() {
     return {
       rak: {
-        rak: '',
+        rak: "",
         kapasitas: 0,
         terisi: 0,
       },
       rules: {
-        required: value => !!value || 'Field is required',
-        number: value => !isNaN(value) || 'Must be a number',
+        required: (value) => !!value || "Field is required",
+        number: (value) => !isNaN(value) || "Must be a number",
       },
     };
   },
@@ -53,21 +58,21 @@ export default {
         const response = await axiosInstance.get(`rack/${rakId}`);
         this.rak = response.data;
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         this.$refs.notification.showError("Gagal memuat detail rak");
       }
     },
     async saveKapasitas(updatedItem) {
-      console.log('Updated Item:', updatedItem);
+      console.log("Updated Item:", updatedItem);
       try {
         const response = await axiosInstance.patch(`rack/${updatedItem.rak}`, {
           kapasitas: updatedItem.kapasitas,
         });
-        console.log('API Response:', response);
+        console.log("API Response:", response);
         this.$refs.notification.showSuccess("Berhasil mengubah kapasitas");
         this.$router.back(); // Kembali setelah berhasil menyimpan
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
         this.$refs.notification.showError("Gagal mengubah kapasitas");
       }
     },
@@ -75,6 +80,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
