@@ -19,7 +19,7 @@
       <v-btn @click="$router.back()">Batal</v-btn>
     </v-card-actions>
   </v-card>
-  
+  <Notification ref="notification" />
 </template>
 
 <script>

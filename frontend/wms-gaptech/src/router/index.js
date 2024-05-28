@@ -93,11 +93,6 @@ const routes = [
         component: StatusRakView,
       },
       {
-        path: '/',
-        name: 'TableStatusRack',
-        component: TableStatusRack,
-      },
-      {
         path: '/status-rack/edit/:rakId',
         name: 'EditKapasitas',
         component: EditKapasitas,
