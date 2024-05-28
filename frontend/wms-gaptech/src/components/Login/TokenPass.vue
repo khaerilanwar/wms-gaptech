@@ -1,6 +1,5 @@
 <template>
   <div v-show="!isValid" class="flex items-center justify-center mt-10">
-    <img src="../../../reset-pass.png" alt="" srcset="" class="w-36" />
     <span
       ><h1 class="text-xl font-semibold">Tunggu dulu ya...</h1>
       <p>
