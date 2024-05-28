@@ -65,26 +65,16 @@ export default {
     };
   },
   created() {
+    console.log("Component created");
     this.fetchData();
   },
   methods: {
-    updateChartData(inProducts, outProducts) {
-      inProducts.forEach((item) => {
-        const date = new Date(item.dateInProduct);
-        const month = date.getMonth();
-        this.chartData.datasets[0].data[month] += item.stokMasuk;
-      });
-
-      outProducts.forEach((item) => {
-        const date = new Date(item.dateOutProduct);
-        const month = date.getMonth();
-        this.chartData.datasets[1].data[month] += item.stokKeluar;
-      });
-    },
     async fetchData() {
       try {
+        console.log("Fetching data...");
         this.loading = true;
         const year = this.currentYear;
+        console.log(year);
         const inProducts = await axiosInstance.get(
           `inproducts/data-by-period?start=${year}-01-01&end=${year}-12-31`,
         );
@@ -99,6 +89,19 @@ export default {
         this.loading = false;
         console.error("Error fetching data:", error);
       }
+    },
+    updateChartData(inProducts, outProducts) {
+      inProducts.forEach((item) => {
+        const date = new Date(item.dateInProduct);
+        const month = date.getMonth();
+        this.chartData.datasets[0].data[month] += item.stokMasuk;
+      });
+
+      outProducts.forEach((item) => {
+        const date = new Date(item.dateOutProduct);
+        const month = date.getMonth();
+        this.chartData.datasets[1].data[month] += item.stokKeluar;
+      });
     },
   },
 };

@@ -12,7 +12,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("token");
     config.headers.Authorization = `Bearer ${token}`;
     if (token) {
-      const expiration = jwt_decode(token).exp * 1000;
+      const expiration = jwt_decode(token).exp;
       if (Date.now() >= expiration) {
         localStorage.removeItem("token");
         try {
