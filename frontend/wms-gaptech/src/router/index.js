@@ -4,6 +4,8 @@ import LoginView from "@/views/LoginView.vue";
 import BarangMasukView from "@/views/BarangMasuk/BarangMasukView.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import StatusRakView from "@/views/StatusRakView.vue";
+import TableStatusRack from '@/components/StatusRack/TableStatusRack.vue';
+import EditKapasitas from '@/components/StatusRack/EditKapasitas.vue';
 import Password from "@/components/Login/Password.vue";
 import TambahBarangMasukView from "@/views/BarangMasuk/TambahBarangMasukView.vue";
 import RiwayatBarangMasukView from "@/views/Riwayat/RiwayatBarangMasukView.vue";
@@ -89,6 +91,16 @@ const routes = [
         path: "/status-rak",
         name: "status-rak",
         component: StatusRakView,
+      },
+      {
+        path: '/',
+        name: 'TableStatusRack',
+        component: TableStatusRack,
+      },
+      {
+        path: '/status-rack/edit/:rakId',
+        name: 'EditKapasitas',
+        component: EditKapasitas,
       },
       {
         path: "/riwayat-barang-masuk",
