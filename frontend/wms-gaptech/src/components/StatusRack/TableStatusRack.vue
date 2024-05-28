@@ -34,7 +34,10 @@
       @update:options="loadItems"
     >
       <template #item="{ item, index }">
-        <tr :class="getRowClass(index)" class="hover:bg-grey-primary hover:bg-opacity-15">
+        <tr
+          :class="getRowClass(index)"
+          class="hover:bg-grey-primary hover:bg-opacity-15"
+        >
           <td class="text-center">
             {{ getRowNumber(index, itemsPerPage) }}
           </td>
@@ -43,7 +46,9 @@
           <td class="text-center">{{ item.terisi }}</td>
           <td>{{ item.produk }}</td>
           <td class="text-center">
-            <v-chip :color="getStatusColor(getStatus(item.kapasitas, item.terisi))">
+            <v-chip
+              :color="getStatusColor(getStatus(item.kapasitas, item.terisi))"
+            >
               {{ getStatus(item.kapasitas, item.terisi) }}
             </v-chip>
           </td>
@@ -85,7 +90,9 @@ const API = {
           if (search && Object.keys(search).length > 0) {
             if (
               search.namaProduk &&
-              !item.produk.toLowerCase().includes(search.namaProduk.toLowerCase())
+              !item.produk
+                .toLowerCase()
+                .includes(search.namaProduk.toLowerCase())
             ) {
               return false;
             }
@@ -255,26 +262,25 @@ export default {
         this.selectedItem = { ...item, ...rackDetail };
         this.isEditDialogOpen = true;
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         this.$refs.notification.showError("Gagal memuat detail rak");
       }
     },
     async saveKapasitas(updatedItem) {
-      console.log('Updated Item:', updatedItem);
+      console.log("Updated Item:", updatedItem);
       try {
         const response = await axiosInstance.patch(`rack/${updatedItem.rak}`, {
           kapasitas: updatedItem.kapasitas,
         });
-        console.log('API Response:', response);
+        console.log("API Response:", response);
         this.isEditDialogOpen = false; // Close the dialog after successful save
         await this.loadItems(); // Ensure the latest data is loaded after update
         this.$refs.notification.showSuccess("Berhasil mengubah kapasitas");
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
         this.$refs.notification.showError("Gagal mengubah kapasitas");
       }
     },
   },
 };
 </script>
-
