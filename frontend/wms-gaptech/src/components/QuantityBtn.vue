@@ -64,6 +64,7 @@
 
 <script>
 import Notification from "./Notification.vue";
+
 export default {
   components: {
     Notification,
@@ -77,6 +78,10 @@ export default {
       type: Number,
       required: true,
     },
+    selecteditems: {
+      type: Array,
+      required: true,
+    },
   },
   emits: ["quantity-changed"],
   data() {
@@ -87,6 +92,11 @@ export default {
   },
   methods: {
     increment: function () {
+      if (!this.isSelected()) {
+        this.$refs.notification.showError("Barang belum dipilih.");
+        return;
+      }
+
       if (this.quantity >= 0) {
         this.quantity++;
         this.$emit("quantity-changed", {
@@ -108,6 +118,18 @@ export default {
         });
       }
     },
+    isSelected: function () {
+      return this.selecteditems.some(
+        (item) => item.kodeProduk === this.kodeprod,
+      );
+    },
   },
 };
 </script>
+
+<style scoped>
+button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+</style>

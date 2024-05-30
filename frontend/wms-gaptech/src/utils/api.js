@@ -2,8 +2,8 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 const axiosInstance = axios.create({
-  baseURL: "https://gaptech-3cde5c34d381.herokuapp.com/",
-  // baseURL: "http://localhost:5000",
+  // baseURL: "https://gaptech-3cde5c34d381.herokuapp.com/",
+  baseURL: "http://localhost:5000",
   withCredentials: true,
 });
 
@@ -12,7 +12,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("token");
     config.headers.Authorization = `Bearer ${token}`;
     if (token) {
-      const expiration = jwt_decode(token).exp;
+      const expiration = jwt_decode(token).exp * 1000;
       if (Date.now() >= expiration) {
         localStorage.removeItem("token");
         try {

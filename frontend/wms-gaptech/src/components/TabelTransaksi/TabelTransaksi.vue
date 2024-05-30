@@ -179,7 +179,7 @@ export default {
         width: "5%",
       },
       {
-        title: "Edit",
+        title: "Action",
         key: "action",
         align: "center",
         sortable: false,

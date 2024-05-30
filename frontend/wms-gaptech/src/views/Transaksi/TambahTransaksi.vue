@@ -106,6 +106,7 @@
                     <QuantityBtn
                       :stok="item.stok"
                       :kodeprod="item.kodeProduk"
+                      :selecteditems="selected"
                       @quantity-changed="handleQuantity"
                     ></QuantityBtn>
                   </td>
@@ -217,6 +218,11 @@ export default {
       const index = this.selected.findIndex(
         (item) => item.kodeProduk === dataQuantity.kodeprod,
       );
+
+      if (index === -1) {
+        console.error("Barang belum dipilih.");
+        return;
+      }
 
       if (!this.selected[index].quantity) {
         this.selected[index].quantity = 0;
