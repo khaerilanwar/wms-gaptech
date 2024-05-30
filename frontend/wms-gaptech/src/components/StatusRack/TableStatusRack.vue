@@ -87,17 +87,14 @@ const API = {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        let items = (await fetchData()).filter((item) => {
-          if (search && Object.keys(search).length > 0) {
-            if (
-              search.produk &&
-              !item.produk.toLowerCase().includes(search.produk.toLowerCase())
-            ) {
-              return false;
-            }
-          }
-          return true;
-        });
+        let items = (await fetchData()).filter(item => {
+        let match = true;
+        if (search.produk && item.produk && !item.produk.toLowerCase().includes(search.produk.toLowerCase())) {
+          match = false;
+        }
+        // Tambahkan kondisi pencarian untuk bidang lain jika diperlukan
+        return match;
+      });
 
         if (sortBy.length) {
           const sortKey = sortBy[0].key;
