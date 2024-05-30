@@ -192,8 +192,10 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
     }
     ```
 25. ``GET`` ``/racks`` untuk mendapatkan semua data dan status rak 
-
 26. ``GET`` ``/racks/empty`` untuk mendapatkan data rak dengan kapasitas kosong 
+25. ``GET`` ``/racks/available`` untuk mendapatkan data rak yang masih tersedia
+25. ``GET`` ``/racks/almost-full`` untuk mendapatkan data rak yang hampir penuh
+25. ``GET`` ``/racks/full`` untuk mendapatkan data rak yang sudah penuh
 27. ``GET`` ``/rack/{rak}`` untuk mendapatkan detail data dari suatu rak
 28. ``PATCH`` ``/rack/{rak}`` untuk mengubah kapasitas suatu rak
     ```json

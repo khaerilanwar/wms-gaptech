@@ -46,7 +46,10 @@ import {
 } from "../controllers/Transaction.js";
 import {
   getAllRacks,
+  getAlmostFullRacks,
+  getAvailableRacks,
   getEmptyRacks,
+  getFullRacks,
   getRack,
   updateRack,
 } from "../controllers/Racks.js"; // Import fungsi dari Rack controller
@@ -88,26 +91,29 @@ router.get("/outproducts/data-by-period", verifyToken, outProductByPeriod);
 router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
-router.get("/transaction/:idTransaksi(\\d+)", getTransaction);
-router.post("/transaction", saveTransaction);
-router.get("/transactions", getAllTransactions);
-router.get("/transactions/process", getProcessTransactions);
-router.get("/transactions/success", getSuccessTransactions);
+router.get("/transaction/:idTransaksi(\\d+)", verifyToken, getTransaction);
+router.post("/transaction", verifyToken, saveTransaction);
+router.get("/transactions", verifyToken, getAllTransactions);
+router.get("/transactions/process", verifyToken, getProcessTransactions);
+router.get("/transactions/success", verifyToken, getSuccessTransactions);
 router.get(
-  "/transactions/success/last30days",
+  "/transactions/success/last30days", verifyToken,
   getSuccessTransactionsLast30Days
 );
 router.get(
-  "/transactions/success/data-by-period",
+  "/transactions/success/data-by-period", verifyToken,
   getSuccessTransactionsByPeriod
 );
-router.delete("/transaction/:idTransaksi(\\d+)", deleteTransaction);
-router.put("/transaction/:idTransaksi(\\d+)", updateTransaction);
-router.patch("/transaction/:idTransaksi(\\d+)", updateStatus);
+router.delete("/transaction/:idTransaksi(\\d+)", verifyToken, deleteTransaction);
+router.put("/transaction/:idTransaksi(\\d+)", verifyToken, updateTransaction);
+router.patch("/transaction/:idTransaksi(\\d+)", verifyToken, updateStatus);
 
 // Router racks
 router.get("/racks", verifyToken, getAllRacks);
 router.get("/racks/empty", verifyToken, getEmptyRacks);
+router.get("/racks/full", verifyToken, getFullRacks);
+router.get("/racks/almost-full", verifyToken, getAlmostFullRacks);
+router.get("/racks/available", verifyToken, getAvailableRacks);
 router.get("/rack/:rak", verifyToken, getRack);
 router.patch("/rack/:rak", verifyToken, updateRack);
 

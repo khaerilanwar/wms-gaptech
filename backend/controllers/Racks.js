@@ -10,6 +10,69 @@ export const getAllRacks = async (req, res) => {
     }
 }
 
+// Untuk mendapatkan semua data rak yang penuh
+export const getFullRacks = async (req, res) => {
+    try {
+        const rakPenuh = await Racks.aggregate([
+            {
+                $match: {
+                    $expr: { $eq: ["$terisi", "$kapasitas"] }
+                }
+            }
+        ])
+
+        res.json(rakPenuh)
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
+// Untuk mendapatkan semua data rak yang hampir penuh
+// Jika terisi >= 90% dan terisi < 100%
+export const getAlmostFullRacks = async (req, res) => {
+    try {
+        const hampirPenuh = await Racks.aggregate([
+            {
+                $match: {
+                    $expr: {
+                        $and: [
+                            { $gte: ['$terisi', { $multiply: ['$kapasitas', 0.9] }] },
+                            { $ne: ['$terisi', '$kapasitas'] }
+                        ]
+                    }
+                }
+            }
+        ])
+
+        res.json(hampirPenuh)
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
+// Untuk mendapatkan semua data rak yang masih tersedia
+// Jika terisi < 90%
+export const getAvailableRacks = async (req, res) => {
+    try {
+        const tersedia = await Racks.aggregate([
+            {
+                $match: {
+                    $expr: {
+                        $and: [
+                            { $lt: ['$terisi', { $multiply: ['$kapasitas', 0.9] }] },
+                            { $ne: ['$terisi', 0] }
+                        ]
+                    }
+                }
+            }
+        ])
+
+        res.json(tersedia)
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
 // Untuk mendapatkan semua data rak yang kosong
 export const getEmptyRacks = async (req, res) => {
     try {
