@@ -1,32 +1,32 @@
 <template>
   <div>
     <div>
-    <div class="flex mb-2 justify-between items-center">
-      <div class="flex items-center">
-        <p>Pencarian</p>
-        <v-text-field
-          v-model="search.produk"
-          class="ma-2"
-          density="compact"
-          placeholder="Cari Produk"
-          hide-details
-          outlined
-          filled
-          @input="searchItems"
-        ></v-text-field>
-      </div>
-      <div class="flex items-center">
-        <p>Filter Status:</p>
-        <v-select
+      <div class="flex mb-2 justify-between items-center">
+        <div class="flex items-center">
+          <p>Pencarian</p>
+          <v-text-field
+            v-model="search.produk"
+            class="ma-2"
+            density="compact"
+            placeholder="Cari Kode Rak"
+            hide-details
+            outlined
+            filled
+            @input="searchItems"
+          ></v-text-field>
+        </div>
+        <div class="flex items-center">
+          <p>Filter Status:</p>
+          <v-select
             v-model="selectedStatus"
             :items="statusOptions"
             dense
             outlined
             @change="searchItems"
-        ></v-select>
+          ></v-select>
+        </div>
       </div>
     </div>
-  </div>
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
       v-model:page="currentPage"
@@ -92,50 +92,53 @@ async function fetchData() {
   return response.data;
 }
 
-
 const API = {
-    async fetch({ page, itemsPerPage, sortBy, search, status }) {
-        return new Promise((resolve) => {
-            setTimeout(async () => {
-                const start = (page - 1) * itemsPerPage;
-                const end = start + itemsPerPage;
+  async fetch({ page, itemsPerPage, sortBy, search, status }) {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
 
-                let items = (await fetchData()).filter(item => {
-                    let match = true;
-                    if (search.produk && item.produk && !item.produk.toLowerCase().includes(search.produk.toLowerCase())) {
-                        match = false;
-                    }
-                    // if (status) {
-                    //     const itemStatus = getStatus(item.kapasitas, item.terisi);
-                    //     if (status !== itemStatus) {
-                    //         match = false;
-                    //     }
-                    // }
-                    return match;
-                });
-
-                if (sortBy.length) {
-                    const sortKey = sortBy[0].key;
-                    const sortOrder = sortBy[0].order;
-
-                    items.sort((a, b) => {
-                        if (sortKey === "terisi") {
-                            const aValue = a[sortKey];
-                            const bValue = b[sortKey];
-                            if (sortOrder === "asc") {
-                                return bValue - aValue;
-                            }
-                            return aValue - bValue;
-                        }
-                    });
-                }
-
-                const paginated = items.slice(start, end);
-
-                resolve({ items: paginated, total: items.length });
-            }, 500);
+        let items = (await fetchData()).filter((item) => {
+          let match = true;
+          if (
+            search.produk &&
+            item.produk &&
+            !item.produk.toLowerCase().includes(search.produk.toLowerCase())
+          ) {
+            match = false;
+          }
+          // if (status) {
+          //     const itemStatus = getStatus(item.kapasitas, item.terisi);
+          //     if (status !== itemStatus) {
+          //         match = false;
+          //     }
+          // }
+          return match;
         });
-    },
+
+        if (sortBy.length) {
+          const sortKey = sortBy[0].key;
+          const sortOrder = sortBy[0].order;
+
+          items.sort((a, b) => {
+            if (sortKey === "terisi") {
+              const aValue = a[sortKey];
+              const bValue = b[sortKey];
+              if (sortOrder === "asc") {
+                return bValue - aValue;
+              }
+              return aValue - bValue;
+            }
+          });
+        }
+
+        const paginated = items.slice(start, end);
+
+        resolve({ items: paginated, total: items.length });
+      }, 500);
+    });
+  },
 };
 
 export default {
@@ -210,32 +213,32 @@ export default {
   },
   watch: {
     selectedStatus() {
-        this.searchItems();
+      this.searchItems();
     },
-},
+  },
   methods: {
     async loadItems({ page, itemsPerPage, sortBy, status } = {}) {
-    this.loading = true;
-    this.currentPage = page || 1;
-    const { items, total } = await API.fetch({
+      this.loading = true;
+      this.currentPage = page || 1;
+      const { items, total } = await API.fetch({
         page: this.currentPage,
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
         status: status || this.selectedStatus, // Pass selected status to API fetch function
-    });
-    this.serverItems = items;
-    this.totalItems = total;
-    this.loading = false;
-},
+      });
+      this.serverItems = items;
+      this.totalItems = total;
+      this.loading = false;
+    },
 
     searchItems() {
-        this.loadItems({
-            page: 1,
-            itemsPerPage: this.itemsPerPage,
-            sortBy: [],
-            status: this.selectedStatus,
-        });
+      this.loadItems({
+        page: 1,
+        itemsPerPage: this.itemsPerPage,
+        sortBy: [],
+        status: this.selectedStatus,
+      });
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
@@ -299,28 +302,33 @@ export default {
   },
   async filterByStatus(status) {
     try {
-        let response;
-        switch(status) {
-            case "Kosong":
-                response = await axiosInstance.get("racks/empty");
-                break;
-            case "Penuh":
-                response = await axiosInstance.get("racks/full");
-                break;
-            case "Hampir Penuh":
-                response = await axiosInstance.get("racks/almost-full");
-                break;
-            case "Tersedia":
-                response = await axiosInstance.get("racks/available");
-                break;
-            default:
-                response = await axiosInstance.get("racks");
-        }
-        this.serverItems = response.data;
+      let response;
+      switch (status) {
+        case "Kosong":
+          response = await axiosInstance.get("racks/empty");
+          break;
+        case "Penuh":
+          response = await axiosInstance.get("racks/full");
+          break;
+        case "Hampir Penuh":
+          response = await axiosInstance.get("racks/almost-full");
+          break;
+        case "Tersedia":
+          response = await axiosInstance.get("racks/available");
+          break;
+        default:
+          response = await axiosInstance.get("racks");
+      }
+      this.serverItems = response.data;
     } catch (error) {
-        console.error("Error filtering by status:", error);
+      console.error("Error filtering by status:", error);
     }
-}
-
+  },
 };
 </script>
+
+<style scoped>
+.v-text-field {
+  width: 400px;
+}
+</style>
