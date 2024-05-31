@@ -88,19 +88,44 @@ import { PlusIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
 import Notification from "../Notification.vue";
 
-async function fetchData() {
-  const response = await axiosInstance.get("racks");
-  return response.data;
+async function fetchData(selectedStatus) {
+  let endpoint = "racks";
+
+  if (selectedStatus !== null) {
+    switch (selectedStatus) {
+      case "Kosong":
+        endpoint = "racks/empty";
+        break;
+      case "Penuh":
+        endpoint = "racks/full";
+        break;
+      case "Hampir Penuh":
+        endpoint = "racks/almost-full";
+        break;
+      case "Tersedia":
+        endpoint = "racks/available";
+        break;
+      default:
+        break;
+    }
+  }
+
+  try {
+    const response = await axiosInstance.get(endpoint);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
 }
 
 const API = {
-  async fetch({ page, itemsPerPage, sortBy, search }) {
+  async fetch({ page, itemsPerPage, sortBy, search, status }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-
-        let items = (await fetchData()).filter((item) => {
+        let items = (await fetchData(status)).filter((item) => {
           let match = true;
           if (
             search.rak &&
@@ -192,8 +217,6 @@ export default {
       totalItems: 0,
       search: { rak: "" },
       currentPage: 1,
-      isEditDialogOpen: false,
-      selectedItem: null,
       selectedStatus: "",
     };
   },
@@ -203,12 +226,12 @@ export default {
     },
   },
   watch: {
-    rak() {
+    selectedStatus() {
       this.loadItems();
     },
   },
   methods: {
-    async loadItems({ page, itemsPerPage, sortBy, status } = {}) {
+    async loadItems({ page, itemsPerPage, sortBy } = {}) {
       this.loading = true;
       this.currentPage = page || 1;
       const { items, total } = await API.fetch({
@@ -216,7 +239,7 @@ export default {
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
-        status: status || this.selectedStatus,
+        status: this.selectedStatus,
       });
       this.serverItems = items;
       this.totalItems = total;
@@ -228,7 +251,7 @@ export default {
         page: 1,
         itemsPerPage: this.itemsPerPage,
         sortBy: [],
-        status: this.search,
+        search: this.search,
       });
     },
     getRowClass(index) {
@@ -262,56 +285,6 @@ export default {
           return "green";
         default:
           return "";
-      }
-    },
-    async editKapasitas(item) {
-      try {
-        const response = await axiosInstance.get(`rack/${item.rak}`);
-        const rackDetail = response.data;
-        this.selectedItem = { ...item, ...rackDetail };
-        this.isEditDialogOpen = true;
-      } catch (error) {
-        console.error("Error:", error);
-        this.$refs.notification.showError("Gagal memuat detail rak");
-      }
-    },
-    async saveKapasitas(updatedItem) {
-      console.log("Updated Item:", updatedItem);
-      try {
-        const response = await axiosInstance.patch(`rack/${updatedItem.rak}`, {
-          kapasitas: updatedItem.kapasitas,
-        });
-        console.log("API Response:", response);
-        this.isEditDialogOpen = false;
-        await this.loadItems();
-        this.$refs.notification.showSuccess("Berhasil mengubah kapasitas");
-      } catch (error) {
-        console.error("API Error:", error);
-        this.$refs.notification.showError("Gagal mengubah kapasitas");
-      }
-    },
-    async filterByStatus(status) {
-      try {
-        let response;
-        switch (status) {
-          case "Kosong":
-            response = await axiosInstance.get("racks/empty");
-            break;
-          case "Penuh":
-            response = await axiosInstance.get("racks/full");
-            break;
-          case "Hampir Penuh":
-            response = await axiosInstance.get("racks/almost-full");
-            break;
-          case "Tersedia":
-            response = await axiosInstance.get("racks/available");
-            break;
-          default:
-            response = await axiosInstance.get("racks");
-        }
-        this.serverItems = response.data;
-      } catch (error) {
-        console.error("Error filtering by status:", error);
       }
     },
   },
