@@ -37,7 +37,8 @@ export const getAlmostFullRacks = async (req, res) => {
                     $expr: {
                         $and: [
                             { $gte: ['$terisi', { $multiply: ['$kapasitas', 0.9] }] },
-                            { $ne: ['$terisi', '$kapasitas'] }
+                            { $ne: ['$terisi', '$kapasitas'] },
+                            { $lt: ['$terisi', '$kapasitas'] }
                         ]
                     }
                 }
@@ -108,12 +109,15 @@ export const updateRack = async (req, res) => {
         const rak = req.params.rak.toUpperCase()
 
         // Mengecek apakah data rak ada di database
-        const cekRak = await Racks.exists({ rak })
+        const cekRak = await Racks.findOne({ rak })
         if (!cekRak) return res.status(400).json({ msg: "Rak tidak ditemukan!" })
 
         // Mengecek apakah ada data kapasitas yang dikirim
         const kapasitasBaru = req.body.kapasitas
         if (!kapasitasBaru) return res.status(400).json({ msg: "Data tidak ditemukan!" })
+
+        // Mengecek apakah nilai kapasitas baru kurang dari stok terisi
+        if (kapasitasBaru < cekRak.terisi) return res.status(400).json({ msg: "Kapasitas tidak boleh kurang dari stok terisi!" })
 
         // Mengganti kapasitas di database
         await Racks.updateOne(

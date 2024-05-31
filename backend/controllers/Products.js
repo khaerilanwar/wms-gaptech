@@ -147,7 +147,14 @@ export const addStock = async (req, res) => {
     const kodeProduk = req.params.kodeProduk
     try {
         const product = await Products.findOne({ kodeProduk })
+        const rack = await Racks.findOne({ rak: product.posisiRak })
         if (!product) return res.status(404).json({ msg: "Produk tidak ditemukan!" })
+
+        // Mengecek jika stok produk melebihi kapasitas rak
+        if (req.body.stokBaru + product.stok > rack.kapasitas) {
+            return res.status(406).json({ msg: "Stok produk melebihi kapasitas rak!" })
+        }
+
         // update total stock in products collection
         await Products.updateOne({ kodeProduk }, {
             stok: req.body.stokBaru + product.stok,
