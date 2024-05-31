@@ -65,16 +65,13 @@ export default {
     };
   },
   created() {
-    console.log("Component created");
     this.fetchData();
   },
   methods: {
     async fetchData() {
       try {
-        console.log("Fetching data...");
         this.loading = true;
         const year = this.currentYear;
-        console.log(year);
         const inProducts = await axiosInstance.get(
           `inproducts/data-by-period?start=${year}-01-01&end=${year}-12-31`,
         );
