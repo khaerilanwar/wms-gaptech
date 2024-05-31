@@ -73,7 +73,10 @@
                 >Lupa kata sandi?</router-link
               >
             </div>
-            <ComponentButton intent="primary_full_width">Masuk</ComponentButton>
+            <!-- <ComponentButton intent="primary_full_width">Masuk</ComponentButton> -->
+            <ComponentButton intent="primary_full_width" :disabled="isLoading">
+              {{ isLoading ? "Loading..." : "Masuk" }}
+            </ComponentButton>
           </form>
         </div>
       </div>
@@ -101,12 +104,14 @@ export default {
       email: "",
       password: "",
       showPassword: false,
-      gaptechLogo, // Tambahkan gambar ke data
+      gaptechLogo,
+      isLoading: false,
     };
   },
   methods: {
     async handleSubmit() {
       try {
+        this.isLoading = true;
         const response = await axiosInstance.post("login", {
           email: this.email,
           password: this.password,
@@ -116,7 +121,9 @@ export default {
         this.$store.dispatch("setUser", response.data.user);
         console.log("accessToken", token);
         this.$router.push("/");
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         this.$refs.notification.showError(error.response.data.msg);
       }
     },

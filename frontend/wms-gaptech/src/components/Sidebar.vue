@@ -141,15 +141,39 @@
     <!-- header atas -->
     <div class="flex-1" :class="{ 'ml-64': !isMobile }">
       <div
-        class="px-3 py-4 flex items-center justify-between"
+        class="px-3 py-2 flex items-center justify-between"
         :class="{ 'ml-64': showSidebar && isMobile }"
       >
         <button @click="showSidebar = !showSidebar">
           <Bars3Icon class="h-6 w-6" />
         </button>
-        <div class="flex gap-4">
-          <p v-if="user">Hai, {{ user.name }}</p>
-          <a href="javascript:void(0)" @click="handleClick">Logout</a>
+        <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1 cursor-default">
+            <UserCircleIcon class="h-8 w-8 text-gray-300" />
+            <div class="flex-col">
+              <p v-if="user" class="text-gray-900 font-semibold text-sm">
+                {{ user.name }}
+              </p>
+            </div>
+          </div>
+          <ChevronDownIcon
+            class="h-4 w-4 cursor-pointer text-gray-900"
+            @click="toggleDropdown"
+          />
+          <div
+            v-if="showDropdown"
+            class="absolute right-0 mt-20 w-48 bg-white border rounded-md shadow-lg border-blue-primary"
+          >
+            <button
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              @click="handleLogout"
+            >
+              <div class="flex items-center justify-between">
+                <p>Logout</p>
+                <ArrowRightStartOnRectangleIcon class="w-5 h-5" />
+              </div>
+            </button>
+          </div>
         </div>
       </div>
       <div class="flex-1 bg-blue-bg p-3 h-full">
@@ -178,6 +202,7 @@ import {
   ClipboardDocumentListIcon,
   ArchiveBoxIcon,
 } from "@heroicons/vue/24/outline";
+import { UserCircleIcon } from "@heroicons/vue/24/solid";
 
 export default {
   components: {
@@ -192,6 +217,7 @@ export default {
     PlusIcon,
     ClipboardDocumentListIcon,
     ArchiveBoxIcon,
+    UserCircleIcon,
   },
   setup() {
     const route = useRoute();
@@ -221,7 +247,6 @@ export default {
           "top-0": true,
           "h-full": true,
           "overflow-y-auto": true,
-          "shadow-md": true,
           "max-h-full": true,
           relative: false,
           "translate-x-0": false,
@@ -276,6 +301,7 @@ export default {
     return {
       user: null,
       gaptechLogo,
+      showDropdown: false,
     };
   },
   computed: {
@@ -290,6 +316,9 @@ export default {
     }
   },
   methods: {
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
     async handleClick() {
       await axiosInstance.delete("logout");
       localStorage.removeItem("token");

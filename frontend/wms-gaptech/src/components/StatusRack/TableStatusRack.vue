@@ -5,8 +5,8 @@
         <div class="flex items-center">
           <p>Pencarian</p>
           <v-text-field
-            v-model="search.produk"
-            class="ma-2"
+            v-model="search.rak"
+            class="pencarian ma-2"
             density="compact"
             placeholder="Cari Kode Rak"
             hide-details
@@ -15,13 +15,16 @@
             @input="searchItems"
           ></v-text-field>
         </div>
-        <div class="flex items-center">
-          <p>Filter Status:</p>
+        <div class="flex items-center gap-2">
+          <p>Status</p>
           <v-select
             v-model="selectedStatus"
+            class="status ma-2"
             :items="statusOptions"
-            dense
+            density="compact"
             outlined
+            hide-details
+            filled
             @change="searchItems"
           ></v-select>
         </div>
@@ -35,7 +38,7 @@
       :items="serverItems"
       :items-length="totalItems"
       :loading="loading"
-      :search="search.produk"
+      :search="search.rak"
       :items-per-page-options="[
         { value: 10, title: '10' },
         { value: 25, title: '25' },
@@ -84,16 +87,14 @@ import ComponentButton from "../../components/ComponentButton.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import axiosInstance from "@/utils/api";
 import Notification from "../Notification.vue";
-// import EditKapasitasDialog from "../../components/StatusRack/EditKapasitasDialog.vue";
 
 async function fetchData() {
   const response = await axiosInstance.get("racks");
-  console.log(response);
   return response.data;
 }
 
 const API = {
-  async fetch({ page, itemsPerPage, sortBy, search, status }) {
+  async fetch({ page, itemsPerPage, sortBy, search }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const start = (page - 1) * itemsPerPage;
@@ -102,18 +103,12 @@ const API = {
         let items = (await fetchData()).filter((item) => {
           let match = true;
           if (
-            search.produk &&
-            item.produk &&
-            !item.produk.toLowerCase().includes(search.produk.toLowerCase())
+            search.rak &&
+            item.rak &&
+            !item.rak.toLowerCase().includes(search.rak.toLowerCase())
           ) {
             match = false;
           }
-          // if (status) {
-          //     const itemStatus = getStatus(item.kapasitas, item.terisi);
-          //     if (status !== itemStatus) {
-          //         match = false;
-          //     }
-          // }
           return match;
         });
 
@@ -132,9 +127,7 @@ const API = {
             }
           });
         }
-
         const paginated = items.slice(start, end);
-
         resolve({ items: paginated, total: items.length });
       }, 500);
     });
@@ -145,7 +138,6 @@ export default {
   components: {
     ComponentButton,
     Notification,
-    // EditKapasitasDialog,
   },
   data() {
     return {
@@ -198,22 +190,21 @@ export default {
       serverItems: [],
       loading: true,
       totalItems: 0,
-      search: { produk: "" },
+      search: { rak: "" },
       currentPage: 1,
       isEditDialogOpen: false,
       selectedItem: null,
-      selectedStatus: "", // New property to store selected status filter
+      selectedStatus: "",
     };
   },
   computed: {
     statusOptions() {
-      // Generate status filter options
       return ["Kosong", "Penuh", "Hampir Penuh", "Tersedia"];
     },
   },
   watch: {
-    selectedStatus() {
-      this.searchItems();
+    rak() {
+      this.loadItems();
     },
   },
   methods: {
@@ -225,7 +216,7 @@ export default {
         itemsPerPage: itemsPerPage || this.itemsPerPage,
         sortBy: sortBy || [],
         search: this.search,
-        status: status || this.selectedStatus, // Pass selected status to API fetch function
+        status: status || this.selectedStatus,
       });
       this.serverItems = items;
       this.totalItems = total;
@@ -237,7 +228,7 @@ export default {
         page: 1,
         itemsPerPage: this.itemsPerPage,
         sortBy: [],
-        status: this.selectedStatus,
+        status: this.search,
       });
     },
     getRowClass(index) {
@@ -291,44 +282,48 @@ export default {
           kapasitas: updatedItem.kapasitas,
         });
         console.log("API Response:", response);
-        this.isEditDialogOpen = false; // Close the dialog after successful save
-        await this.loadItems(); // Ensure the latest data is loaded after update
+        this.isEditDialogOpen = false;
+        await this.loadItems();
         this.$refs.notification.showSuccess("Berhasil mengubah kapasitas");
       } catch (error) {
         console.error("API Error:", error);
         this.$refs.notification.showError("Gagal mengubah kapasitas");
       }
     },
-  },
-  async filterByStatus(status) {
-    try {
-      let response;
-      switch (status) {
-        case "Kosong":
-          response = await axiosInstance.get("racks/empty");
-          break;
-        case "Penuh":
-          response = await axiosInstance.get("racks/full");
-          break;
-        case "Hampir Penuh":
-          response = await axiosInstance.get("racks/almost-full");
-          break;
-        case "Tersedia":
-          response = await axiosInstance.get("racks/available");
-          break;
-        default:
-          response = await axiosInstance.get("racks");
+    async filterByStatus(status) {
+      try {
+        let response;
+        switch (status) {
+          case "Kosong":
+            response = await axiosInstance.get("racks/empty");
+            break;
+          case "Penuh":
+            response = await axiosInstance.get("racks/full");
+            break;
+          case "Hampir Penuh":
+            response = await axiosInstance.get("racks/almost-full");
+            break;
+          case "Tersedia":
+            response = await axiosInstance.get("racks/available");
+            break;
+          default:
+            response = await axiosInstance.get("racks");
+        }
+        this.serverItems = response.data;
+      } catch (error) {
+        console.error("Error filtering by status:", error);
       }
-      this.serverItems = response.data;
-    } catch (error) {
-      console.error("Error filtering by status:", error);
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-.v-text-field {
+.pencarian {
   width: 400px;
+}
+
+.status {
+  width: 200px;
 }
 </style>
