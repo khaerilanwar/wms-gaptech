@@ -3,30 +3,37 @@
     <div>
       <div class="flex mb-2 justify-between items-center">
         <div class="flex items-center">
-          <p>Pencarian</p>
-          <v-text-field
-            v-model="search.rak"
-            class="pencarian ma-2"
-            density="compact"
-            placeholder="Cari Kode Rak"
-            hide-details
-            outlined
-            filled
-            @input="searchItems"
-          ></v-text-field>
+          <div class="flex items-center">
+            <p>Pencarian</p>
+            <v-text-field
+              v-model="search.rak"
+              class="pencarian ma-2"
+              density="compact"
+              placeholder="Cari Kode Rak"
+              hide-details
+              outlined
+              filled
+              @input="searchItems"
+            ></v-text-field>
+          </div>
+          <div class="flex items-center gap-2">
+            <p>Status</p>
+            <v-select
+              v-model="selectedStatus"
+              class="status ma-2"
+              :items="statusOptions"
+              density="compact"
+              outlined
+              hide-details
+              filled
+              @change="searchItems"
+            ></v-select>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <p>Status</p>
-          <v-select
-            v-model="selectedStatus"
-            class="status ma-2"
-            :items="statusOptions"
-            density="compact"
-            outlined
-            hide-details
-            filled
-            @change="searchItems"
-          ></v-select>
+        <div>
+          <ComponentButton intent="primary" @click="clearFilters"
+            >Hapus Filter</ComponentButton
+          >
         </div>
       </div>
     </div>
@@ -70,9 +77,7 @@
           <td>
             <div class="flex justify-center">
               <router-link :to="'/status-rack/edit/' + item.rak">
-                <button>
-                  <ComponentButton intent="edit"></ComponentButton>
-                </button>
+                <ComponentButton intent="edit"></ComponentButton>
               </router-link>
             </div>
           </td>
@@ -245,7 +250,6 @@ export default {
       this.totalItems = total;
       this.loading = false;
     },
-
     searchItems() {
       this.loadItems({
         page: 1,
@@ -253,6 +257,11 @@ export default {
         sortBy: [],
         search: this.search,
       });
+    },
+    async clearFilters() {
+      this.search.rak = "";
+      this.selectedStatus = "";
+      this.loadItems();
     },
     getRowClass(index) {
       return index % 2 === 0 ? "bg-blue-bg" : "";
@@ -293,7 +302,7 @@ export default {
 
 <style scoped>
 .pencarian {
-  width: 400px;
+  width: 200px;
 }
 
 .status {
