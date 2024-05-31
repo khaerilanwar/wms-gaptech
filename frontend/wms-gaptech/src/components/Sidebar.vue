@@ -319,9 +319,10 @@ export default {
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
     },
-    async handleClick() {
+    async handleLogout() {
       await axiosInstance.delete("logout");
       localStorage.removeItem("token");
+      localStorage.removeItem("userId");
       this.$router.push("/login");
     },
     ...mapActions(["setUser"]),

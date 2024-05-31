@@ -134,7 +134,6 @@ export default {
           const response = await axiosInstance.get(`product/${kodeProduk}`);
           this.products = response.data;
           this.originalProduct = { ...this.products };
-          console.log(this.originalProduct);
           this.editProduct = { ...this.products };
           await this.fetchRacks();
           this.loading = false;
@@ -161,20 +160,13 @@ export default {
         const dataToUpdate = {};
         if (this.editProduct.namaProduk !== this.originalProduct.namaProduk) {
           dataToUpdate.namaProduk = this.editProduct.namaProduk;
-          console.log("edit nama", this.editProduct.namaProduk);
-          console.log("ori nama", this.originalProduct.namaProduk);
         }
         if (parseFloat(this.editProduct.harga) !== this.originalProduct.harga) {
           dataToUpdate.harga = parseFloat(this.editProduct.harga);
-          console.log("edit harga", this.editProduct.harga);
-          console.log("ori harga", this.originalProduct.harga);
         }
         if (this.editProduct.posisiRak !== this.originalProduct.posisiRak) {
           dataToUpdate.posisiRak = this.editProduct.posisiRak;
-          console.log("edit rak", this.editProduct.posisiRak);
-          console.log("ori rak", this.originalProduct.posisiRak);
         }
-        console.log(dataToUpdate);
         if (Object.keys(dataToUpdate).length > 0) {
           try {
             await axiosInstance.put(

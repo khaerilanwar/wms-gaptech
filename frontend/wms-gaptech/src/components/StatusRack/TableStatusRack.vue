@@ -78,6 +78,9 @@
             <div class="flex justify-center">
               <router-link :to="'/status-rack/edit/' + item.rak">
                 <ComponentButton intent="edit"></ComponentButton>
+                <v-tooltip activator="parent" location="top">
+                  Edit Kapasitas
+                </v-tooltip>
               </router-link>
             </div>
           </td>
@@ -276,7 +279,7 @@ export default {
       const percentage = (terisi / kapasitas) * 100;
       if (percentage >= 100) {
         return "Penuh";
-      } else if (percentage >= 80) {
+      } else if (percentage >= 90) {
         return "Hampir Penuh";
       } else {
         return "Tersedia";

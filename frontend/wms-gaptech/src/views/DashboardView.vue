@@ -7,8 +7,8 @@
         </h1>
         <div class="flex-grow"><Diagram></Diagram></div>
       </div>
-      <div class="w-1/2 flex flex-col">
-        <PemasukanPemesanan class="flex-grow"></PemasukanPemesanan>
+      <div class="w-1/2 flex flex-col flex-grow">
+        <PemasukanPemesanan></PemasukanPemesanan>
       </div>
     </div>
     <div class="w-full"><RingkasanBarang></RingkasanBarang></div>

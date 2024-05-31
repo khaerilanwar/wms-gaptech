@@ -149,7 +149,6 @@ export default {
         "Apakah Anda yakin untuk menambahkan data?",
       );
       if (isConfirmed) {
-        this.fetchData();
         this.saveDataToServer();
       }
     },
@@ -159,9 +158,13 @@ export default {
         await axiosInstance.patch(`product/${this.products.kodeProduk}`, {
           stokBaru: parseInt(this.stockAmountNew),
         });
-        this.$router.push("/produk");
+        this.$refs.notification.showSuccess("Berhasil mengedit produk!");
+        setTimeout(() => {
+          this.$router.push("/produk");
+        }, 2000);
       } catch (error) {
         console.log(error);
+        this.$refs.notification.showError(error.response.data.msg);
       }
     },
     cancel() {

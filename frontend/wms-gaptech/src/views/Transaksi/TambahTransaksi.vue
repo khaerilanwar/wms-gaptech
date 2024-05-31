@@ -113,7 +113,6 @@
                 </tr>
               </template>
             </v-data-table>
-            <pre> {{ selected }}</pre>
             <p class="p-5 m-5">
               Total Harga : {{ $filters.currency(orders.totalPrice) }}
             </p>
@@ -181,12 +180,24 @@ export default {
       },
     };
   },
+  watch: {
+    selected: {
+      handler: function (newSelected) {
+        this.orders.totalPrice = 0;
+        newSelected.forEach((item) => {
+          if (item.quantity && item.harga) {
+            this.orders.totalPrice += item.harga * item.quantity;
+          }
+        });
+      },
+      deep: true,
+    },
+  },
   created() {
     setTimeout(() => {
       this.fetchProducts();
     }, 1000);
   },
-
   methods: {
     async fetchProducts() {
       try {
@@ -275,7 +286,6 @@ export default {
         if (isConfirmed) {
           await axiosInstance.post("transaction", orderData);
           this.$refs.notification.showSuccess("Transaksi berhasil ditambahkan");
-
           this.recipientName = "";
           this.recipientAddress = "";
           this.selected = [];
