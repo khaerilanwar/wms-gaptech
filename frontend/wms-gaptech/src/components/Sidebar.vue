@@ -311,6 +311,7 @@ export default {
     try {
       const response = await axiosInstance.get("user");
       this.user = response.data.user;
+      localStorage.setItem("username", this.user.name);
     } catch (error) {
       console.error("Gagal mendapatkan data pengguna:", error);
     }
@@ -322,7 +323,7 @@ export default {
     async handleLogout() {
       await axiosInstance.delete("logout");
       localStorage.removeItem("token");
-      // localStorage.removeItem("userId");
+      localStorage.removeItem("username");
       this.$router.push("/login");
     },
     ...mapActions(["setUser"]),
