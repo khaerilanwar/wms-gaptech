@@ -68,7 +68,7 @@
       <p
         class="font-semibold text-xl xl:text-3xl flex justify-center items-center"
       >
-        {{ $filters.currency(monthlyData.income[thisMonth]) }}
+        {{ $filters.currency(monthlyData.income[thisMonth] ?? 0) }}
       </p>
     </div>
 
@@ -90,7 +90,9 @@
         <h1 class="text-sm xl:text-lg">Transaksi</h1>
       </div>
       <div class="text-xl xl:text-3xl flex justify-center items-center gap-1">
-        <p class="font-semibold">{{ monthlyData.transaction[thisMonth] }}</p>
+        <p class="font-semibold">
+          {{ monthlyData.transaction[thisMonth] ?? 0 }}
+        </p>
         <span class="text-xs xl:text-base text-gray-500">invoice</span>
       </div>
     </div>
@@ -128,8 +130,8 @@
       <p
         class="font-semibold text-sm xl:text-xl flex justify-center items-center"
       >
-        {{ $filters.currency(monthlyData.income[thisMonth]) }}/{{
-          $filters.currency(salesGoals())
+        {{ $filters.currency(monthlyData.income[thisMonth] ?? 0) }}/{{
+          $filters.currency(salesGoals() ?? 0)
         }}
       </p>
     </div>
@@ -174,19 +176,24 @@ export default {
     },
     monthlyReport(transactions) {
       this.loading = true;
-      transactions.forEach((transaction) => {
-        const month = new Date(transaction.tanggalTransaksi).getMonth();
+      if (transactions.length === 0) {
+        this.monthlyData.income[this.thisMonth] = 0;
+        this.monthlyData.transaction[this.thisMonth] = 0;
+      } else {
+        transactions.forEach((transaction) => {
+          const month = new Date(transaction.tanggalTransaksi).getMonth();
 
-        if (!this.monthlyData.income[month]) {
-          this.monthlyData.income[month] = 0;
-        }
-        if (!this.monthlyData.transaction[month]) {
-          this.monthlyData.transaction[month] = 0;
-        }
+          if (!this.monthlyData.income[month]) {
+            this.monthlyData.income[month] = 0;
+          }
+          if (!this.monthlyData.transaction[month]) {
+            this.monthlyData.transaction[month] = 0;
+          }
 
-        this.monthlyData.income[month] += transaction.totalHarga;
-        this.monthlyData.transaction[month] += 1;
-      });
+          this.monthlyData.income[month] += transaction.totalHarga;
+          this.monthlyData.transaction[month] += 1;
+        });
+      }
       setTimeout(() => {
         this.loading = false;
       }, 1000);
@@ -198,14 +205,16 @@ export default {
     },
     thisMonthProgressSales() {
       this.loading = true;
-      const thisMonthIncome = this.monthlyData.income[this.thisMonth];
+      const thisMonthIncome = this.monthlyData.income[this.thisMonth] || 0;
       this.progressValue = Math.round(
         (thisMonthIncome / this.salesGoals()) * 100,
       );
       const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
 
       const percentage =
-        ((thisMonthIncome - lastMonthIncome) / lastMonthIncome) * 100;
+        lastMonthIncome === 0
+          ? 0
+          : ((thisMonthIncome - lastMonthIncome) / lastMonthIncome) * 100;
       this.percentageChange = Math.round(percentage);
 
       this.isPercentageUp = percentage > 0;
