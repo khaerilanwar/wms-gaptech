@@ -121,10 +121,10 @@ export default {
         this.$store.dispatch("setUser", response.data.user);
         console.log("accessToken", token);
         this.$router.push("/");
-        const user = await axiosInstance.get("user");
-        const userId = user.data.user._id;
-        console.log(userId);
-        localStorage.setItem("userId", userId);
+        // const user = await axiosInstance.get("user");
+        // const userId = user.data.user._id;
+        // console.log(userId);
+        // localStorage.setItem("userId", userId);
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;

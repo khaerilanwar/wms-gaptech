@@ -322,7 +322,7 @@ export default {
     async handleLogout() {
       await axiosInstance.delete("logout");
       localStorage.removeItem("token");
-      localStorage.removeItem("userId");
+      // localStorage.removeItem("userId");
       this.$router.push("/login");
     },
     ...mapActions(["setUser"]),
