@@ -119,7 +119,7 @@ export default {
         const token = response.data.accessToken;
         localStorage.setItem("token", token);
         this.$store.dispatch("setUser", response.data.user);
-        // console.log("accessToken", token);
+        console.log("accessToken", token);
         this.$router.push("/");
         // const user = await axiosInstance.get("user");
         // const userId = user.data.user._id;
