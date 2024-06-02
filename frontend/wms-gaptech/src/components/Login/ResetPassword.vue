@@ -87,10 +87,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import ComponentButton from ".././ComponentButton.vue";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import Notification from "../Notification.vue";
-import axiosInstance from "@/utils/api";
 export default {
   components: {
     ComponentButton,
@@ -117,8 +117,8 @@ export default {
     async handleSubmit() {
       try {
         this.isLoading = true;
-        const response = await axiosInstance.put(
-          "update-password",
+        const response = await axios.put(
+          "https://gaptech-3cde5c34d381.herokuapp.com/update-password",
           {
             newPassword: this.password,
             confirmNewPassword: this.confirm_password,
