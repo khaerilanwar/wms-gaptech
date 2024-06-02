@@ -117,10 +117,18 @@ export default {
     async handleSubmit() {
       try {
         this.isLoading = true;
-        const response = await axiosInstance.put("update-password", {
-          newPassword: this.password,
-          confirmNewPassword: this.confirm_password,
-        });
+        const response = await axiosInstance.put(
+          "update-password",
+          {
+            newPassword: this.password,
+            confirmNewPassword: this.confirm_password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
         this.$refs.notification.showSuccess(response.data.msg);
         setTimeout(() => {
           this.$router.push("/login");
