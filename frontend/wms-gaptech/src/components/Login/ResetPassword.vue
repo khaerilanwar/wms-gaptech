@@ -87,10 +87,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import ComponentButton from ".././ComponentButton.vue";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import Notification from "../Notification.vue";
+import axiosInstance from "@/utils/api";
 export default {
   components: {
     ComponentButton,
@@ -117,19 +117,10 @@ export default {
     async handleSubmit() {
       try {
         this.isLoading = true;
-        const response = await axios.put(
-          "http://localhost:5000/update-password",
-          {
-            newPassword: this.password,
-            confirmNewPassword: this.confirm_password,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-              "Content-Type": "application/json",
-            },
-          },
-        );
+        const response = await axiosInstance.put("update-password", {
+          newPassword: this.password,
+          confirmNewPassword: this.confirm_password,
+        });
         this.$refs.notification.showSuccess(response.data.msg);
         setTimeout(() => {
           this.$router.push("/login");
