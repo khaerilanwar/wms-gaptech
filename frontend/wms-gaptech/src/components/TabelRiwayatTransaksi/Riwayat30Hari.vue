@@ -99,7 +99,6 @@ import Notification from "../Notification.vue";
 
 async function fetchData() {
   const response = await axiosInstance.get("/transactions/success/last30days");
-  console.log(response.data);
   return response.data;
 }
 

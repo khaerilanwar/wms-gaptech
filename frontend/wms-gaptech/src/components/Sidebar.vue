@@ -152,7 +152,8 @@
             <UserCircleIcon class="h-8 w-8 text-gray-300" />
             <div class="flex-col">
               <p v-if="user" class="text-gray-900 font-semibold text-sm">
-                {{ user.name }}
+                <!-- {{ user.name }} -->
+                {{ name }}
               </p>
             </div>
           </div>
@@ -302,6 +303,7 @@ export default {
       user: null,
       gaptechLogo,
       showDropdown: false,
+      name: "",
     };
   },
   computed: {
@@ -311,7 +313,8 @@ export default {
     try {
       const response = await axiosInstance.get("user");
       this.user = response.data.user;
-      localStorage.setItem("username", this.user.name);
+      localStorage.setItem("name", this.user.name);
+      this.name = localStorage.getItem("name");
     } catch (error) {
       console.error("Gagal mendapatkan data pengguna:", error);
     }
@@ -323,7 +326,7 @@ export default {
     async handleLogout() {
       await axiosInstance.delete("logout");
       localStorage.removeItem("token");
-      localStorage.removeItem("username");
+      localStorage.removeItem("name");
       this.$router.push("/login");
     },
     ...mapActions(["setUser"]),

@@ -34,7 +34,7 @@ axiosInstance.interceptors.request.use(
           const newAccessToken = response.data.accessToken;
           localStorage.setItem("token", newAccessToken);
           config.headers.Authorization = `Bearer ${newAccessToken}`;
-          console.log("New token:", newAccessToken);
+          // console.log("New token:", newAccessToken);
 
           //uid
           // userId = getUserIdFromToken(newAccessToken);

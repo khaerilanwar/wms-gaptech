@@ -76,7 +76,6 @@ export default {
         const response = await axiosInstance.post("reset-password", {
           email: this.email,
         });
-        console.log(this.email);
         this.$refs.notification.showSuccess(response.data.msg);
       } catch (error) {
         console.log(error);

@@ -177,7 +177,6 @@ export default {
         const payload = {
           status: this.status,
         };
-        console.log(payload);
         await axiosInstance.patch(`transaction/${idTransaksi}`, payload);
         this.$refs.notification.showSuccess("Berhasil mengubah status pesanan");
       } catch (error) {
