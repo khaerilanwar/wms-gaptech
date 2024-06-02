@@ -125,6 +125,7 @@ export default {
           },
           {
             headers: {
+              Authorization: `Bearer ${this.token}`,
               "Content-Type": "application/json",
             },
           },
