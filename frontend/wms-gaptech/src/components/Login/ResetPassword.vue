@@ -118,7 +118,7 @@ export default {
       try {
         this.isLoading = true;
         const response = await axios.put(
-          "https://gaptech-b409fb96bb3f.herokuapp.com/update-password",
+          "https://gaptech-4e15d7710e71.herokuapp.com//update-password",
           {
             newPassword: this.password,
             confirmNewPassword: this.confirm_password,

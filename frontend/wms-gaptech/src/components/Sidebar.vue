@@ -147,7 +147,7 @@
         <button @click="showSidebar = !showSidebar">
           <Bars3Icon class="h-6 w-6" />
         </button>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1" @click="toggleDropdown">
           <div class="flex items-center gap-1 cursor-default">
             <UserCircleIcon class="h-8 w-8 text-gray-300" />
             <div class="flex-col">
@@ -157,10 +157,7 @@
               </p>
             </div>
           </div>
-          <ChevronDownIcon
-            class="h-4 w-4 cursor-pointer text-gray-900"
-            @click="toggleDropdown"
-          />
+          <ChevronDownIcon class="h-4 w-4 cursor-pointer text-gray-900" />
           <div
             v-if="showDropdown"
             class="absolute right-0 mt-20 w-48 bg-white border rounded-md shadow-lg border-blue-primary"
