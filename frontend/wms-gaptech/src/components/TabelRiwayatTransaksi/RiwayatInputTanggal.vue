@@ -18,7 +18,7 @@
       <download-excel
         :data="json_data"
         :fields="json_fields"
-        stringify-long-num="true"
+        :stringify-long-num="true"
         :worksheet="'Riwayat Transaksi ' + startDate + ' hingga ' + endDate"
         :name="'Riwayat Transaksi ' + startDate + ' hingga ' + endDate"
       >

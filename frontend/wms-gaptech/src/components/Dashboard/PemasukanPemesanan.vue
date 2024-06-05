@@ -199,17 +199,21 @@ export default {
       }, 1000);
     },
     salesGoals() {
-      const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
+      const lastMonth = this.thisMonth === 0 ? 11 : this.thisMonth - 1;
+      const lastMonthIncome = this.monthlyData.income[lastMonth] || 0;
       const targetGoals = lastMonthIncome * (30 / 100) + lastMonthIncome;
-      return targetGoals;
+      return targetGoals || 0;
     },
     thisMonthProgressSales() {
       this.loading = true;
       const thisMonthIncome = this.monthlyData.income[this.thisMonth] || 0;
+      const salesGoalsValue = this.salesGoals() || 1;
       this.progressValue = Math.round(
-        (thisMonthIncome / this.salesGoals()) * 100,
+        (thisMonthIncome / salesGoalsValue) * 100,
       );
-      const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
+      const lastMonth = this.thisMonth === 0 ? 11 : this.thisMonth - 1;
+      const lastMonthIncome = this.monthlyData.income[lastMonth] || 0;
+      // const lastMonthIncome = this.monthlyData.income[this.thisMonth - 1] || 0;
 
       const percentage =
         lastMonthIncome === 0

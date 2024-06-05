@@ -1,9 +1,9 @@
 <template>
-  <v-card v-show="!showAlert">
-    <div v-if="loading" class="flex justify-center items-center h-screen">
-      <v-progress-circular color="primary" indeterminate></v-progress-circular>
-    </div>
-    <div v-else>
+  <div v-if="loading" class="flex justify-center items-center h-screen">
+    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+  </div>
+  <v-card v-show="!showAlert" v-else>
+    <div>
       <v-card-title>Edit Kapasitas Rak</v-card-title>
       <v-card-text>
         <v-form ref="form">
