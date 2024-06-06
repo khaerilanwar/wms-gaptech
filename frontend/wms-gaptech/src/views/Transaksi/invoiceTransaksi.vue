@@ -1,5 +1,5 @@
 <template>
-  <section class="font-Montserrat px-6 py-8 lg:py-0">
+  <section class="font-Montserrat py-8">
     <div v-if="isLoading" class="flex justify-center items-center h-screen">
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </div>
