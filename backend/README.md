@@ -110,6 +110,7 @@ Berikut adalah endpoint API yang bisa digunakan di server backend :
 22. ``GET`` ``/transactions/success/last30days`` untuk mendapatkan history transaksi selesai 30 hari terakhir
 22. ``GET`` ``/transactions/success/data-by-period`` untuk mendapatkan history transaksi berdasarkan periode waktu awal dan akhir tertentu. Data dikirimkan dengan metode `GET` <br> Contoh request data :<br>`http://localhost:5000/transactions/data-by-period?start=2024-03-09&end=2024-03-25`
 21. ``GET`` ``/transaction/{idTransaksi}`` untuk mendapatkan satu data transaksi berdasarkan id transaksi
+21. ``GET`` ``/transaction/invoice/{idTransaksi}`` untuk mendapatkan satu data transaksi berdasarkan id transaksi secara publik
 21. ``POST`` ``/transaction`` untuk menambahkan data transaksi baru `otorisasi` <br> Contoh request data : 
     ```json
     {

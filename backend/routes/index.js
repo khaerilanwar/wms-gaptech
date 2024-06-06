@@ -43,6 +43,7 @@ import {
   saveTransaction,
   updateStatus,
   updateTransaction,
+  getTransactionPublic
 } from "../controllers/Transaction.js";
 import {
   getAllRacks,
@@ -92,6 +93,7 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 
 // Router transaction product
 router.get("/transaction/:idTransaksi(\\d+)", verifyToken, getTransaction);
+router.get("/transaction/invoice/:idTransaksi(\\d+)", getTransactionPublic);
 router.post("/transaction", verifyToken, saveTransaction);
 router.get("/transactions", verifyToken, getAllTransactions);
 router.get("/transactions/process", verifyToken, getProcessTransactions);

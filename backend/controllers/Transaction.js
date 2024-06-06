@@ -87,6 +87,18 @@ export const getTransaction = async (req, res) => {
     }
 }
 
+// Mendapatkan detil transaksi berdasarkan id secara publik
+export const getTransactionPublic = async (req, res) => {
+    if (!req.params.idTransaksi) return res.status(400).json({ msg: "Id transaksi tidak dikirim" })
+    try {
+        const transaction = await Transaction.findOne({ idTransaksi: req.params.idTransaksi, status: 0 }, { _id: 0 })
+        if (!transaction) return res.status(404).json({ msg: "ID Transaksi tidak ditemukan!" })
+        res.json(transaction)
+    } catch (error) {
+        res.sendStatus(500).json({ msg: "Ada kesalahan pada server" })
+    }
+}
+
 // untuk menambah transaksi baru
 export const saveTransaction = async (req, res) => {
     const allProduct = await Products.find()
