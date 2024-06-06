@@ -160,18 +160,12 @@ export default {
         const dataToUpdate = {};
         if (this.editProduct.namaProduk !== this.originalProduct.namaProduk) {
           dataToUpdate.namaProduk = this.editProduct.namaProduk;
-          console.log("sebelum", this.originalProduct.namaProduk);
-          console.log("sesudah", this.editProduct.namaProduk);
         }
         if (parseFloat(this.editProduct.harga) !== this.originalProduct.harga) {
           dataToUpdate.harga = parseFloat(this.editProduct.harga);
-          console.log("sebelum", this.originalProduct.harga);
-          console.log("sesudah", this.editProduct.harga);
         }
         if (this.editProduct.posisiRak !== this.originalProduct.posisiRak) {
           dataToUpdate.posisiRak = this.editProduct.posisiRak;
-          console.log("sebelum", this.originalProduct.posisiRak);
-          console.log("sesudah", this.editProduct.posisiRak);
         }
         if (Object.keys(dataToUpdate).length > 0) {
           try {
