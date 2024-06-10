@@ -163,7 +163,6 @@ export default {
         this.$refs.notification.showError("Form tidak boleh kosong.");
         return;
       }
-
       if (parseFloat(this.editProduct.harga) <= 0) {
         this.$refs.notification.showError("Harga harus lebih dari 0.");
         return;

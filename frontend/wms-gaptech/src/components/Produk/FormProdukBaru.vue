@@ -157,7 +157,7 @@ export default {
         this.$refs.notification.showError("Semua form harus diisi.");
         return;
       }
-      if (this.newProduct.harga !== 0) {
+      if (this.newProduct.harga <= 0) {
         this.$refs.notification.showError("Field harga tidak boleh 0");
         return;
       }
