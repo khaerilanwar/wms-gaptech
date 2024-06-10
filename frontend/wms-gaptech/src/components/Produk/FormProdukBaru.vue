@@ -157,6 +157,10 @@ export default {
         this.$refs.notification.showError("Semua form harus diisi.");
         return;
       }
+      if (this.newProduct.harga !== 0) {
+        this.$refs.notification.showError("Field harga tidak boleh 0");
+        return;
+      }
       const isConfirmed = window.confirm(
         "Apakah Anda yakin untuk menambahkan data?",
       );

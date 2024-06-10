@@ -32,6 +32,7 @@
                 name="productName"
                 rows="2"
                 class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 focus:ring-1 focus:ring-blue-primary"
+                required
               ></textarea>
             </div>
             <div>
@@ -69,6 +70,7 @@
                 <input
                   id="productPrice"
                   v-model="editProduct.harga"
+                  required
                   type="text"
                   name="productPrice"
                   class="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg block w-full p-2.5 pl-10 focus:ring-1 focus:ring-blue-primary"
@@ -153,6 +155,19 @@ export default {
       }
     },
     async saveData() {
+      if (
+        !this.editProduct.namaProduk ||
+        !this.editProduct.harga ||
+        !this.editProduct.posisiRak
+      ) {
+        this.$refs.notification.showError("Form tidak boleh kosong.");
+        return;
+      }
+
+      if (parseFloat(this.editProduct.harga) <= 0) {
+        this.$refs.notification.showError("Harga harus lebih dari 0.");
+        return;
+      }
       const isConfirmed = window.confirm(
         "Apakah Anda yakin untuk menyimpan perubahan?",
       );
