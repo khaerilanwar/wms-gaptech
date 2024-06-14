@@ -54,6 +54,7 @@ import {
   getRack,
   updateRack,
 } from "../controllers/Racks.js"; // Import fungsi dari Rack controller
+import { verifyAdmin } from "../middleware/VerifyAdmin.js";
 
 const router = express.Router();
 
@@ -74,10 +75,10 @@ router.put("/update-password", authToken, updatePassword);
 // gunakan middleware verifyToken !!!!!!!!!!!!!!!!!!!!
 router.get("/products", verifyToken, getProducts);
 router.get("/product/:kodeProduk(\\d+)", verifyToken, getProduct); // kodeProduk hanya menerima numeric
-router.post("/product", verifyToken, addProduct);
-router.put("/product/:kodeProduk(\\d+)", verifyToken, updateProduct);
-router.patch("/product/:kodeProduk(\\d+)", verifyToken, addStock);
-router.delete("/product/:kodeProduk(\\d+)", verifyToken, deleteProduct);
+router.post("/product", verifyToken, verifyAdmin, addProduct);
+router.put("/product/:kodeProduk(\\d+)", verifyToken, verifyAdmin, updateProduct);
+router.patch("/product/:kodeProduk(\\d+)", verifyToken, verifyAdmin, addStock);
+router.delete("/product/:kodeProduk(\\d+)", verifyToken, verifyAdmin, deleteProduct);
 
 // Router in products (history)
 router.get("/inproducts", verifyToken, getInProducts);
@@ -94,7 +95,7 @@ router.get("/outproducts/data-by-month", verifyToken, outProductByMonth);
 // Router transaction product
 router.get("/transaction/:idTransaksi(\\d+)", verifyToken, getTransaction);
 router.get("/transaction/invoice/:idTransaksi(\\d+)", getTransactionPublic);
-router.post("/transaction", verifyToken, saveTransaction);
+router.post("/transaction", verifyToken, verifyAdmin, saveTransaction);
 router.get("/transactions", verifyToken, getAllTransactions);
 router.get("/transactions/process", verifyToken, getProcessTransactions);
 router.get("/transactions/success", verifyToken, getSuccessTransactions);
@@ -106,9 +107,9 @@ router.get(
   "/transactions/success/data-by-period", verifyToken,
   getSuccessTransactionsByPeriod
 );
-router.delete("/transaction/:idTransaksi(\\d+)", verifyToken, deleteTransaction);
-router.put("/transaction/:idTransaksi(\\d+)", verifyToken, updateTransaction);
-router.patch("/transaction/:idTransaksi(\\d+)", verifyToken, updateStatus);
+router.delete("/transaction/:idTransaksi(\\d+)", verifyToken, verifyAdmin, deleteTransaction);
+router.put("/transaction/:idTransaksi(\\d+)", verifyToken, verifyAdmin, updateTransaction);
+router.patch("/transaction/:idTransaksi(\\d+)", verifyToken, verifyAdmin, updateStatus);
 
 // Router racks
 router.get("/racks", verifyToken, getAllRacks);
@@ -117,7 +118,7 @@ router.get("/racks/full", verifyToken, getFullRacks);
 router.get("/racks/almost-full", verifyToken, getAlmostFullRacks);
 router.get("/racks/available", verifyToken, getAvailableRacks);
 router.get("/rack/:rak", verifyToken, getRack);
-router.patch("/rack/:rak", verifyToken, updateRack);
+router.patch("/rack/:rak", verifyToken, verifyAdmin, updateRack);
 
 router.use((req, res) => {
   res.status(404);
