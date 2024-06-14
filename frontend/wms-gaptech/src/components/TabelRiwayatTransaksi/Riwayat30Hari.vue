@@ -74,7 +74,7 @@
               <router-link
                 :to="'/riwayat-transaksi/detail/' + item.idTransaksi"
               >
-                <button @click="showDetails(item.idTransaksi)">
+                <button>
                   <ComponentButton intent="detail"></ComponentButton>
                   <v-tooltip activator="parent" location="top">
                     Detail Transaksi

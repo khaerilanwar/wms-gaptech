@@ -3,7 +3,7 @@
     <div class="flex justify-center items-center font-semibold text-3xl mb-2">
       <h1 class="font-semibold">Daftar Transaksi</h1>
     </div>
-    <TabelTransaksi @transaction-details="handleShowDetail"></TabelTransaksi>
+    <TabelTransaksi></TabelTransaksi>
   </div>
 </template>
 
@@ -18,9 +18,9 @@ export default {
     return {};
   },
   methods: {
-    handleShowDetail(idTransaksi) {
-      this.$router.push({ name: "DetailBrgKeluar", params: { idTransaksi } });
-    },
+    // handleShowDetail(idTransaksi) {
+    //   this.$router.push({ name: "DetailBrgKeluar", params: { idTransaksi } });
+    // },
   },
 };
 </script>

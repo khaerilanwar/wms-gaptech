@@ -4,7 +4,7 @@
     <QRCodeVue3
       :width="400"
       :height="400"
-      :value="id"
+      :value="invoiceLink"
       :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
       :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 10 }"
       :dotsOptions="{
@@ -44,17 +44,20 @@ export default {
   },
   props: {
     id: {
-      type: Object,
+      type: Number,
       required: true,
     },
   },
   data() {
     return {
       gaptechLogo,
+      invoiceLink: "",
     };
   },
   created() {
     console.log(this.id);
+    const idTransaksi = this.id;
+    this.invoiceLink = `https://wms-gaptech.vercel.app/invoice/${idTransaksi}`;
   },
 };
 </script>

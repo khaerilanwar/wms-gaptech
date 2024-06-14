@@ -19,6 +19,7 @@ import RiwayatTransaksi from "@/views/Riwayat/RiwayatTransaksi.vue";
 import DetailRiwayatTransaksi from "@/views/Transaksi/DetailRiwayatTransaksi.vue";
 import EditTransaksi from "@/views/Transaksi/EditTransaksi.vue";
 import NotFoundPage from "@/views/NotFoundPage.vue";
+import InvoiceTransaksi from "@/views/Transaksi/invoiceTransaksi.vue";
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: "/reset/:token",
     name: "reset",
     component: TokenPass,
+  },
+  {
+    path: "/invoice/:idTransaksi",
+    name: "invoiceTransaksi",
+    component: InvoiceTransaksi,
   },
   {
     path: "/",
