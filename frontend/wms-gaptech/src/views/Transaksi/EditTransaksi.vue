@@ -179,6 +179,9 @@ export default {
         };
         await axiosInstance.patch(`transaction/${idTransaksi}`, payload);
         this.$refs.notification.showSuccess("Berhasil mengubah status pesanan");
+        setTimeout(() => {
+          this.$router.push("/daftar-transaksi");
+        }, 2000);
       } catch (error) {
         console.error("Error updating transaction status:", error);
       }
