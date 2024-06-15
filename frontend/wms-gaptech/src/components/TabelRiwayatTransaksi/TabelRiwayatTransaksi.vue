@@ -27,10 +27,10 @@
         <div class="relative mr-5">
           <input
             v-model="endDate"
-            name="start"
+            name="end"
             type="date"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-primary focus:border-blue-primary block w-full py-2.5 p-2"
-            placeholder="Pilih tanggal mulai"
+            placeholder="Pilih tanggal akhir"
           />
         </div>
         <ComponentButton
@@ -49,24 +49,26 @@
         Hasil Filter Data:
       </h2>
       <div>
-        <v-chip v-show="show30Days" closable @click="toggleHide30DaysFilter">
+        <v-chip v-show="show30Days" closable @click:close="toggleHide30DaysFilter">
           30 hari terakhir
         </v-chip>
-        <v-chip v-show="showPeriode" closable @click="toggleHidePeriodeFilter">
+        <v-chip v-show="showPeriode" closable @click:close="toggleHidePeriodeFilter">
           {{ formatDate(startDate) }} - {{ formatDate(endDate) }}
         </v-chip>
       </div>
     </div>
-    <RiwayatInputTanggal
-      v-show="showPeriode"
-      :start-date="startDate"
-      :end-date="endDate"
-    ></RiwayatInputTanggal>
-    <Riwayat30Hari v-show="show30Days"></Riwayat30Hari>
+    <div v-if="show30Days || showPeriode">
+      <RiwayatInputTanggal
+        v-show="showPeriode"
+        :start-date="startDate"
+        :end-date="endDate"
+      ></RiwayatInputTanggal>
+      <Riwayat30Hari v-show="show30Days"></Riwayat30Hari>
+    </div>
+    <ShowAlert v-else>
+      Pilih Filter Terlebih Dahulu!
+    </ShowAlert>
   </div>
-  <ShowAlert v-show="!showPeriode && !show30Days"
-    >Pilih Filter Terlebih Dahulu!
-  </ShowAlert>
   <Notification ref="notification" />
 </template>
 
@@ -151,9 +153,9 @@ export default {
       this.show30Days = false;
     },
     toggleHidePeriodeFilter() {
-      this.showPeriode = false;
+        this.showPeriode = false;
+      },
     },
-  },
 };
 </script>
 
