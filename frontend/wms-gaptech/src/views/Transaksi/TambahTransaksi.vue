@@ -258,10 +258,12 @@ export default {
 
     async submitOrder() {
       if (this.selected.length === 0) {
-        this.$refs.notification.showError("Pilih minimal satu produk untuk melanjutkan.");
+        this.$refs.notification.showError(
+          "Pilih minimal satu produk untuk melanjutkan.",
+        );
         return;
       }
-      
+
       this.orders.recipientName = this.recipientName;
       this.orders.recipientAddress = this.recipientAddress;
       this.orders.items = this.selected.map((item) => {

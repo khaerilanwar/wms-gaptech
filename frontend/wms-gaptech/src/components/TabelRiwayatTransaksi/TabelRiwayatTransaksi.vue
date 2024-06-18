@@ -49,10 +49,18 @@
         Hasil Filter Data:
       </h2>
       <div>
-        <v-chip v-show="show30Days" closable @click:close="toggleHide30DaysFilter">
+        <v-chip
+          v-show="show30Days"
+          closable
+          @click:close="toggleHide30DaysFilter"
+        >
           30 hari terakhir
         </v-chip>
-        <v-chip v-show="showPeriode" closable @click:close="toggleHidePeriodeFilter">
+        <v-chip
+          v-show="showPeriode"
+          closable
+          @click:close="toggleHidePeriodeFilter"
+        >
           {{ formatDate(startDate) }} - {{ formatDate(endDate) }}
         </v-chip>
       </div>
@@ -65,9 +73,7 @@
       ></RiwayatInputTanggal>
       <Riwayat30Hari v-show="show30Days"></Riwayat30Hari>
     </div>
-    <ShowAlert v-else>
-      Pilih Filter Terlebih Dahulu!
-    </ShowAlert>
+    <ShowAlert v-else> Pilih Filter Terlebih Dahulu! </ShowAlert>
   </div>
   <Notification ref="notification" />
 </template>
@@ -153,9 +159,9 @@ export default {
       this.show30Days = false;
     },
     toggleHidePeriodeFilter() {
-        this.showPeriode = false;
-      },
+      this.showPeriode = false;
     },
+  },
 };
 </script>
 
