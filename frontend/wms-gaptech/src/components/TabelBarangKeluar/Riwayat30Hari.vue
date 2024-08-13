@@ -84,15 +84,17 @@ async function fetchData() {
 }
 
 function formatDateTime(dateTimeString) {
-  const dateTime = new Date(dateTimeString);
-  const localDateTime = new Date(
-    dateTime.getTime() + dateTime.getTimezoneOffset() * 60000,
-  );
-  const day = localDateTime.getDate().toString().padStart(2, "0");
-  const month = (localDateTime.getMonth() + 1).toString().padStart(2, "0");
-  const year = localDateTime.getFullYear();
-  const hours = localDateTime.getHours().toString().padStart(2, "0");
-  const minutes = localDateTime.getMinutes().toString().padStart(2, "0");
+  // Create a Date object with the UTC time provided
+  const date = new Date(dateTimeString);
+
+  // Extract the year, month, day, hours, and minutes
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Adjust month to 1-based index
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  // Format the date as "dd-MM-yyyy hh:mm"
   return `${day}-${month}-${year} ${hours}:${minutes}`;
 }
 
