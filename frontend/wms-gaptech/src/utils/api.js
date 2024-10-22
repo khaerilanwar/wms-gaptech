@@ -2,7 +2,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 const axiosInstance = axios.create({
-  baseURL: "https://gaptech-4e15d7710e71.herokuapp.com/",
+  baseURL: "https://gaptech-server.vercel.app/",
   // baseURL: "http://localhost:5000",
   withCredentials: true,
 });
